@@ -1,0 +1,30 @@
+{
+  "name": "web-admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "parcel build src/index.js src/login.js --public-url ./ --out-dir public/dist --no-source-maps",
+    "watch": "parcel watch src/index.js src/login.js --public-url ./ --out-dir public/dist --no-source-maps"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.5.0",
+    "jquery": "^3.5.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.10.1",
+    "@babel/runtime": "^7.10.2",
+    "@vue/component-compiler-utils": "^3.1.2",
+    "babel-core": "^6.26.3",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4",
+    "vue-router": "^3.3.4",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
