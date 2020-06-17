@@ -8,6 +8,18 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 
 // vue
 import Vue from 'vue/dist/vue.common.prod';
+
+// icon
+import { library as FaLibrary } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faSyncAlt, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+
+FaLibrary.add(faTrashAlt);
+FaLibrary.add(faSyncAlt);
+FaLibrary.add(faEdit);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+// router
 import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
