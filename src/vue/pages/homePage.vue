@@ -33,13 +33,31 @@
 
         <div class="container mt-5">
             <div class="row">
-                <div class="offset-lg-10 col-lg-2">
+                <div class="offset-lg-4 col-lg-4">
                     <button :disabled="disabled" @click="onClickCreate" type="button" class="w-100 btn btn-sm btn-outline-primary">생성</button>
                 </div>
             </div>
 
-            <div class="row mt-3">
-                <label class="col-12 form-label">개수 : {{ showroomArr.length }}</label>
+            <div class="row mt-5">
+                <div class="order-lg-last col-lg-4">
+                    <div class="row">
+                        <div class="col-8">
+                            <input v-model.trim="search" type="text" class="form-control form-control-sm">
+                        </div>
+
+                        <div class="col-4">
+                            <button @click="loadShowroomList" type="button" class="w-100 btn btn-sm btn-outline-primary">검색</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-lg-first col-lg-8 mt-3 mt-lg-0">
+                    <button @click="onClickRefresh" type="button" class="mr-3 btn btn-sm btn-outline-primary">
+                        <font-awesome-icon :icon="['fas', 'sync-alt']"></font-awesome-icon>
+                    </button>
+
+                    <label class="form-label">개수 : {{ showroomArr.length }}</label>
+                </div>
             </div>
 
             <div class="row mt-3">
@@ -116,7 +134,8 @@
             return {
                 disabled: false,
                 selectShowroom: new Showroom(),
-                showroomArr: []
+                showroomArr: [],
+                search: ''
             };
         },
         mounted: function () {
@@ -130,9 +149,13 @@
             },
             loadShowroomList: function () {
                 const me = this;
-                const Promise = window.Promise;
 
-                return Utils.apiRequest(ApiUrl.SHOWROOM_LIST).catch(function () {
+                const Promise = window.Promise;
+                const param = {
+                    s: me.search
+                };
+
+                return Utils.apiRequest(ApiUrl.SHOWROOM_LIST, param).catch(function () {
                     return Promise.resolve({data: []});
 
                 }).then(function (data) {
@@ -147,6 +170,12 @@
 
                     return Promise.resolve(dataArr);
                 });
+            },
+            onClickRefresh: function () {
+                const me = this;
+
+                me.search = '';
+                me.loadShowroomList();
             },
             onClickCreate: function () {
                 const me = this;
