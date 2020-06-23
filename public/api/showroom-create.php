@@ -9,7 +9,7 @@
 
     if (!empty($_POST)) {
         try {
-            $pdo = new PDO($dsn, $name, $pwd);
+            $pdo = new PDO($dsn, $db_user_name, $db_user_pwd);
             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

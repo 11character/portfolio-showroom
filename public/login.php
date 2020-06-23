@@ -37,7 +37,7 @@
                             <input type="password" id="password" class="form-control" name="password" maxlength="64" autocomplete="off" required>
                         </div>
 
-                        <button type="submit" class="offset-lg-9 col-lg-3 btn btn-primary">Login</button>
+                        <button type="submit" class="offset-lg-9 col-lg-3 btn btn-secondary">Login</button>
                     </form>
                 </div>
             </div>

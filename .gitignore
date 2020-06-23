@@ -1,6 +1,6 @@
 .cache
 node_modules
-data
 upload
 public/dist
+public/data
 db/.~*

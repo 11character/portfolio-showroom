@@ -33,7 +33,7 @@
 
         <div class="container mt-5">
             <div class="row">
-                <div class="offset-lg-4 col-lg-4">
+                <div class="offset-lg-3 col-lg-6">
                     <button :disabled="disabled" @click="onClickCreate" type="button" class="w-100 btn btn-sm btn-outline-primary">생성</button>
                 </div>
             </div>
@@ -46,13 +46,13 @@
                         </div>
 
                         <div class="col-4">
-                            <button @click="loadShowroomList" type="button" class="w-100 btn btn-sm btn-outline-primary">검색</button>
+                            <button @click="loadShowroomList" type="button" class="w-100 btn btn-sm btn-outline-secondary">검색</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="order-lg-first col-lg-8 mt-3 mt-lg-0">
-                    <button @click="onClickRefresh" type="button" class="mr-3 btn btn-sm btn-outline-primary">
+                    <button @click="onClickRefresh" type="button" class="mr-3 btn btn-sm btn-outline-secondary">
                         <font-awesome-icon :icon="['fas', 'sync-alt']"></font-awesome-icon>
                     </button>
 
@@ -68,8 +68,8 @@
                                 <th style="width: 10%">ID</th>
                                 <th style="width: 20%">이름</th>
                                 <th style="width: 40%">설명</th>
-                                <th style="width: 20%">날짜</th>
-                                <th style="width: 20%"></th>
+                                <th style="width: 15%">날짜</th>
+                                <th style="width: 15%"></th>
                             </tr>
                         </thead>
 

@@ -19,7 +19,7 @@
             SEARCH2 => $search
         ];
 
-        $stmt = $pdo->prepare($sql_select_tb_showroom);
+        $stmt = $pdo->prepare($sql_select_tb_upload_file);
 
         if ($stmt->execute($value)) {
             $arr = [];

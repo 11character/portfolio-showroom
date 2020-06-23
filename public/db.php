@@ -1,8 +1,8 @@
 <?php
 $dbname = 'showroom';
 $dsn = 'mysql:host=127.0.0.1;port=3306;dbname=' . $dbname . ';charset=utf8';
-$name = 'root';
-$pwd = '000000';
+$db_user_name = 'root';
+$db_user_pwd = '000000';
 
 $return_db_error = false;
 
@@ -50,5 +50,45 @@ DELETE FROM
     TB_SHOWROOM
 WHERE
     SEQ_ID = :SEQ_ID
+EOD;
+
+// 파일 목록 조회.
+$sql_select_tb_upload_file = <<<EOD
+SELECT
+    *
+FROM
+    TB_UPLOAD_FILE
+WHERE
+    NAME LIKE :SEARCH1
+    OR MEMO LIKE :SEARCH2
+ORDER BY C_DATE DESC
+EOD;
+
+// 파일정보 생성.
+$sql_insert_tb_upload_file = <<<EOD
+INSERT INTO TB_UPLOAD_FILE
+(
+    TYPE_CODE,
+    EXT,
+    NAME,
+    FULL_NAME,
+    DIR_PATH,
+    DIR_URL,
+    PATH,
+    URL,
+    SIZE,
+    MEMO
+) VALUES (
+    :TYPE_CODE,
+    :EXT,
+    :NAME,
+    :FULL_NAME,
+    :DIR_PATH,
+    :DIR_URL,
+    :PATH,
+    :URL,
+    :SIZE,
+    :MEMO
+)
 EOD;
 ?>

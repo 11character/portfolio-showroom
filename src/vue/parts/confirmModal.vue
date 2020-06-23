@@ -7,8 +7,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button @click="onClickOk" type="button" class="btn btn-primary">OK</button>
-                    <button @click="onClickClose" type="button" class="btn btn-secondary">Cancel</button>
+                    <button :disabled="disabled" @click="onClickOk" type="button" class="btn btn-primary">OK</button>
+                    <button :disabled="disabled" @click="onClickClose" type="button" class="btn btn-secondary">Cancel</button>
                 </div>
             </div>
         </div>
@@ -24,6 +24,10 @@
     export default {
         props: {
             disableOkHide: {
+                type: Boolean,
+                default: false
+            },
+            disabled: {
                 type: Boolean,
                 default: false
             }
