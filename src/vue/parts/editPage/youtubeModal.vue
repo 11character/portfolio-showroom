@@ -1,27 +1,17 @@
 <template>
     <div class="import-modal modal fade" tabindex="-1" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-content-model-file">
+            <div class="modal-content modal-content-url">
                 <div class="modal-head">
-                    <p class="modal-title">
-                        <img :src="'./img/icon-model-file.png'" class="modal-title-img modal-title-img-model-file"> Model
-                    </p>
+                    <div class="modal-title">
+                        <img :src="'img/icon-youtube.png'" class="modal-title-img modal-title-img-youtube"> YouTube
+                    </div>
                 </div>
 
                 <div class="modal-body">
                     <div class="row w-100">
                         <div class="col-12">
-                            <div class="table-background col-12">
-                                <table class="model-file-table table table-striped" style="width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
+                            <input type="text" class="modal-input col-12">
                         </div>
                     </div>
                 </div>
@@ -43,88 +33,17 @@
 <script>
     import * as ApiUrl from '../../../class/apiUrl';
     import Utils from '../../../class/utils';
-    import ObjectFile from '../../../class/objectFile';
 
     export default {
         data: function () {
             return {
-                disabled: false,
-                selectObjectFile: new ObjectFile(),
-                fileArr: [],
-                search: ''
+                disabled: false
             };
         },
         mounted: function () {
             const me = this;
-
-            $('.model-file-table').DataTable({
-                ajax: {
-                    url: ApiUrl.FILE_LIST,
-                    dataSrc: 'data'
-                },
-                autoWidth: false,
-                lengthChange: false,
-                info: false,
-                pagingType: 'numbers',
-                select: {
-                    style: 'multi',
-                    items: 'row'
-                },
-                columns: [
-                    {className: 'column-text column-text-user', width: '20%', data: 'TYPE_CODE', render: function (data) {
-                        return data == 0 ? '벽' : '물건';
-                    }},
-                    {className: 'column-text column-text-name', width: '60%', data: 'NAME'},
-                    {className: 'column-text column-text-type', width: '20%', data: 'EXT'}
-                ]
-
-            }).on('init.dt', function () {
-                // 스카일을 적용하기 위한 클래스 삽입.
-                // 브라우저의 개발자 모드에서 구조를 확인하면서 값을 변경.
-                const $search = $('.dataTables_filter').parent();
-                const $paginate = $('.dataTables_paginate.paging_numbers').parent();
-
-                $search.prev().remove();
-                $paginate.prev().remove();
-
-                $search.attr('class', 'search-field');
-                $paginate.attr('class', 'paginate-field');
-
-            }).on('page.dt search.dt', function () {
-                const table = $('.model-file-table').DataTable();
-
-                table.rows().deselect();
-            });
-
-            $('.import-modal').on('show.bs.modal', function () {
-                me.loadFileList();
-            });
         },
         methods: {
-            loadFileList: function () {
-                const me = this;
-
-                const Promise = window.Promise;
-                const param = {
-                    s: me.search
-                };
-
-                return Utils.apiRequest(ApiUrl.FILE_LIST, param).catch(function () {
-                    return Promise.resolve({data: []});
-
-                }).then(function (data) {
-                    const arr = data.data;
-                    const dataArr = [];
-
-                    for (let i = 0; i < arr.length; i++) {
-                        dataArr.push(new ObjectFile(Utils.snakeObjToCamelObj(arr[i])));
-                    }
-
-                    me.fileArr = dataArr;
-
-                    return Promise.resolve(dataArr);
-                });
-            },
             onClickClose: function () {
                 const me = this;
 

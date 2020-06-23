@@ -4,24 +4,30 @@
 
         <model-modal class="model-modal"></model-modal>
 
+        <text-modal class="text-modal"></text-modal>
+
+        <web-modal class="web-modal"></web-modal>
+
+        <youtube-modal class="youtube-modal"></youtube-modal>
+
         <div class="editor-field">
             <nav class="nav-field">
-                <div @click="onClickModelModalOpen" class="nav-btn" data-toggle="modal" data-target="#model-file-modal">
+                <div @click="onClickModelModalOpen" class="nav-btn" data-toggle="modal">
                     <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
                     <div class="nav-btn-font">Model</div>
                 </div>
 
-                <div class="nav-btn" data-toggle="modal" data-target="#text-modal">
+                <div @click="onClickTextModalOpen" class="nav-btn" data-toggle="modal">
                     <img :src="'./img/icon-text.png'" class="nav-btn-img nav-btn-img-text">
                     <div class="nav-btn-font">Text</div>
                 </div>
 
-                <div class="nav-btn" data-toggle="modal" data-target="#webpage-modal">
+                <div @click="onClickWebModalOpen" class="nav-btn" data-toggle="modal">
                     <img :src="'./img/icon-web.png'" class="nav-btn-img nav-btn-img-webpage">
                     <div class="nav-btn-font">Web Page</div>
                 </div>
 
-                <div class="nav-btn" data-toggle="modal" data-target="#youtube-modal">
+                <div  @click="onClickYoutubeModalOpen" class="nav-btn" data-toggle="modal">
                     <img :src="'./img/icon-youtube.png'" class="nav-btn-img nav-btn-img-youtube">
                     <div class="nav-btn-font">YouTube</div>
                 </div>
@@ -39,11 +45,17 @@
 
     import topNavVue from '../parts/topNav.vue';
     import modelModalVue from '../parts/editPage/modelModal.vue';
+    import textModalVue from '../parts/editPage/textModal.vue';
+    import webModalVue from '../parts/editPage/webModal.vue';
+    import youtubeModalVue from '../parts/editPage/youtubeModal.vue';
 
     export default {
         components: {
             'top-nav': topNavVue,
-            'model-modal': modelModalVue
+            'model-modal': modelModalVue,
+            'text-modal': textModalVue,
+            'web-modal': webModalVue,
+            'youtube-modal': youtubeModalVue
         },
         data: function () {
             return {
@@ -62,6 +74,15 @@
         methods: {
             onClickModelModalOpen: function () {
                 $('.model-modal').modal('show');
+            },
+            onClickTextModalOpen: function () {
+                $('.text-modal').modal('show');
+            },
+            onClickWebModalOpen: function () {
+                $('.web-modal').modal('show');
+            },
+            onClickYoutubeModalOpen: function () {
+                $('.youtube-modal').modal('show');
             }
         }
     }
