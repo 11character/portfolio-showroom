@@ -238,7 +238,7 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .table-field {
         overflow-y: auto;
     }

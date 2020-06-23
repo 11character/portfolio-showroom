@@ -1,4 +1,4 @@
-export default class UploadFile {
+export default class ObjectFile {
     constructor (obj = {}) {
         this.seqId = obj.seqId || 0;
         this.typeCode = obj.typeCode || 0;

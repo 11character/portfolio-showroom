@@ -91,25 +91,25 @@
                         </thead>
 
                         <tbody>
-                            <tr v-for="(uploadFile, i) in fileArr" :key="i">
+                            <tr v-for="(objectFile, i) in fileArr" :key="i">
                                 <td>
-                                    <div class="pt-1 text-truncate">{{ uploadFile.seqId }}</div>
+                                    <div class="pt-1 text-truncate">{{ objectFile.seqId }}</div>
                                 </td>
 
                                 <td>
-                                    <div class="pt-1 text-truncate">{{ uploadFile.ext }}</div>
+                                    <div class="pt-1 text-truncate">{{ objectFile.ext }}</div>
                                 </td>
 
                                 <td>
-                                    <div class="pt-1 text-truncate">{{ uploadFile.name }}</div>
+                                    <div class="pt-1 text-truncate">{{ objectFile.name }}</div>
                                 </td>
 
                                 <td>
-                                    <div class="pt-1 text-truncate">{{ uploadFile.memo }}</div>
+                                    <div class="pt-1 text-truncate">{{ objectFile.memo }}</div>
                                 </td>
 
                                 <td>
-                                    <div class="pt-1 text-truncate">{{ dateToDateString(uploadFile.cDate) }}</div>
+                                    <div class="pt-1 text-truncate">{{ dateToDateString(objectFile.cDate) }}</div>
                                 </td>
                             </tr>
                         </tbody>
@@ -123,7 +123,7 @@
 <script>
     import * as ApiUrl from '../../class/apiUrl';
     import Utils from '../../class/utils';
-    import UploadFile from '../../class/uploadFile';
+    import ObjectFile from '../../class/objectFile';
 
     import topNavVue from '../parts/topNav.vue';
     import confirmModalVue from '../parts/confirmModal.vue';
@@ -136,7 +136,7 @@
         data: function () {
             return {
                 disabled: false,
-                selectUploadFile: new UploadFile(),
+                selectObjectFile: new ObjectFile(),
                 fileArr: [],
                 search: ''
             };
@@ -166,7 +166,7 @@
                     const dataArr = [];
 
                     for (let i = 0; i < arr.length; i++) {
-                        dataArr.push(new UploadFile(Utils.snakeObjToCamelObj(arr[i])));
+                        dataArr.push(new ObjectFile(Utils.snakeObjToCamelObj(arr[i])));
                     }
 
                     me.fileArr = dataArr;
@@ -183,7 +183,7 @@
             onClickUpload: function () {
                 const me = this;
 
-                me.selectUploadFile = new UploadFile();
+                me.selectObjectFile = new ObjectFile();
 
                 $('.upload-modal').modal('show');
             },
@@ -240,7 +240,7 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .table-field {
         overflow-y: auto;
     }

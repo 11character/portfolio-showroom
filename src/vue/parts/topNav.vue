@@ -1,10 +1,10 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-nav">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-content">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse navbar-nav">
+        <div class="collapse navbar-collapse navbar-content">
             <ul class="navbar-nav w-100">
                 <li class="nav-item">
                     <router-link :to="{name: 'home'}" :class="homeClass" class="nav-link">
@@ -18,7 +18,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="separatePage" class="nav-item px-2 mr-lg-auto">
+                <li v-if="separatePage" class="nav-item px-lg-2 mr-lg-auto">
                     <span class="navbar-text text-white">{{ separatePage }}</span>
                 </li>
 
@@ -47,6 +47,13 @@
                     'active': me.pageName == 'file'
                 }
             };
+        },
+        mounted: function () {
+            $('.navbar-toggler').on('click', function () {
+                setTimeout(function () {
+                    $(window).trigger('resize');
+                }, 250);
+            });
         }
     }
 </script>
