@@ -96,9 +96,9 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-6">
-                                            <button :disabled="disabled" type="button" class="w-100 btn btn-sm btn-outline-primary">
+                                            <router-link :to="{name: 'edit', params: {id: showroom.seqId}}" class="w-100 btn btn-sm btn-outline-primary">
                                                 <font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon>
-                                            </button>
+                                            </router-link>
                                         </div>
 
                                         <div class="col-6">
