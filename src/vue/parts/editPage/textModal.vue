@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="row w-100">
                         <div class="col-12">
-                            <button type="button" class="w-100 btn btn-outline-secondary">배경색</button>
+                            <button type="button" class="text-page-color w-100 btn btn-outline-secondary">배경색</button>
                         </div>
 
                         <div class="col-12 mt-3">
@@ -38,6 +38,12 @@
     import * as ApiUrl from '../../../class/apiUrl';
     import Utils from '../../../class/utils';
 
+    import 'summernote/dist/summernote-bs4';
+    import 'summernote/dist/summernote-bs4.css';
+
+    import Pickr from '@simonwep/pickr';
+    import '@simonwep/pickr/dist/themes/monolith.min.css';
+
     export default {
         data: function () {
             return {
@@ -46,6 +52,44 @@
         },
         mounted: function () {
             const me = this;
+
+            // Text editor ====================================================================================================
+            $(me.$el).find('textarea').summernote({
+                height: 180,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['paragraph']],
+                    ['height', ['height']]
+                ]
+            });
+            // END-Text editor ====================================================================================================
+
+            // Color picker ====================================================================================================
+            Pickr.create({
+                el: '.text-page-color',
+                useAsButton: true,
+                theme: 'monolith',
+                default: '#ffffff',
+
+                components: {
+                    preview: true,
+                    opacity: true,
+                    hue: true,
+                    interaction: {
+                        hex: true,
+                        rgba: true,
+                        input: true
+                    }
+                }
+            }).on('change', function (color) {
+                $(me.$el).find('.note-editable').css('backgroundColor', color.toHEXA());
+
+            }).on('show', function (instance) {
+                instance.setColor($(me.$el).find('.note-editable').css('backgroundColor') || '#ffffff');
+            });
+            // END-Color picker ====================================================================================================
         },
         methods: {
             onClickClose: function () {

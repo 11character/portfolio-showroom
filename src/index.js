@@ -19,7 +19,7 @@ dtBs4(window, $);
 dtButton(window, $);
 dtButtonBs4(window, $);
 dtSelect(window, $);
-dtSelectBs4(window, $)
+dtSelectBs4(window, $);
 
 // vue
 import Vue from 'vue/dist/vue.common.prod';
