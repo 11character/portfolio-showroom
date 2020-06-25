@@ -49,7 +49,10 @@
     import webModalVue from '../parts/editPage/webModal.vue';
     import youtubeModalVue from '../parts/editPage/youtubeModal.vue';
 
+    import NemoShowroomEditor from '../../NemoShowroom/nemoShowroomEditor/nemoShowroomEditor';
+
     export default {
+        props: ['id'],
         components: {
             'top-nav': topNavVue,
             'model-modal': modelModalVue,
@@ -59,15 +62,26 @@
         },
         data: function () {
             return {
-                disabled: false
+                disabled: false,
+                showroom: null
             };
         },
         mounted: function () {
+            const me = this;
+
+            me.showroom = new NemoShowroomEditor({
+                el: $('.view-field').get(0),
+                mode: 'edit'
+            });
+
             $(window).on('resize', function () {
                 setTimeout(function () {
+                    const w = $('.view-field').width();
                     const h = $(window).height() - $('.navbar').outerHeight();
 
                     $('.editor-field').css('height', h + 'px');
+
+                    me.showroom.resize(w, h);
                 }, 100);
             }).trigger('resize');
         },
@@ -154,7 +168,7 @@
         }
 
         .view-field {
-            height: 100%;
+            width: 100%;
         }
     }
     /* END-nav ==================================================================================================== */

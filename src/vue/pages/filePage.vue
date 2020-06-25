@@ -22,7 +22,7 @@
                             </div>
 
                             <div class="col-9">
-                                <input :disabled="disabled" type="file" class="w-100 border rounded" ref="upload-file">
+                                <input :disabled="disabled" type="file" class="upload-file w-100 border rounded">
                             </div>
                         </div>
 
@@ -191,7 +191,8 @@
                 const me = this;
 
                 if (bool) {
-                    const el = me.$refs['upload-file'];
+                    const el = $('.upload-file').get(0);
+
                     let file = el.files[0];
 
                     const memeType = 'application/zip application/octet-stream application/x-zip-compressed multipart/x-zip';
