@@ -128,6 +128,8 @@
     import topNavVue from '../parts/topNav.vue';
     import confirmModalVue from '../parts/confirmModal.vue';
 
+    const Promise = window.Promise;
+
     export default {
         components: {
             'top-nav': topNavVue,
@@ -153,7 +155,6 @@
             loadFileList: function () {
                 const me = this;
 
-                const Promise = window.Promise;
                 const param = {
                     s: me.search
                 };

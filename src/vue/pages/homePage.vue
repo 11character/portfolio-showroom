@@ -125,6 +125,8 @@
     import topNavVue from '../parts/topNav.vue';
     import confirmModalVue from '../parts/confirmModal.vue';
 
+    const Promise = window.Promise;
+
     export default {
         components: {
             'top-nav': topNavVue,
@@ -150,7 +152,6 @@
             loadShowroomList: function () {
                 const me = this;
 
-                const Promise = window.Promise;
                 const param = {
                     s: me.search
                 };
@@ -186,7 +187,6 @@
             },
             onConfirmCreate: function (bool) {
                 const me = this;
-                const Promise = window.Promise;
 
                 if (bool) {
                     const message = me.selectShowroom.validate();
@@ -219,7 +219,6 @@
             },
             onConfirmDelete: function (bool) {
                 const me = this;
-                const Promise = window.Promise;
 
                 if (bool) {
                     me.disabled = true;

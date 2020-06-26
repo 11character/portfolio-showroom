@@ -31,6 +31,11 @@
                     <img :src="'./img/icon-youtube.png'" class="nav-btn-img nav-btn-img-youtube">
                     <div class="nav-btn-font">YouTube</div>
                 </div>
+
+                <div  @click="onClickTest" class="nav-btn" data-toggle="modal">
+                    <img :src="'./img/icon-youtube.png'" class="nav-btn-img nav-btn-img-youtube">
+                    <div class="nav-btn-font">TEST</div>
+                </div>
             </nav>
 
             <div class="view-field"></div>
@@ -63,13 +68,13 @@
         data: function () {
             return {
                 disabled: false,
-                showroom: null
+                showroomEditor: null
             };
         },
         mounted: function () {
             const me = this;
 
-            me.showroom = new NemoShowroomEditor({
+            me.showroomEditor = new NemoShowroomEditor({
                 el: $('.view-field').get(0),
                 mode: 'edit'
             });
@@ -81,7 +86,7 @@
 
                     $('.editor-field').css('height', h + 'px');
 
-                    me.showroom.resize(w, h);
+                    me.showroomEditor.resize(w, h);
                 }, 100);
             }).trigger('resize');
         },
@@ -97,6 +102,49 @@
             },
             onClickYoutubeModalOpen: function () {
                 $('.youtube-modal').modal('show');
+            },
+            onClickTest: function () {
+                const me = this;
+
+                let item = {
+                    name: 'box',
+                    type: 'obj',
+                    itemUrl: 'data/1593153215_1778596525/box.obj'
+                };
+
+                me.showroomEditor.import(item).then(function () {
+                    console.log('성공');
+                });
+
+                // Utils.sizeFromImageUrl('./data/1592983949_642429268/obj뷰어01.png').then(function (info) {
+                //     const item = {
+                //         name: 'obj뷰어01',
+                //         type: 'image',
+                //         itemUrl: 'data/1592983949_642429268/obj뷰어01.png',
+                //         width: info.width / 500,
+                //         height: info.height / 500,
+                //         scale: {x: 1, y: 1, z: 1},
+                //         zeroScale: {x: 1, y: 1, z: 1}
+                //     };
+
+                //     me.showroomEditor.import(item).then(function () {
+                //         console.log('성공');
+                //     });
+                // });
+
+                const content = '<div class="asset-text-item" data-type="text" style="word-wrap:break-word; overflow:hidden; background-color:#ffffff;">1234</div>';
+
+                item = {
+                    name: 'Text',
+                    type: 'html',
+                    content: content,
+                    scale: {x: 0.005, y: 0.005, z: 0.005},
+                    zeroScale: {x: 0, y: 0, z: 0}
+                };
+
+                me.showroomEditor.import(item).then(function () {
+                    console.log('성공');
+                });
             }
         }
     }

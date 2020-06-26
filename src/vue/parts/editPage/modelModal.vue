@@ -45,6 +45,8 @@
     import Utils from '../../../class/utils';
     import ObjectFile from '../../../class/objectFile';
 
+    const Promise = window.Promise;
+
     export default {
         data: function () {
             return {
@@ -104,7 +106,6 @@
             loadFileList: function () {
                 const me = this;
 
-                const Promise = window.Promise;
                 const param = {
                     s: me.search
                 };

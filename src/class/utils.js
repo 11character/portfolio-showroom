@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+const Promise = window.Promise;
+
 export default class Utils {
     static randomString(count = 16) {
         let str = '';
@@ -40,7 +42,7 @@ export default class Utils {
         };
     }
 
-    static snakeToCamel (str = '') {
+    static snakeToCamel(str = '') {
         str = str.toLowerCase();
     
         return str.replace(/([-_].)/g, function (group) {
@@ -48,7 +50,7 @@ export default class Utils {
         });
     }
 
-    static snakeObjToCamelObj (sObj) {
+    static snakeObjToCamelObj(sObj) {
         const cObj = {};
     
         for (let key in sObj) {
@@ -58,7 +60,7 @@ export default class Utils {
         return cObj;
     }
 
-    static apiRequest (url, obj = {}, method = 'get') {
+    static apiRequest(url, obj = {}, method = 'get') {
         return new Promise(function (resolve, reject) {
             $.ajax({
                 method: method,
@@ -81,4 +83,34 @@ export default class Utils {
 
         return [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-');
     };
+
+    static sizeFromImageUrl(url) {
+        return new Promise(function (resolve, reject) {
+            const image = new Image();
+
+            image.onload = function () {
+                resolve({
+                    url: url,
+                    width: image.width,
+                    height: image.height
+                });
+            };
+
+            image.onerror = function (error) {
+                console.error(error);
+                return reject(error);
+            };
+
+            image.src = url;
+        });
+    }
+
+    static createDivElement() {
+        const el = document.createElement('DIV');
+
+        el.style.color = '#000000';
+        el.style.background = 'initial';
+
+        return el;
+    }
 }
