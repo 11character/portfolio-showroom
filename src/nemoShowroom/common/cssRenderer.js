@@ -94,8 +94,8 @@ export default class CssRenderer {
             assetItem.height = height;
 
             //마스크가 되는 3D객체 크기 설정.
-            assetItem.object3D.scale.setX(width);
-            assetItem.object3D.scale.setY(height);
+            assetItem.object3D.children[0].scale.setX(width);
+            assetItem.object3D.children[0].scale.setY(height);
 
             contentEl.style.position = 'relative';
             contentEl.style.visibility = '';
@@ -122,8 +122,8 @@ export default class CssRenderer {
                 contentEl.style.height = height + 'px';
 
                 //마스크가 되는 3D객체 크기 설정.
-                assetItem.object3D.scale.setX(width);
-                assetItem.object3D.scale.setY(height);
+                assetItem.object3D.children[0].scale.setX(width);
+                assetItem.object3D.children[0].scale.setY(height);
 
                 contentEl.style.position = 'relative';
                 contentEl.style.visibility = '';
@@ -231,8 +231,6 @@ export default class CssRenderer {
 
         if (cssUnit) {
             tempUnit.assetItem.onShow();
-
-            console.log(cssUnit.cssObject3D);
 
             const orgLocalT = cssUnit.cssObject3D.children[0].element.parentNode.style.transform;
             const orgItemStyleW = itemEl.style.width;

@@ -47,14 +47,16 @@
     export default {
         data: function () {
             return {
-                disabled: false
+                disabled: false,
+                colorPickr: null,
+                jTextEditor: null
             };
         },
         mounted: function () {
             const me = this;
 
             // Text editor ====================================================================================================
-            $(me.$el).find('textarea').summernote({
+            me.jTextEditor = $(me.$el).find('textarea').summernote({
                 height: 180,
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -67,7 +69,7 @@
             // END-Text editor ====================================================================================================
 
             // Color picker ====================================================================================================
-            Pickr.create({
+            me.colorPickr = Pickr.create({
                 el: '.text-page-color',
                 useAsButton: true,
                 theme: 'monolith',
@@ -90,6 +92,15 @@
                 instance.setColor($(me.$el).find('.note-editable').css('backgroundColor') || '#ffffff');
             });
             // END-Color picker ====================================================================================================
+        },
+        beforeDestroy: function () {
+            const me = this;
+
+            me.colorPickr.destroy();
+            me.colorPickr = null;
+
+            me.jTextEditor.summernote('destroy');
+            me.jTextEditor = null;
         },
         methods: {
             onClickClose: function () {

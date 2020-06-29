@@ -10,6 +10,7 @@ import AssetItem from '../common/assetItem';
 import ItemLoader from '../common/itemLoader';
 import Utils from '../../class/utils';
 import CssRenderer from '../common/cssRenderer';
+import AssetItemManager from './assetItemManager';
 
 const Promise = window.Promise;
 
@@ -52,6 +53,9 @@ export default class NemoShowroomEditor {
         me.cssRenderer.resize();
         me.cssRenderer.domElement.style.left = '0px';
         me.cssRenderer.domElement.style.top = '0px';
+
+        //--
+        me.assetItemManager = new AssetItemManager();
 
         // ---
         me.baseField = new THREE.Group();
@@ -108,14 +112,32 @@ export default class NemoShowroomEditor {
         me.options.el.appendChild(me.fieldEl);
 
         // ---
+        me.isRun = true;
+        me.start();
+    }
+
+    start() {
+        const me = this;
+
+        me.isRun = true;
+
         (function animate() {
-            requestAnimationFrame(animate);
+            if (me.isRun) {
+                requestAnimationFrame(animate);
+            }
 
             me.renderer.render(me.scene, me.camera);
+            me.assetItemManager.animationUpdate(me.clock.getDelta());
 
             me.cssRenderer.updateAll();
             me.cssRenderer.render();
         })();
+    }
+
+    stop() {
+        const me = this;
+
+        me.isRun = false;
     }
 
     /**
@@ -130,6 +152,9 @@ export default class NemoShowroomEditor {
         return me.itemLoader.load(assetItem).then(function (currentItem) {
             me.objectField.add(currentItem.object3D);
             me.cssRenderer.add(assetItem);
+            me.assetItemManager.add(assetItem);
+
+            assetItem.animationPlay();
 
             me.historyManager.push({
                 name: 'import',

@@ -1,3 +1,5 @@
+import * as THREE from 'three/build/three.module';
+
 import Utils from '../../class/utils';
 import * as StaticVariable from './staticVariable';
 
@@ -47,8 +49,6 @@ export default class AssetItem {
         this.onHide = (typeof obj.onHide === 'function') ? obj.onHide : function () {};
         this.onAnimationEnd = (typeof obj.onAnimationEnd === 'function') ? obj.onAnimationEnd : function () {};
 
-        this.parentAsset = null;
-
         this.isSprite = !!obj.isSprite;
         this.isUsed = !!obj.isUsed;
         this.isLoaded = !!obj.isLoaded;
@@ -63,7 +63,7 @@ export default class AssetItem {
     get isVisible() {
         const me = this;
 
-        return (me.object3D) ? (!!me.object3D.visible && me.parentAsset && me.parentAsset.isVisible) : false;
+        return (me.object3D) ? (me.object3D.visible) : false;
     }
 
     // 외부로 출력되는 JSON 값.

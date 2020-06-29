@@ -33,7 +33,7 @@ export const TRANSPARENT_OBJECT_NAME = 'transparentObject3D';
 /**
  * 화면에 배치하는 필드 영역의 ID.
  */
-export const ELEMENT_FIELD_ID = '';
+export const ELEMENT_FIELD_ID = 'nemo-web-showroom';
 
 /**
  * 에디터 카메라의 초기 위치.

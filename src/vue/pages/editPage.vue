@@ -2,7 +2,7 @@
     <div>
         <top-nav separate-page="Edit"></top-nav>
 
-        <model-modal class="model-modal"></model-modal>
+        <model-modal @select="onSelectModel" class="model-modal"></model-modal>
 
         <text-modal class="text-modal"></text-modal>
 
@@ -46,7 +46,6 @@
 <script>
     import * as ApiUrl from '../../class/apiUrl';
     import Utils from '../../class/utils';
-    import ObjectFile from '../../class/objectFile';
 
     import topNavVue from '../parts/topNav.vue';
     import modelModalVue from '../parts/editPage/modelModal.vue';
@@ -68,29 +67,94 @@
         data: function () {
             return {
                 disabled: false,
-                showroomEditor: null
+                showroomEditor: null,
+                isConfigEdited: false
             };
+        },
+        beforeRouteLeave: function (to, from, next) {
+            const me = this;
+
+            if (me.isConfigEdited && !confirm('변경사항이 저장되지 않을 수 있습니다.')) {
+                next(false);
+
+            } else {
+                next();
+            }
         },
         mounted: function () {
             const me = this;
+
+            me.isConfigEdited = false;
 
             me.showroomEditor = new NemoShowroomEditor({
                 el: $('.view-field').get(0),
                 mode: 'edit'
             });
 
-            $(window).on('resize', function () {
+            $(window).on('resize.edit.page', function () {
                 setTimeout(function () {
-                    const w = $('.view-field').width();
+                    const w = $(window).width() - $('.nav-field').outerWidth();
                     const h = $(window).height() - $('.navbar').outerHeight();
 
-                    $('.editor-field').css('height', h + 'px');
+                    $('.editor-field').css('width', w + 'px').css('height', h + 'px');
 
                     me.showroomEditor.resize(w, h);
                 }, 100);
-            }).trigger('resize');
+            }).trigger('resize.edit.page');
+
+            $(window).on('beforeunload.edit.page', function (jEvt) {
+                if (me.isConfigEdited) {
+                    // 반환값이 있으면 무조건 창 띄움.
+                    return true;
+                }
+            });
+        },
+        beforeDestroy: function () {
+            const me = this;
+
+            me.showroomEditor.stop();
+            me.showroomEditor = null;
+
+            $(window).off('resize.edit.page').off('beforeunload.edit.page');
         },
         methods: {
+            load2d: function (data) {
+                const me = this;
+
+                Utils.sizeFromImageUrl('./' + data.url).then(function (info) {
+                    const item = {
+                        name: data.name,
+                        type: 'image',
+                        itemUrl: data.url,
+                        width: info.width / 500,
+                        height: info.height / 500
+                    };
+
+                    me.showroomEditor.import(item).then(me.onModelItemLoad);
+                });
+            },
+            load3d: function (data) {
+                const me = this;
+
+                const item = {
+                    name: data.name,
+                    type: data.ext,
+                    itemUrl: data.url
+                };
+
+                me.showroomEditor.import(item).then(me.onModelItemLoad);
+            },
+            onModelItemLoad: function (assetItem) {
+                const me = this;
+
+                const box3 = assetItem.getBox3();
+                const scale = 1 / (box3.max.y - box3.min.y);
+
+                assetItem.object3D.scale.set(scale, scale, scale);
+                assetItem.syncMembers();
+
+                me.isConfigEdited = true;
+            },
             onClickModelModalOpen: function () {
                 $('.model-modal').modal('show');
             },
@@ -103,48 +167,23 @@
             onClickYoutubeModalOpen: function () {
                 $('.youtube-modal').modal('show');
             },
-            onClickTest: function () {
+            onSelectModel: function (dataArr) {
                 const me = this;
 
-                let item = {
-                    name: 'box',
-                    type: 'obj',
-                    itemUrl: 'data/1593153215_1778596525/box.obj'
-                };
+                const typesStr = 'jpeg, jpg, png, gif';
 
-                me.showroomEditor.import(item).then(function () {
-                    console.log('성공');
-                });
+                let data, ext;
 
-                // Utils.sizeFromImageUrl('./data/1592983949_642429268/obj뷰어01.png').then(function (info) {
-                //     const item = {
-                //         name: 'obj뷰어01',
-                //         type: 'image',
-                //         itemUrl: 'data/1592983949_642429268/obj뷰어01.png',
-                //         width: info.width / 500,
-                //         height: info.height / 500,
-                //         scale: {x: 1, y: 1, z: 1},
-                //         zeroScale: {x: 1, y: 1, z: 1}
-                //     };
+                for (let i = 0; i < dataArr.length; i++) {
+                    data = dataArr[i];
 
-                //     me.showroomEditor.import(item).then(function () {
-                //         console.log('성공');
-                //     });
-                // });
+                    if (typesStr.indexOf(data.ext) > -1) {
+                        me.load2d(data);
 
-                const content = '<div class="asset-text-item" data-type="text" style="word-wrap:break-word; overflow:hidden; background-color:#ffffff;">1234</div>';
-
-                item = {
-                    name: 'Text',
-                    type: 'html',
-                    content: content,
-                    scale: {x: 0.005, y: 0.005, z: 0.005},
-                    zeroScale: {x: 0, y: 0, z: 0}
-                };
-
-                me.showroomEditor.import(item).then(function () {
-                    console.log('성공');
-                });
+                    } else {
+                        me.load3d(data);
+                    }
+                }
             }
         }
     }
@@ -213,10 +252,6 @@
         .nav-btn-font {
             font-size: 17px;
             color: #ffffff;
-        }
-
-        .view-field {
-            width: 100%;
         }
     }
     /* END-nav ==================================================================================================== */

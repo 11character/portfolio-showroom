@@ -49,11 +49,14 @@
             };
         },
         mounted: function () {
-            $('.navbar-toggler').on('click', function () {
+            $('.navbar-toggler').on('click.top.nav', function () {
                 setTimeout(function () {
                     $(window).trigger('resize');
                 }, 250);
             });
+        },
+        beforeDestroy: function () {
+            $('.navbar-toggler').off('click.top.nav');
         }
     }
 </script>

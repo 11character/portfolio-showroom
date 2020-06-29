@@ -47,19 +47,20 @@
 
     const Promise = window.Promise;
 
+    /**
+    * template event names : select
+    */
     export default {
         data: function () {
             return {
                 disabled: false,
-                selectObjectFile: new ObjectFile(),
-                fileArr: [],
-                search: ''
+                jDataTable: null
             };
         },
         mounted: function () {
             const me = this;
 
-            $('.model-file-table').DataTable({
+            me.jDataTable = $('.model-file-table').DataTable({
                 ajax: {
                     url: ApiUrl.FILE_LIST,
                     dataSrc: 'data'
@@ -79,8 +80,9 @@
                     {className: 'column-text column-text-name', width: '60%', data: 'NAME'},
                     {className: 'column-text column-text-type', width: '20%', data: 'EXT'}
                 ]
+            });
 
-            }).on('init.dt', function () {
+            me.jDataTable.on('init.dt', function () {
                 // 스카일을 적용하기 위한 클래스 삽입.
                 // 브라우저의 개발자 모드에서 구조를 확인하면서 값을 변경.
                 const $search = $('.dataTables_filter').parent();
@@ -93,39 +95,22 @@
                 $paginate.attr('class', 'paginate-field');
 
             }).on('page.dt search.dt', function () {
-                const table = $('.model-file-table').DataTable();
-
-                table.rows().deselect();
+                $('.model-file-table').DataTable().rows().deselect();
             });
 
-            $('.import-modal').on('show.bs.modal', function () {
-                me.loadFileList();
+            $(me.$el).on('hidden.bs.modal', function () {
+                $('.model-file-table').DataTable().ajax.reload();
             });
         },
+        beforeDestroy: function () {
+            const me = this;
+
+            me.jDataTable.destroy();
+            me.jDataTable = null;
+
+            $(me.$el).off('hidden.bs.modal');
+        },
         methods: {
-            loadFileList: function () {
-                const me = this;
-
-                const param = {
-                    s: me.search
-                };
-
-                return Utils.apiRequest(ApiUrl.FILE_LIST, param).catch(function () {
-                    return Promise.resolve({data: []});
-
-                }).then(function (data) {
-                    const arr = data.data;
-                    const dataArr = [];
-
-                    for (let i = 0; i < arr.length; i++) {
-                        dataArr.push(new ObjectFile(Utils.snakeObjToCamelObj(arr[i])));
-                    }
-
-                    me.fileArr = dataArr;
-
-                    return Promise.resolve(dataArr);
-                });
-            },
             onClickClose: function () {
                 const me = this;
 
@@ -135,6 +120,15 @@
                 const me = this;
 
                 $(me.$el).modal('hide');
+
+                const rows = me.jDataTable.rows({selected: true}).data();
+                const arr = [];
+
+                for (let i = 0; i < rows.length; i++) {
+                    arr.push(new ObjectFile(Utils.snakeObjToCamelObj(rows[i])));
+                }
+
+                me.$emit('select', arr);
             }
         }
     }

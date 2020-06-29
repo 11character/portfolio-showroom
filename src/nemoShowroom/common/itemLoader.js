@@ -61,11 +61,22 @@ export default class AssetLoader {
     }
 
     __onLoad(assetItem) {
-        const object3D = assetItem.object3D;
+        const group = assetItem.object3D;
+        const lightArr = [];
 
-        // 모든 객체 양면 표시.
-        if (object3D.material) {
-            object3D.material.side = THREE.DoubleSide;
+        group.traverse(function (object3D) {
+            if (object3D.isLight) {
+                lightArr.push(object3D);
+            }
+
+            // 객체 양면 표시.
+            if (object3D.material) {
+                object3D.material.side = THREE.DoubleSide;
+            }
+        });
+
+        for(let i = 0; i < lightArr.length; i++) {
+            lightArr[i].parent.remove(lightArr[i]);
         }
 
         assetItem.isLoaded = true;
@@ -139,7 +150,7 @@ export default class AssetLoader {
     }
 
     __loadText(assetItem) {
-        const fieldEl = document.getElementById(StaticVariable.ELEMENT_FIELD_ID) || document.body;
+        const fieldEl = document.getElementById(StaticVariable.ELEMENT_FIELD_ID);
         const divEl = Utils.createDivElement();
 
         divEl.innerHTML = assetItem.content;
@@ -149,8 +160,8 @@ export default class AssetLoader {
         divEl.style.top = '100%';
         fieldEl.appendChild(divEl);
 
-        const width = divEl.children[0].offsetWidth;
-        const height = divEl.children[0].offsetHeight;
+        const width = divEl.offsetWidth;
+        const height = divEl.offsetHeight;
 
         assetItem.width = width;
         assetItem.height = height;
@@ -297,7 +308,7 @@ export default class AssetLoader {
                         assetItem.animationActions.push(action);
                     }
 
-                    // 시간이 지정 되었을 때 루프이벤트는 asset-item 에서 선언.
+                    // 시간이 지정 되었을 때 루프이벤트는 assetItem 에서 선언.
                     mixer.addEventListener('loop', function () {
                         assetItem.animationStop();
 
