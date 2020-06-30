@@ -27,11 +27,31 @@ import Vue from 'vue/dist/vue.common.prod';
 // icon
 import { library as FaLibrary } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faSyncAlt, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+    faSyncAlt,
+    faEdit,
+    faTrashAlt,
+    faClone,
+    faExchangeAlt,
+    faUndoAlt,
+    faRedoAlt,
+    faArrowsAlt,
+    faExpand,
+    faCompress
 
-FaLibrary.add(faTrashAlt);
+} from '@fortawesome/free-solid-svg-icons';
+
 FaLibrary.add(faSyncAlt);
 FaLibrary.add(faEdit);
+FaLibrary.add(faTrashAlt);
+FaLibrary.add(faClone);
+FaLibrary.add(faExchangeAlt);
+FaLibrary.add(faUndoAlt);
+FaLibrary.add(faRedoAlt);
+FaLibrary.add(faArrowsAlt);
+FaLibrary.add(faExpand);
+FaLibrary.add(faCompress);
+
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 // router

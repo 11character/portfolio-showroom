@@ -39,6 +39,10 @@
             </nav>
 
             <div class="view-field"></div>
+
+            <div class="control-field">
+                <control-panel></control-panel>
+            </div>
         </div>
     </div>
 </template>
@@ -48,6 +52,7 @@
     import Utils from '../../class/utils';
 
     import topNavVue from '../parts/topNav.vue';
+    import controlPanelVue from '../parts/editPage/controlPanel.vue';
     import modelModalVue from '../parts/editPage/modelModal.vue';
     import textModalVue from '../parts/editPage/textModal.vue';
     import webModalVue from '../parts/editPage/webModal.vue';
@@ -59,6 +64,7 @@
         props: ['id'],
         components: {
             'top-nav': topNavVue,
+            'control-panel': controlPanelVue,
             'model-modal': modelModalVue,
             'text-modal': textModalVue,
             'web-modal': webModalVue,
@@ -93,7 +99,7 @@
 
             $(window).on('resize.edit.page', function () {
                 setTimeout(function () {
-                    const w = $(window).width() - $('.nav-field').outerWidth();
+                    const w = $(window).width() - $('.nav-field').outerWidth() - $('.control-field').outerWidth();
                     const h = $(window).height() - $('.navbar').outerHeight();
 
                     $('.editor-field').css('width', w + 'px').css('height', h + 'px');
@@ -190,13 +196,14 @@
 </script>
 
 <style lang="scss" scoped>
-    /* nav ==================================================================================================== */
-    $nav-field-w: 120;
 
     .editor-field {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
+
+        /* nav ==================================================================================================== */
+        $nav-field-w: 120;
 
         .nav-field {
             min-width: $nav-field-w + px;
@@ -253,6 +260,19 @@
             font-size: 17px;
             color: #ffffff;
         }
+        /* END-nav ==================================================================================================== */
+
+
+        /* control ==================================================================================================== */
+        $control-field-w: 220;
+
+        .control-field {
+            min-width: $control-field-w + px;
+            height: 100%;
+            background-color: #343a40 ;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        /* END-control ==================================================================================================== */
     }
-    /* END-nav ==================================================================================================== */
 </style>
