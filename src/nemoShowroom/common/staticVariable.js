@@ -46,6 +46,11 @@ export const CAMERA_ZERO_POSITION = new THREE.Vector3(0, 4, 10);
 export const CAMERA_ZERO_LOOK_AT = new THREE.Vector3(0, 0, 0);
 
 /**
+ * 에디터 카메라의 초기 확대비율.
+ */
+export const CAMERA_ZERO_ZOOM = 1;
+
+/**
  * 화면을 위 아래로 이동할 때의 최소 각도. (위쪽이 0도)
  */
 export const CONTROLS_MIN_POLAR_ANGLE = 0;
@@ -130,3 +135,28 @@ export const ITEM_POPUP_BACKGROUND_CLASS_NAME = 'nemo-item-popup-background';
  * 아이템 팝업 클래스명.
  */
 export const ITEM_POPUP_CLASS_NAME = 'nemo-item-popup';
+
+/**
+ * 이동 모드명.
+ */
+export const CONTROLS_TF_MODE_POSITION = 'translate';
+
+/**
+ * 회전 모드명.
+ */
+export const CONTROLS_TF_MODE_ROTATION = 'rotate';
+
+/**
+ * 크기 모드명.
+ */
+export const CONTROLS_TF_MODE_SCALE = 'scale';
+
+/**
+ * 조작 기준 영역 - 전역.
+ */
+export const CONTROLS_TF_SPACE_W = 'world';
+
+/**
+ * 바탕색.
+ */
+export const STYLE_BACKGROUND_COLOR = '#DDDDDD';
