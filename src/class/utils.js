@@ -113,4 +113,12 @@ export default class Utils {
 
         return el;
     }
+
+    static r2d(r = 0) {
+        return (180 / Math.PI) * r;
+    }
+
+    static d2r(d = 0) {
+        return (Math.PI / 180) * d;
+    }
 }

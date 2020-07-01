@@ -41,7 +41,7 @@
             <div class="view-field"></div>
 
             <div class="control-field">
-                <control-panel></control-panel>
+                <control-panel v-bind:editor="showroomEditor"></control-panel>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
     import webModalVue from '../parts/editPage/webModal.vue';
     import youtubeModalVue from '../parts/editPage/youtubeModal.vue';
 
-    import NemoShowroomEditor from '../../NemoShowroom/nemoShowroomEditor/nemoShowroomEditor';
+    import NemoShowroomEditor from '../../nemoShowroom/nemoShowroomEditor/nemoShowroomEditor';
 
     export default {
         props: ['id'],
@@ -73,7 +73,7 @@
         data: function () {
             return {
                 disabled: false,
-                showroomEditor: null,
+                showroomEditor: new NemoShowroomEditor(),
                 isConfigEdited: false
             };
         },
@@ -90,12 +90,9 @@
         mounted: function () {
             const me = this;
 
-            me.isConfigEdited = false;
-
-            me.showroomEditor = new NemoShowroomEditor({
-                el: $('.view-field').get(0),
-                mode: 'edit'
-            });
+            // 에디터 객체는 mounted 실행시 초기화 하여 자식 컴포넌트에 넘겨주려고 하면 오류가 발생한다.
+            // data 초기화 후에 에디터의 위치를 이동하는 식으로 처리한다.
+            $('.view-field').get(0).appendChild(me.showroomEditor.rootEl);
 
             $(window).on('resize.edit.page', function () {
                 setTimeout(function () {
@@ -106,7 +103,7 @@
 
                     me.showroomEditor.resize(w, h);
                 }, 100);
-            }).trigger('resize.edit.page');
+            });
 
             $(window).on('beforeunload.edit.page', function (jEvt) {
                 if (me.isConfigEdited) {
@@ -114,6 +111,11 @@
                     return true;
                 }
             });
+
+            // 에디터의 위치가 변경되기를 기다렸다가 처리.
+            setTimeout(function () {
+                $(window).trigger('resize.edit.page');
+            }, 100);
         },
         beforeDestroy: function () {
             const me = this;

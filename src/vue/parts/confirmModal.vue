@@ -19,7 +19,7 @@
     import $ from 'jquery';
 
     /**
-     * template event names : confirm
+     * template event : confirm
      */
     export default {
         props: {

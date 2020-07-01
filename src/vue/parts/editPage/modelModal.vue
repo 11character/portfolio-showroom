@@ -48,7 +48,7 @@
     const Promise = window.Promise;
 
     /**
-    * template event names : select
+    * template event : select
     */
     export default {
         data: function () {

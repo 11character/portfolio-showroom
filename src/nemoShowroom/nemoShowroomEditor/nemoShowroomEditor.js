@@ -28,13 +28,14 @@ export default class NemoShowroomEditor {
         me.itemLoader = new ItemLoader();
 
         // ---
-        me.fieldEl = Utils.createDivElement();
+        me.rootEl = Utils.createDivElement();
 
         // ---
         me.scene = new THREE.Scene();
 
         // ---
-        me.light = new THREE.AmbientLight();
+        me.light = new THREE.DirectionalLight();
+        me.light.position.set(1, 1, 1);
 
         // ---
         me.camera = new THREE.PerspectiveCamera(45, winW / winH, StaticVariable.CAMERA_NEAR, StaticVariable.CAMERA_FAR);
@@ -100,17 +101,17 @@ export default class NemoShowroomEditor {
         me.scene.add(me.gridObject3D);
 
         // ---
-        me.fieldEl.classList.add(StaticVariable.ELEMENT_FIELD_CLASS_NAME);
-        me.fieldEl.id = StaticVariable.ELEMENT_FIELD_ID;
-        me.fieldEl.style.width = me.options.width + 'px';
-        me.fieldEl.style.height = me.options.height + 'px';
-        me.fieldEl.style.overflow = 'hidden';
-        me.fieldEl.style.position = 'relative';
+        me.rootEl.classList.add(StaticVariable.ELEMENT_FIELD_CLASS_NAME);
+        me.rootEl.id = StaticVariable.ELEMENT_FIELD_ID;
+        me.rootEl.style.width = me.options.width + 'px';
+        me.rootEl.style.height = me.options.height + 'px';
+        me.rootEl.style.overflow = 'hidden';
+        me.rootEl.style.position = 'relative';
 
         // ---
-        me.fieldEl.appendChild(me.cssRenderer.domElement);
-        me.fieldEl.appendChild(me.renderer.domElement);
-        me.options.el.appendChild(me.fieldEl);
+        me.rootEl.appendChild(me.cssRenderer.domElement);
+        me.rootEl.appendChild(me.renderer.domElement);
+        me.options.el.appendChild(me.rootEl);
 
         // ---
         me.isRun = true;
@@ -149,7 +150,7 @@ export default class NemoShowroomEditor {
     showBackground(colorCode = StaticVariable.STYLE_BACKGROUND_COLOR) {
         const me = this;
 
-        me.fieldEl.style.backgroundColor = colorCode;
+        me.rootEl.style.backgroundColor = colorCode;
     }
 
     /**
@@ -158,7 +159,7 @@ export default class NemoShowroomEditor {
     hideBackground() {
         const me = this;
 
-        me.fieldEl.style.backgroundColor = '';
+        me.rootEl.style.backgroundColor = '';
     }
 
     /**
@@ -400,16 +401,6 @@ export default class NemoShowroomEditor {
             me.detach();
 
             me.removeById(id);
-
-            me.historyManager.push({
-                name: 'remove',
-                redo: function () {
-                    me.removeById(id);
-                },
-                undo: function () {
-                    me.recoverFromId(id);
-                }
-            });
         }
     }
 
@@ -454,6 +445,41 @@ export default class NemoShowroomEditor {
         const me = this;
 
         return me.assetItemManager.getItemByName(name);
+    }
+
+    /**
+     * 2D 객체 sprite 전환, 해제
+     */
+    switchingSpriteMode () {
+        const me = this;
+
+        const prevItem = me.selectedItem;
+        const type = 'html,image,youtube';
+
+        if (prevItem && type.indexOf(prevItem.type) >= 0) {
+            const cloneItem = prevItem.clone();
+
+            cloneItem.rotation.x = 0;
+            cloneItem.rotation.y = 0;
+            cloneItem.rotation.z = 0;
+            cloneItem.isSprite = !cloneItem.isSprite;
+
+            me.import(cloneItem).then(function () {
+                me.remove();
+
+                const historyManager = me.historyManager;
+                const undoHistory = historyManager.getHistory();
+                const redoHistory = historyManager.getHistory(historyManager.cursor - 1);
+
+                undoHistory.onUndo = function () {
+                    historyManager.undo();
+                };
+
+                redoHistory.onRedo = function () {
+                    historyManager.redo();
+                };
+            });
+        }
     }
 
     /**
@@ -685,8 +711,8 @@ export default class NemoShowroomEditor {
     resize(width = 800, height = 600) {
         const me = this;
 
-        me.fieldEl.style.width = width + 'px';
-        me.fieldEl.style.height = height + 'px';
+        me.rootEl.style.width = width + 'px';
+        me.rootEl.style.height = height + 'px';
 
         me.renderer.setSize(width, height);
 
