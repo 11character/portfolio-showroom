@@ -25,7 +25,7 @@
                         <span>취소</span>
                     </div>
 
-                    <div @click="onClickClose" class="modal-footer-btn">
+                    <div @click="onClickOk" class="modal-footer-btn">
                         <span>확인</span>
                     </div>
                 </div>
@@ -44,6 +44,9 @@
     import Pickr from '@simonwep/pickr';
     import '@simonwep/pickr/dist/themes/monolith.min.css';
 
+    /**
+    * template event : apply
+    */
     export default {
         data: function () {
             return {
@@ -92,6 +95,10 @@
                 instance.setColor($(me.$el).find('.note-editable').css('backgroundColor') || '#ffffff');
             });
             // END-Color picker ====================================================================================================
+            
+            $(me.$el).on('hidden.bs.modal', function () {
+                me.jTextEditor.summernote('code', '');
+            });
         },
         beforeDestroy: function () {
             const me = this;
@@ -110,6 +117,13 @@
             },
             onClickOk: function () {
                 const me = this;
+
+                const data = {
+                    html: me.jTextEditor.summernote('code'),
+                    backgroundColor: $(me.$el).find('.note-editable').css('backgroundColor')
+                };
+
+                me.$emit('apply', data);
 
                 $(me.$el).modal('hide');
             }

@@ -2,13 +2,13 @@
     <div>
         <top-nav separate-page="Edit"></top-nav>
 
-        <model-modal @select="onSelectModel" class="model-modal"></model-modal>
+        <model-modal @apply="onApplyModel" class="model-modal"></model-modal>
 
-        <text-modal class="text-modal"></text-modal>
+        <text-modal @apply="onApplyText" class="text-modal"></text-modal>
 
-        <web-modal class="web-modal"></web-modal>
+        <web-modal @apply="onApplyWeb" class="web-modal"></web-modal>
 
-        <youtube-modal class="youtube-modal"></youtube-modal>
+        <youtube-modal @apply="onApplyYouTube" class="youtube-modal"></youtube-modal>
 
         <div class="editor-field">
             <nav class="nav-field">
@@ -31,17 +31,12 @@
                     <img :src="'./img/icon-youtube.png'" class="nav-btn-img nav-btn-img-youtube">
                     <div class="nav-btn-font">YouTube</div>
                 </div>
-
-                <div  @click="onClickTest" class="nav-btn" data-toggle="modal">
-                    <img :src="'./img/icon-youtube.png'" class="nav-btn-img nav-btn-img-youtube">
-                    <div class="nav-btn-font">TEST</div>
-                </div>
             </nav>
 
             <div class="view-field"></div>
 
             <div class="control-field">
-                <control-panel v-bind:editor="showroomEditor"></control-panel>
+                <control-panel @control="onControl" v-bind:editor="showroomEditor"></control-panel>
             </div>
         </div>
     </div>
@@ -73,8 +68,12 @@
         data: function () {
             return {
                 disabled: false,
-                showroomEditor: new NemoShowroomEditor(),
-                isConfigEdited: false
+                isConfigEdited: false,
+                isTextEdit: false,
+                showroomEditor: new NemoShowroomEditor({
+                    width: 100,
+                    height: 100
+                })
             };
         },
         beforeRouteLeave: function (to, from, next) {
@@ -175,7 +174,15 @@
             onClickYoutubeModalOpen: function () {
                 $('.youtube-modal').modal('show');
             },
-            onSelectModel: function (dataArr) {
+            onControl: function (type) {
+                const me = this;
+
+                if (type == 'textEdit') {
+                    me.isTextEdit = true;
+                    me.onClickTextModalOpen();
+                }
+            },
+            onApplyModel: function (dataArr) {
                 const me = this;
 
                 const typesStr = 'jpeg, jpg, png, gif';
@@ -191,6 +198,99 @@
                     } else {
                         me.load3d(data);
                     }
+                }
+            },
+            onApplyText: function (data) {
+                const me = this;
+
+                const html = data.html;
+                const backgroundColor = data.backgroundColor;
+                const scale = 0.005;
+
+                // 텍스트 에디터에서 출력값 마지막 라인 아래에 여백이 없도록 처리.
+                const content = '<div class="asset-text-item" data-type="text" style="word-wrap:break-word; overflow:hidden; background-color:' + backgroundColor + ';">' + html + '</div>';
+
+                const item = {
+                    name: 'Text',
+                    type: 'html',
+                    content: content,
+                    scale: {x: scale, y: scale, z: scale},
+                    zeroScale: {x: scale, y: scale, z: scale}
+                };
+
+                const prevItem = me.showroomEditor.selectedItem;
+
+                if (me.isTextEdit && prevItem) {
+                    item.isSprite = prevItem.isSprite;
+                }
+
+                me.showroomEditor.import(item).then(function (assetItem) {
+                    me.isConfigEdited = true;
+
+                    if (me.isTextEdit && prevItem) {
+                        me.showroomEditor.attach(prevItem);
+                        me.showroomEditor.remove();
+
+                        const prevScale = prevItem.object3D.scale;
+                        const prevPostion = prevItem.object3D.position;
+                        const prevRotation = prevItem.object3D.rotation;
+
+                        assetItem.object3D.scale.copy(prevScale);
+                        assetItem.object3D.position.copy(prevPostion);
+                        assetItem.object3D.rotation.copy(prevRotation);
+                        assetItem.syncMembers();
+
+                        const historyManager = me.showroomEditor.historyManager;
+                        const undoHistory = historyManager.getHistory();
+                        const redoHistory = historyManager.getHistory(historyManager.cursor - 1);
+
+                        undoHistory.onUndo = function () {
+                            historyManager.undo();
+                        };
+
+                        redoHistory.onRedo = function () {
+                            historyManager.redo();
+                        };
+                    }
+                });
+            },
+            onApplyWeb: function (url) {
+                const me = this;
+
+                const scale = 0.001;
+                const apiUrl = './api/page-item.php?url=' + url;
+
+                const item = {
+                    name: 'Web Page',
+                    type: 'html',
+                    content: '<iframe data-type="webpage" frameBorder="0" style="border 0 none;background-color:#FFFFFF;width:1920px;height:1080px;overflow:hidden;" scrolling="no" src="' + apiUrl + '"></iframe>',
+                    width: 1920,
+                    height: 1080,
+                    scale: {x: scale, y: scale, z: scale},
+                    zeroScale: {x: scale, y: scale, z: scale}
+                };
+
+                me.showroomEditor.import(item).then(function () {
+                    me.isConfigEdited = true;
+                });
+            },
+            onApplyYouTube: function (url) {
+                const me = this;
+
+                const scale = 0.001;
+
+                if (url) {
+                    const item = {
+                        nwme: 'YouTube',
+                        type: 'youtube',
+                        content: url,
+                        scale: {x: scale, y: scale, z: scale},
+                        zeroScale: {x: scale, y: scale, z: scale}
+                    };
+    
+                    me.showroomEditor.import(item).then(function () {
+                        me.isConfigEdited = true;
+                    });
                 }
             }
         }
@@ -277,4 +377,26 @@
         }
         /* END-control ==================================================================================================== */
     }
+</style>
+
+<style lang="scss">
+    /* 화면에 표시되는 asset-text-item 스타일 통일 */
+        .asset-text-item {
+            padding-left: 0.25rem !important;
+
+            padding-right: 0.25rem !important;
+
+            & > * {
+                margin-bottom: 0px !important;
+            }
+        }
+
+        .note-editable {
+            -webkit-user-select: initial;
+            user-select: initial;
+
+            & > * {
+                margin-bottom: 0px !important;
+            }
+        }
 </style>

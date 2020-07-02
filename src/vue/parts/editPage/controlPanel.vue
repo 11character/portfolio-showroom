@@ -43,9 +43,9 @@
                 </div>
             </div>
 
-            <div v-if="(assetItem.type == 'html' && $(assetItem.content).data('type') == 'text')" class="item-row">
+            <div v-if="(contentType == 'text')" class="item-row">
                 <div class="item-control">
-                    <button type="button" class="item-control-btn" tabindex="-1">
+                    <button @click="onClickTextEdit" type="button" class="item-control-btn" tabindex="-1">
                         <font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon>&nbsp;Edit
                     </button>
                 </div>
@@ -166,6 +166,7 @@ import Utils from '../../../class/utils';
             const me = this;
 
             return {
+                contentType: '',
                 assetItem: new AssetItem(),
                 scalePercent: 0,
                 positionX: 0,
@@ -197,6 +198,12 @@ import Utils from '../../../class/utils';
         methods: {
             setItemData: function (assetItem) {
                 const me = this;
+
+                me.contentType = assetItem.type;
+
+                if (me.contentType == 'html') {
+                    me.contentType = $(assetItem.content).data('type') || 'html';
+                }
 
                 me.scalePercent = parseFloat((assetItem.scale.x / assetItem.zeroScale.x * 100).toFixed(3));
                 me.positionX = parseFloat(assetItem.position.x.toFixed(3));
@@ -254,6 +261,11 @@ import Utils from '../../../class/utils';
                         me.$emit('change');
                     });
                 }
+            },
+            onClickTextEdit: function () {
+                const me = this;
+
+                me.$emit('control', 'textEdit');
             },
             onClickSwitchingSprite: function () {
                 const me = this;
@@ -505,25 +517,4 @@ import Utils from '../../../class/utils';
         }
     }
     /* END-item menu ==================================================================================================== */
-
-    /* asset-text-item ====================================================================================================*/
-    .note-editable {
-        -webkit-user-select: initial;
-        user-select: initial;
-
-        & > * {
-            margin-bottom: 0px !important;
-        }
-    }
-
-    .asset-text-item {
-        padding-left: 0.25rem !important;
-
-        padding-right: 0.25rem !important;
-
-        & > * {
-            margin-bottom: 0px !important;
-        }
-    }
-    /* END-asset-text-item ====================================================================================================*/
 </style>

@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="row w-100">
                         <div class="col-12">
-                            <input type="text" class="modal-input col-12">
+                            <input v-model.trim="content" type="text" class="modal-input col-12">
                         </div>
                     </div>
                 </div>
@@ -34,14 +34,22 @@
     import * as ApiUrl from '../../../class/apiUrl';
     import Utils from '../../../class/utils';
 
+    /**
+     * template event : apply
+     */
     export default {
         data: function () {
             return {
-                disabled: false
+                disabled: false,
+                content: ''
             };
         },
         mounted: function () {
             const me = this;
+
+            $(me.$el).on('hidden.bs.modal', function () {
+                me.content = '';
+            });
         },
         methods: {
             onClickClose: function () {
@@ -51,6 +59,8 @@
             },
             onClickOk: function () {
                 const me = this;
+
+                me.$emit('apply', me.content);
 
                 $(me.$el).modal('hide');
             }

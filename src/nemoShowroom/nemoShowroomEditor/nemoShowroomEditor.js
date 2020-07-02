@@ -21,8 +21,8 @@ export default class NemoShowroomEditor {
 
         me.options = new Options(obj);
 
-        const winW = me.options.el.offsetWidth;
-        const winH = me.options.el.offsetHeight;
+        const winW = me.options.width;
+        const winH = me.options.height;
 
         // ---
         me.itemLoader = new ItemLoader();
@@ -103,8 +103,8 @@ export default class NemoShowroomEditor {
         // ---
         me.rootEl.classList.add(StaticVariable.ELEMENT_FIELD_CLASS_NAME);
         me.rootEl.id = StaticVariable.ELEMENT_FIELD_ID;
-        me.rootEl.style.width = me.options.width + 'px';
-        me.rootEl.style.height = me.options.height + 'px';
+        me.rootEl.style.width = winW + 'px';
+        me.rootEl.style.height = winH + 'px';
         me.rootEl.style.overflow = 'hidden';
         me.rootEl.style.position = 'relative';
 

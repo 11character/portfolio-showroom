@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="row w-100">
                         <div class="col-12">
-                            <input type="text" class="modal-input col-12" value="https://">
+                            <input v-model.trim="content" type="text" class="modal-input col-12">
                         </div>
                     </div>
                 </div>
@@ -34,14 +34,22 @@
     import * as ApiUrl from '../../../class/apiUrl';
     import Utils from '../../../class/utils';
 
+    /**
+     * template event : apply
+     */
     export default {
         data: function () {
             return {
-                disabled: false
+                disabled: false,
+                content: 'https://'
             };
         },
         mounted: function () {
             const me = this;
+
+            $(me.$el).on('hidden.bs.modal', function () {
+                me.content = 'https://';
+            });
         },
         methods: {
             onClickClose: function () {
@@ -52,7 +60,14 @@
             onClickOk: function () {
                 const me = this;
 
-                $(me.$el).modal('hide');
+                if (me.content.indexOf('https://') != 0) {
+                    alert('경로는 "https://"로 시작해야 합니다.');
+
+                } else {
+                    me.$emit('apply', me.content);
+
+                    $(me.$el).modal('hide');
+                }
             }
         }
     }

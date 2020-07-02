@@ -73,11 +73,11 @@ export default class CssUnit {
 
     showCssObject3D() {
         const me = this;
-        me.__cssObject3D.children[0].element.style.display = '';
+        me.__cssObject3D.children[0].element.style.visibility = '';
     }
 
     hideCssObject3D() {
         const me = this;
-        me.__cssObject3D.children[0].element.style.display = 'none';
+        me.__cssObject3D.children[0].element.style.visibility = 'hidden';
     }
 }

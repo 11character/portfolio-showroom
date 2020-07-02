@@ -15,7 +15,7 @@
 
             $zip_mime = 'application/zip application/octet-stream application/x-zip-compressed multipart/x-zip';
 
-            if (strpos($zip_mime, $mimetype)) {
+            if (strpos($zip_mime, $mimetype) !== false) {
                 $dir_name = time() . '_' . rand();
                 $dir_path = $UPLOAD_DIR . '/' . $dir_name;
                 $file_name = $file['name'];
@@ -53,7 +53,7 @@
                         $path_info = pathinfo($path);
                         $file_extension = strtolower($path_info['extension']);
 
-                        if (strpos('jpg jpeg png gif fbx stl obj', $file_extension)) {
+                        if (strpos('jpg jpeg png gif fbx stl obj', $file_extension) !== false) {
                             $has_file = true;
                             $name = $path_info['filename'];
                             $ext = $file_extension;
@@ -85,6 +85,9 @@
 
                         $pdo->prepare($sql_insert_tb_upload_file)->execute($value);
                         $data['message'] = 'success';
+
+                    } else {
+                        $data['code'] = 99;
                     }
                 }
             }

@@ -48,7 +48,7 @@
     const Promise = window.Promise;
 
     /**
-    * template event : select
+    * template event : apply
     */
     export default {
         data: function () {
@@ -119,8 +119,6 @@
             onClickOk: function () {
                 const me = this;
 
-                $(me.$el).modal('hide');
-
                 const rows = me.jDataTable.rows({selected: true}).data();
                 const arr = [];
 
@@ -128,7 +126,9 @@
                     arr.push(new ObjectFile(Utils.snakeObjToCamelObj(rows[i])));
                 }
 
-                me.$emit('select', arr);
+                me.$emit('apply', arr);
+
+                $(me.$el).modal('hide');
             }
         }
     }
