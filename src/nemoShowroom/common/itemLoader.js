@@ -65,7 +65,7 @@ export default class AssetLoader {
         const lightArr = [];
 
         group.traverse(function (object3D) {
-            if (object3D.isLight) {
+            if (assetItem.type != StaticVariable.ITEM_TYPE_SPOT_LIGHT && object3D.isLight) {
                 lightArr.push(object3D);
             }
 
@@ -137,6 +137,9 @@ export default class AssetLoader {
             case StaticVariable.ITEM_TYPE_TEXT:
                 return me.__loadText(assetItem).then(onLoad).catch(onError);
 
+            case StaticVariable.ITEM_TYPE_SPOT_LIGHT:
+                return me.__loadSpotLight(assetItem).then(onLoad).catch(onError);
+
             default:
                 console.error('type not found');
                 return onError();
@@ -147,6 +150,39 @@ export default class AssetLoader {
         for (let i = 0; i < object3D.children.length; i++) {
             object3D.remove(object3D.children[i]);
         }
+    }
+
+    __loadSpotLight(assetItem) {
+        const me = this;
+
+        return new Promise(function (resolve, reject) {
+            try {
+                const spotLight = new THREE.SpotLight( 0xffffff );
+                const group = new THREE.Group();
+
+                spotLight.position.set(0, 0.5, 0);
+                spotLight.target.position.set(0, -4.5, 0);
+                spotLight.angle = Utils.d2r(45);
+
+                group.add(spotLight);
+                group.add(spotLight.target);
+
+                const geometry = new THREE.ConeGeometry(1, 1, 32);
+                const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
+                const cone = new THREE.Mesh(geometry, material);
+
+                cone.material.depthTest = false;
+                cone.material.transparent = true;
+                cone.material.opacity = 0.7;
+
+                group.add(cone);
+
+                resolve(group);
+
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 
     __loadText(assetItem) {
@@ -174,7 +210,7 @@ export default class AssetLoader {
 
         }).then(function (canvas) {
             const g = new THREE.PlaneGeometry(width, height);
-            const m = new THREE.MeshBasicMaterial({
+            const m = new THREE.MeshPhongMaterial({
                 transparent: true,
                 map: new THREE.CanvasTexture(canvas),
                 side: THREE.DoubleSide
@@ -208,7 +244,7 @@ export default class AssetLoader {
 
                 } else {
                     const g = new THREE.PlaneGeometry(assetItem.width, assetItem.height);
-                    const m = new THREE.MeshBasicMaterial({
+                    const m = new THREE.MeshPhongMaterial({
                         transparent: true,
                         map: texture,
                         side: THREE.DoubleSide

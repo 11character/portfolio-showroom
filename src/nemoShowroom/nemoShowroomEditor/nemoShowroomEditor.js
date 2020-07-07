@@ -5,13 +5,14 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import * as StaticVariable from '../common/staticVariable';
 import Raycaster from '../common/raycaster';
 import Options from './options';
-import HistoryManager from './history-manager';
+import HistoryManager from './historyManager';
 import AssetItem from '../common/assetItem';
 import ItemLoader from '../common/itemLoader';
 import Utils from '../../class/utils';
 import CssRenderer from '../common/cssRenderer';
 import AssetItemManager from './assetItemManager';
 import TransformHistory from './transformHistory';
+import { grep } from 'jquery';
 
 const Promise = window.Promise;
 
@@ -29,6 +30,7 @@ export default class NemoShowroomEditor {
 
         // ---
         me.rootEl = Utils.createDivElement();
+        me.rootEl.style.backgroundColor = StaticVariable.STYLE_BACKGROUND_COLOR;
 
         // ---
         me.scene = new THREE.Scene();
@@ -91,6 +93,12 @@ export default class NemoShowroomEditor {
 
         // ---
         me.gridObject3D = new THREE.GridHelper( StaticVariable.GRID_SIZE, StaticVariable.GRID_DIVISIONS, StaticVariable.GRID_COLOR, StaticVariable.GRID_COLOR );
+        me.gridObject3D.position.setY(0.055);
+
+        // ---
+        const geoFloor = new THREE.BoxBufferGeometry(2000, 0.1, 2000);
+        const matStdFloor = new THREE.MeshPhongMaterial({color: StaticVariable.FLOOR_COLOR});
+        me.baseFloor = new THREE.Mesh(geoFloor, matStdFloor);
 
         // ---
         me.scene.add(me.camera);
@@ -99,6 +107,7 @@ export default class NemoShowroomEditor {
         me.scene.add(me.objectField);
         me.scene.add(me.tfControls);
         me.scene.add(me.gridObject3D);
+        me.scene.add(me.baseFloor);
 
         // ---
         me.rootEl.classList.add(StaticVariable.ELEMENT_FIELD_CLASS_NAME);
@@ -123,6 +132,32 @@ export default class NemoShowroomEditor {
         //--
         me.start();
         me.__initEvent();
+    }
+
+    /**
+     * 스포트 라이트를 추가한다.
+     */
+    addSpotLight() {
+        const me = this;
+
+        const assetItem = new AssetItem({type: StaticVariable.ITEM_TYPE_SPOT_LIGHT});
+
+        return me.itemLoader.load(assetItem).then(function (currentItem) {
+            me.objectField.add(currentItem.object3D);
+            me.assetItemManager.add(currentItem);
+
+            me.historyManager.push({
+                name: 'addSpotLight',
+                redo: function () {
+                    me.recoverArray([currentItem]);
+                },
+                undo: function () {
+                    me.removeArray([currentItem]);
+                }
+            });
+
+            return Promise.resolve(currentItem);
+        });
     }
 
     /**
@@ -301,6 +336,71 @@ export default class NemoShowroomEditor {
     }
 
     /**
+     * json을 읽어 저장된 값을 불러온다.
+     * @param {String} json
+     */
+    openJson(json) {
+        const me = this;
+
+        const arr = JSON.parse(json);
+        const hasPrveOpen = me.objectField.children.length;
+
+        if (arr.length) {
+            // 이전에 그려진 대상이 있으면 전부 지운다.
+            if (hasPrveOpen) {
+                me.removeAll();
+
+                // 지움 작업을 했던 히스토리를 가지고 온다.
+                const removeHistoryInfo = me.historyManager.getHistory();
+
+                // 대상을 지웠던 작업 전, 후의 작업을 연속으로 호출하도록 세팅한다.
+                removeHistoryInfo.onRedo = function () {
+                    me.historyManager.redo();
+                };
+            }
+
+            const promiseArr = [];
+
+            let assetItem;
+
+            for (let i = 0; i < arr.length; i++) {
+                assetItem = new AssetItem(arr[i]);
+
+                promiseArr.push(me.itemLoader.load(assetItem));
+            }
+
+            Promise.all(promiseArr).then(function (itemArr) {
+                let assetItem;
+
+                for (let i = 0; i < itemArr.length; i++) {
+                    assetItem = itemArr[i];
+
+                    me.objectField.add(assetItem.object3D);
+                    me.cssRenderer.add(assetItem);
+                    me.assetItemManager.add(assetItem);
+
+                    assetItem.animationPlay();
+                }
+
+                me.historyManager.push({
+                    name: 'open',
+                    redo: function () {
+                        me.recoverArray(itemArr);
+                    },
+                    undo: function () {
+                        me.removeArray(itemArr);
+                    },
+                    onUndo: function () {
+                        if (hasPrveOpen) {
+                            me.historyManager.undo();
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    /**
      * 화면에 3D객체를 추가한다.
      * @param {AssetItem || object} obj 화면에 표시할 3D객체 정보.
      */
@@ -311,10 +411,10 @@ export default class NemoShowroomEditor {
 
         return me.itemLoader.load(assetItem).then(function (currentItem) {
             me.objectField.add(currentItem.object3D);
-            me.cssRenderer.add(assetItem);
-            me.assetItemManager.add(assetItem);
+            me.cssRenderer.add(currentItem);
+            me.assetItemManager.add(currentItem);
 
-            assetItem.animationPlay();
+            currentItem.animationPlay();
 
             me.historyManager.push({
                 name: 'import',
@@ -328,6 +428,15 @@ export default class NemoShowroomEditor {
 
             return Promise.resolve(currentItem);
         });
+    }
+
+    /**
+     * 에디터에 표시된 내용을 JSON형태로 출력한다.
+     */
+    exportJson() {
+        const me = this;
+
+        return JSON.stringify(me.assetItemManager.getItemArray());
     }
 
     /**

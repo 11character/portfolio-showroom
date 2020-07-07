@@ -12,6 +12,10 @@
 
         <div class="editor-field">
             <nav class="nav-field">
+                <div @click="onClickSave" class="nav-btn nav-btn-sm">
+                    <div class="nav-btn-font">SAVE</div>
+                </div>
+
                 <div @click="onClickModelModalOpen" class="nav-btn" data-toggle="modal">
                     <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
                     <div class="nav-btn-font">Model</div>
@@ -31,6 +35,11 @@
                     <img :src="'./img/icon-youtube.png'" class="nav-btn-img nav-btn-img-youtube">
                     <div class="nav-btn-font">YouTube</div>
                 </div>
+
+                <div @click="onClickLight" class="nav-btn" data-toggle="modal">
+                    <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
+                    <div class="nav-btn-font">Light</div>
+                </div>
             </nav>
 
             <div class="view-field"></div>
@@ -45,6 +54,7 @@
 <script>
     import * as ApiUrl from '../../class/apiUrl';
     import Utils from '../../class/utils';
+    import Showroom from '../../class/showroom';
 
     import topNavVue from '../parts/topNav.vue';
     import controlPanelVue from '../parts/editPage/controlPanel.vue';
@@ -70,6 +80,7 @@
                 disabled: false,
                 isConfigEdited: false,
                 isTextEdit: false,
+                showroom: new Showroom(),
                 showroomEditor: new NemoShowroomEditor({
                     width: 100,
                     height: 100
@@ -79,7 +90,7 @@
         beforeRouteLeave: function (to, from, next) {
             const me = this;
 
-            if (me.isConfigEdited && !confirm('변경사항이 저장되지 않을 수 있습니다.')) {
+            if (me.isConfigEdited && !confirm('변경사항이 저장되지 않을 수 있습니다.\n나가시겠습니까?')) {
                 next(false);
 
             } else {
@@ -106,7 +117,7 @@
 
             $(window).on('beforeunload.edit.page', function (jEvt) {
                 if (me.isConfigEdited) {
-                    // 반환값이 있으면 무조건 창 띄움.
+                    // 반환값이 있으면 무조건 페이지 이동을 경고.
                     return true;
                 }
             });
@@ -115,6 +126,11 @@
             setTimeout(function () {
                 $(window).trigger('resize.edit.page');
             }, 100);
+
+            // 크기가 변경된 이후에 처리.
+            setTimeout(function () {
+                me.openData();
+            }, 200);
         },
         beforeDestroy: function () {
             const me = this;
@@ -125,42 +141,24 @@
             $(window).off('resize.edit.page').off('beforeunload.edit.page');
         },
         methods: {
-            load2d: function (data) {
+            openData: function () {
                 const me = this;
 
-                Utils.sizeFromImageUrl('./' + data.url).then(function (info) {
-                    const item = {
-                        name: data.name,
-                        type: 'image',
-                        itemUrl: data.url,
-                        width: info.width / 500,
-                        height: info.height / 500
-                    };
+                Utils.apiRequest(ApiUrl.SHOWROOM_DATA, {seqId: me.id}).then(function (data) {
+                    if (data.data.length > 0) {
+                        me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
 
-                    me.showroomEditor.import(item).then(me.onModelItemLoad);
+                        me.showroomEditor.openJson(me.showroom.data || '[]');
+
+                    } else {
+                        alert('해당 정보가 없습니다.');
+                    }
                 });
             },
-            load3d: function (data) {
+            onClickLight: function () {
                 const me = this;
 
-                const item = {
-                    name: data.name,
-                    type: data.ext,
-                    itemUrl: data.url
-                };
-
-                me.showroomEditor.import(item).then(me.onModelItemLoad);
-            },
-            onModelItemLoad: function (assetItem) {
-                const me = this;
-
-                const box3 = assetItem.getBox3();
-                const scale = 1 / (box3.max.y - box3.min.y);
-
-                assetItem.object3D.scale.set(scale, scale, scale);
-                assetItem.syncMembers();
-
-                me.isConfigEdited = true;
+                me.showroomEditor.addSpotLight();
             },
             onClickModelModalOpen: function () {
                 $('.model-modal').modal('show');
@@ -181,6 +179,47 @@
                     me.isTextEdit = true;
                     me.onClickTextModalOpen();
                 }
+
+                me.isConfigEdited = true;
+            },
+            load2d: function (data) {
+                const me = this;
+
+                Utils.sizeFromImageUrl('./' + data.url).then(function (info) {
+                    const item = {
+                        name: data.name,
+                        type: 'image',
+                        itemUrl: data.url,
+                        width: info.width / 500,
+                        height: info.height / 500,
+                        position: {x: 0, y: 1, z: 0}
+                    };
+
+                    me.showroomEditor.import(item).then(me.onModelItemLoad);
+                });
+            },
+            load3d: function (data) {
+                const me = this;
+
+                const item = {
+                    name: data.name,
+                    type: data.ext,
+                    itemUrl: data.url,
+                    position: {x: 0, y: 1, z: 0}
+                };
+
+                me.showroomEditor.import(item).then(me.onModelItemLoad);
+            },
+            onModelItemLoad: function (assetItem) {
+                const me = this;
+
+                const box3 = assetItem.getBox3();
+                const scale = 1 / (box3.max.y - box3.min.y);
+
+                assetItem.object3D.scale.set(scale, scale, scale);
+                assetItem.syncMembers();
+
+                me.isConfigEdited = true;
             },
             onApplyModel: function (dataArr) {
                 const me = this;
@@ -215,7 +254,8 @@
                     type: 'html',
                     content: content,
                     scale: {x: scale, y: scale, z: scale},
-                    zeroScale: {x: scale, y: scale, z: scale}
+                    zeroScale: {x: scale, y: scale, z: scale},
+                    position: {x: 0, y: 1, z: 0}
                 };
 
                 const prevItem = me.showroomEditor.selectedItem;
@@ -267,7 +307,8 @@
                     width: 1920,
                     height: 1080,
                     scale: {x: scale, y: scale, z: scale},
-                    zeroScale: {x: scale, y: scale, z: scale}
+                    zeroScale: {x: scale, y: scale, z: scale},
+                    position: {x: 0, y: 1, z: 0}
                 };
 
                 me.showroomEditor.import(item).then(function () {
@@ -285,32 +326,53 @@
                         type: 'youtube',
                         content: url,
                         scale: {x: scale, y: scale, z: scale},
-                        zeroScale: {x: scale, y: scale, z: scale}
+                        zeroScale: {x: scale, y: scale, z: scale},
+                        position: {x: 0, y: 1, z: 0}
                     };
-    
+
                     me.showroomEditor.import(item).then(function () {
                         me.isConfigEdited = true;
                     });
                 }
+            },
+            onClickSave: function () {
+                const me = this;
+
+                me.showroom.data = me.showroomEditor.exportJson();
+
+                Utils.apiRequest(ApiUrl.SHOWROOM_UPDATE, me.showroom, 'post').then(function () {
+                    me.isConfigEdited = false;
+
+                    alert('저장에 성공했습니다.');
+
+                }).catch(function () {
+                    alert('저장에 실패했습니다.');
+                });
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-
     .editor-field {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
 
+        -ms-user-select: none;
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+
         /* nav ==================================================================================================== */
         $nav-field-w: 120;
 
         .nav-field {
+            border-top: solid 1px #8c8c8c;
             min-width: $nav-field-w + px;
             height: 100%;
-            background-color: #343a40 ;
+            background-color: #343a40;
             overflow-x: hidden;
             overflow-y: auto;
         }
@@ -320,6 +382,16 @@
             height: $nav-field-w + px;
             border-bottom: solid 1px #8c8c8c;
             text-align: center;
+            cursor: pointer;
+        }
+
+        .nav-btn-sm {
+            width: $nav-field-w + px;
+            height: ($nav-field-w / 3) + px;
+            border-bottom: solid 1px #8c8c8c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
         }
 

@@ -92,10 +92,13 @@
                 $(me.$el).find('.note-editable').css('backgroundColor', color.toHEXA());
 
             }).on('show', function (instance) {
-                instance.setColor($(me.$el).find('.note-editable').css('backgroundColor') || '#ffffff');
+                const color = '#ffffff';
+
+                $(me.$el).find('.note-editable').css('backgroundColor', color);
+                instance.setColor(color);
             });
             // END-Color picker ====================================================================================================
-            
+
             $(me.$el).on('hidden.bs.modal', function () {
                 me.jTextEditor.summernote('code', '');
             });
@@ -120,7 +123,7 @@
 
                 const data = {
                     html: me.jTextEditor.summernote('code'),
-                    backgroundColor: $(me.$el).find('.note-editable').css('backgroundColor')
+                    backgroundColor: me.colorPickr.getColor().toHEXA()
                 };
 
                 me.$emit('apply', data);

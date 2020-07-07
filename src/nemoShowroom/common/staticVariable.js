@@ -63,7 +63,12 @@ export const CONTROLS_MAX_POLAR_ANGLE = Math.PI;
 /**
  * 그리드 색.
  */
-export const GRID_COLOR = new THREE.Color(0xb8b8b8);
+export const GRID_COLOR = new THREE.Color(0xffffff);
+
+/**
+ * 바닥 색.
+ */
+export const FLOOR_COLOR = new THREE.Color(0x808080);
 
 /**
  * 그리드 사이즈.
@@ -86,6 +91,7 @@ export const ITEM_TYPE_HTML = 'html';
 export const ITEM_TYPE_YOUTUBE = 'youtube';
 export const ITEM_TYPE_IMAGE = 'image';
 export const ITEM_TYPE_TEXT = 'text';
+export const ITEM_TYPE_SPOT_LIGHT = 'spotLight';
 
 /**
  * 대상 복제시 리로드 할 타입.
@@ -159,4 +165,4 @@ export const CONTROLS_TF_SPACE_W = 'world';
 /**
  * 바탕색.
  */
-export const STYLE_BACKGROUND_COLOR = '#DDDDDD';
+export const STYLE_BACKGROUND_COLOR = '#000000';

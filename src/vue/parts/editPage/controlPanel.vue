@@ -84,21 +84,21 @@
                 <div class="item-control">
                     <div class="item-label">X</div>
                     <button @click="onPosition(-1, 0, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="x">-</button>
-                    <input v-model.number="positionX" @click="onPosition(0, 0, 0)" type="number" class="item-value item-position-x-value" value="0.000">
+                    <input v-model.number="positionX" @change="onPosition(0, 0, 0)" type="number" class="item-value item-position-x-value" value="0.000">
                     <button @click="onPosition(1, 0, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="x">＋</button>
                 </div>
 
                 <div class="item-control">
                     <div class="item-label">Y</div>
                     <button @click="onPosition(0, -1, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="y">-</button>
-                    <input v-model.number="positionY" @click="onPosition(0, 0, 0)" type="number" class="item-value item-position-y-value" value="0.000">
+                    <input v-model.number="positionY" @change="onPosition(0, 0, 0)" type="number" class="item-value item-position-y-value" value="0.000">
                     <button @click="onPosition(0, 1, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="y">＋</button>
                 </div>
 
                 <div class="item-control">
                     <div class=" item-label">Z</div>
                     <button @click="onPosition(0, 0, -1)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="z">-</button>
-                    <input v-model.number="positionZ" @click="onPosition(0, 0, 0)" type="number" class="item-value item-position-z-value" value="0.000">
+                    <input v-model.number="positionZ" @change="onPosition(0, 0, 0)" type="number" class="item-value item-position-z-value" value="0.000">
                     <button @click="onPosition(0, 0, 1)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="z">＋</button>
                 </div>
             </div>
@@ -158,7 +158,7 @@
 import Utils from '../../../class/utils';
 
     /**
-     * template event : change
+     * template event : control
      */
     export default {
         props: ['editor'],
@@ -219,31 +219,31 @@ import Utils from '../../../class/utils';
                 const me = this;
 
                 me.editor.undo();
-                me.$emit('change');
+                me.$emit('control', 'undo');
             },
             onClickRedo: function () {
                 const me = this;
 
                 me.editor.redo();
-                me.$emit('change');
+                me.$emit('control', 'redo');
             },
             onClickMode: function (mode) {
                 const me = this;
 
                 me.editor.modeChange(mode);
-                me.$emit('change');
+                me.$emit('control', mode);
             },
             onClickAllScaleUp: function () {
                 const me = this;
 
                 me.editor.multiplyScaleAll(1.1, 1.1, 1.1);
-                me.$emit('change');
+                me.$emit('control', 'scaleUp');
             },
             onClickAllScaleDown: function () {
                 const me = this;
 
                 me.editor.multiplyScaleAll(0.9, 0.9, 0.9);
-                me.$emit('change');
+                me.$emit('control', 'scaleDown');
             },
             onClickCopy: function () {
                 const me = this;
@@ -258,7 +258,7 @@ import Utils from '../../../class/utils';
 
                     me.editor.import(assetItem).then(function (item) {
                         me.editor.attach(item);
-                        me.$emit('change');
+                        me.$emit('control', 'copy');
                     });
                 }
             },
@@ -271,23 +271,27 @@ import Utils from '../../../class/utils';
                 const me = this;
 
                 me.editor.switchingSpriteMode();
-                me.$emit('change');
+                me.$emit('control', 'switchingSprite');
             },
             onChangeAnimationTime: function () {
                 const me = this;
 
                 me.editor.setAnimationTime(0, me.animationEndTime || 0, true);
+
+                me.$emit('control', 'animationTime');
             },
             onChangeLink: function () {
                 const me = this;
 
                 me.editor.setLink(me.link);
+
+                me.$emit('control', 'link');
             },
             onClickRemove: function () {
                 const me = this;
 
                 me.editor.remove();
-                me.$emit('change');
+                me.$emit('control', 'remove');
             },
             onScale: function (gap) {
                 const me = this;
@@ -310,6 +314,8 @@ import Utils from '../../../class/utils';
                         const scale = assetItem.zeroScale.x * (percent / 100);
 
                         me.editor.setScale(scale, scale, scale);
+
+                        me.$emit('control', 'scale');
                     }
                 }
             },
@@ -341,6 +347,8 @@ import Utils from '../../../class/utils';
                     }
 
                     me.editor.setPosition(x, y, z);
+
+                    me.$emit('control', 'position');
                 }
             },
             onRotation: function (gapX, gapY, gapZ) {
@@ -371,6 +379,8 @@ import Utils from '../../../class/utils';
                     }
 
                     me.editor.setRotation(Utils.d2r(x), Utils.d2r(y), Utils.d2r(z));
+
+                    me.$emit('control', 'rotation');
                 }
             }
         }

@@ -30,6 +30,16 @@ WHERE
 ORDER BY C_DATE DESC
 EOD;
 
+// 전시장 정보 조회.
+$sql_select_tb_showroom_from_id = <<<EOD
+SELECT
+    *
+FROM
+    TB_SHOWROOM
+WHERE
+    SEQ_ID = :SEQ_ID
+EOD;
+
 // 전시장 생성.
 $sql_insert_tb_showroom = <<<EOD
 INSERT INTO TB_SHOWROOM
@@ -42,6 +52,18 @@ VALUES
     :NAME,
     :MEMO
 )
+EOD;
+
+// 전시장 업데이트
+$sql_update_tb_showroom = <<<EOD
+UPDATE
+    TB_SHOWROOM
+SET
+    NAME = :NAME,
+    MEMO = :MEMO,
+    DATA = :DATA
+WHERE
+    SEQ_ID = :SEQ_ID
 EOD;
 
 // 전시장 삭제.
