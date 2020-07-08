@@ -62,12 +62,14 @@ Vue.use(VueRouter);
 const homePageVue = () => import('./vue/pages/homePage.vue');
 const filePageVue = () => import('./vue/pages/filePage.vue');
 const editPageVue = () => import('./vue/pages/editPage.vue');
+const viewPageVue = () => import('./vue/pages/viewPage.vue');
 
 const router = new VueRouter({
     routes: [
         {path: '/', name: 'home', component: homePageVue, props: false},
         {path: '/file', name: 'file', component: filePageVue, props: false},
-        {path: '/edit/:id', name: 'edit', component: editPageVue, props: true}
+        {path: '/edit/:id', name: 'edit', component: editPageVue, props: true},
+        {path: '/view/:id', name: 'view', component: viewPageVue, props: true}
     ]
 });
 

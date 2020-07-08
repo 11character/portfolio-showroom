@@ -81,7 +81,7 @@
 
                                 <td>
                                     <div class="pt-1 text-truncate">
-                                        <a href="./">{{ showroom.name }}</a>
+                                        <router-link :to="{name: 'view', params: {id: showroom.seqId}}">{{ showroom.name }}</router-link>
                                     </div>
                                 </td>
 
