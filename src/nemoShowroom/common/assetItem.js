@@ -15,6 +15,13 @@ class Xyz {
     }
 }
 
+class StandardMaterialSetting {
+    constructor (obj = {}) {
+        this.metalness = (typeof obj.metalness == 'number') ? obj.metalness : 0.5;
+        this.roughness = (typeof obj.roughness == 'number') ? obj.roughness : 1;
+    }
+}
+
 export default class AssetItem {
     constructor (obj = {}) {
         this.id = Utils.randomString();
@@ -52,6 +59,9 @@ export default class AssetItem {
         this.isSprite = !!obj.isSprite;
         this.isUsed = !!obj.isUsed;
         this.isLoaded = !!obj.isLoaded;
+        this.isStdMtl = !!obj.isStdMtl;
+
+        this.standardMaterialSetting = new StandardMaterialSetting(obj.standardMaterialSetting);
     }
 
     get isAnimation() {
@@ -91,8 +101,28 @@ export default class AssetItem {
             animationEndTime: me.animationEndTime,
             animationLoop: me.animationLoop,
 
-            isSprite: me.isSprite
+            isSprite: me.isSprite,
+
+            standardMaterialSetting: me.standardMaterialSetting
         };
+    }
+
+    setStdMtlOptions(obj = {}) {
+        const me = this;
+
+        if (me.isStdMtl) {
+            me.standardMaterialSetting = new StandardMaterialSetting(obj);
+
+            me.object3D.traverse(function (object3D) {
+                object3D.traverse(function (obj) {
+                    if (obj.isMesh && obj.material && obj.material.type == 'MeshStandardMaterial' ) {
+                        for (let key in me.standardMaterialSetting) {
+                            obj.material[key] = me.standardMaterialSetting[key];
+                        }
+                    }
+                });
+            });
+        }
     }
 
     getBox3() {

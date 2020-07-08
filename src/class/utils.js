@@ -121,4 +121,8 @@ export default class Utils {
     static d2r(d = 0) {
         return (Math.PI / 180) * d;
     }
+
+    static dirPath(url) {
+        return url.substring(0, url.lastIndexOf('/'));
+    }
 }

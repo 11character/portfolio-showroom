@@ -73,7 +73,7 @@
                 <div class="item-label">Scale ( &percnt; )</div>
                 <div class="item-control">
                     <button @click="onScale(-10)" type="button" class="incr-decr-btn decr-btn" tabindex="-1">-</button>
-                    <input v-model.number="scalePercent" @change="onScale(0)" type="number" class="item-value item-scale-value" value="100.000">
+                    <input v-model.number="scalePercent" @change="onScale(0)" type="number" class="item-value" value="100.000">
                     <button @click="onScale(10)" type="button" class="incr-decr-btn incr-btn" tabindex="-1">＋</button>
                 </div>
             </div>
@@ -84,21 +84,21 @@
                 <div class="item-control">
                     <div class="item-label">X</div>
                     <button @click="onPosition(-1, 0, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="x">-</button>
-                    <input v-model.number="positionX" @change="onPosition(0, 0, 0)" type="number" class="item-value item-position-x-value" value="0.000">
+                    <input v-model.number="positionX" @change="onPosition(0, 0, 0)" type="number" class="item-value" value="0.000">
                     <button @click="onPosition(1, 0, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="x">＋</button>
                 </div>
 
                 <div class="item-control">
                     <div class="item-label">Y</div>
                     <button @click="onPosition(0, -1, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="y">-</button>
-                    <input v-model.number="positionY" @change="onPosition(0, 0, 0)" type="number" class="item-value item-position-y-value" value="0.000">
+                    <input v-model.number="positionY" @change="onPosition(0, 0, 0)" type="number" class="item-value" value="0.000">
                     <button @click="onPosition(0, 1, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="y">＋</button>
                 </div>
 
                 <div class="item-control">
                     <div class=" item-label">Z</div>
                     <button @click="onPosition(0, 0, -1)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="z">-</button>
-                    <input v-model.number="positionZ" @change="onPosition(0, 0, 0)" type="number" class="item-value item-position-z-value" value="0.000">
+                    <input v-model.number="positionZ" @change="onPosition(0, 0, 0)" type="number" class="item-value" value="0.000">
                     <button @click="onPosition(0, 0, 1)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="z">＋</button>
                 </div>
             </div>
@@ -109,21 +109,21 @@
                 <div class="item-control">
                     <div class="item-label">X</div>
                     <button @click="onRotation(-1, 0, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="x">-</button>
-                    <input v-model.number="rotationX" @change="onRotation(0, 0, 0)" type="number" class="item-value item-rotation-x-value" value="0.000">
+                    <input v-model.number="rotationX" @change="onRotation(0, 0, 0)" type="number" class="item-value" value="0.000">
                     <button @click="onRotation(1, 0, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="x">＋</button>
                 </div>
 
                 <div class="item-control">
                     <div class="item-label">Y</div>
                     <button @click="onRotation(0, -1, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="y">-</button>
-                    <input v-model.number="rotationY" @change="onRotation(0, 0, 0)" type="number" class="item-value item-rotation-y-value" value="0.000">
+                    <input v-model.number="rotationY" @change="onRotation(0, 0, 0)" type="number" class="item-value" value="0.000">
                     <button @click="onRotation(0, 1, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="y">＋</button>
                 </div>
 
                 <div class="item-control">
                     <div class=" item-label">Z</div>
                     <button @click="onRotation(0, 0, -1)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="z">-</button>
-                    <input v-model.number="rotationZ" @change="onRotation(0, 0, 0)" type="number" class="item-value item-rotation-z-value" value="0.000">
+                    <input v-model.number="rotationZ" @change="onRotation(0, 0, 0)" type="number" class="item-value" value="0.000">
                     <button @click="onRotation(0, 0, 1)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="z">＋</button>
                 </div>
             </div>
@@ -135,7 +135,7 @@
                 </div>
             </div>
 
-            <div v-if="assetItem.type != 'youtube'" class="item-link item-row">
+            <div v-if="assetItem.type != 'youtube' && assetItem.type != 'spotLight'" class="item-link item-row">
                 <div class="item-label">Link</div>
                 <div class="item-control">
                     <input v-model.trim="link" @change="onChangeLink" type="text" class="item-value">
@@ -147,6 +147,20 @@
                     <button @click="onClickRemove" type="button" class="item-control-btn" tabindex="-1">
                         <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>&nbsp;Remove
                     </button>
+                </div>
+            </div>
+
+            <div  v-if="assetItem.isStdMtl" class="item-material item-row">
+                <div class="item-label">Material</div>
+
+                <div class="item-control">
+                    <div class="item-label">Metalness</div>
+                    <input v-model.number="metalness" @change="onChangeMtl" type="number" class="item-value">
+                </div>
+
+                <div class="item-control">
+                    <div class="item-label">roughness</div>
+                    <input v-model.number="roughness" @change="onChangeMtl" type="number" class="item-value">
                 </div>
             </div>
         </div>
@@ -176,6 +190,8 @@ import Utils from '../../../class/utils';
                 rotationY: 0,
                 rotationZ: 0,
                 animationEndTime: 0,
+                metalness: 0.5,
+                roughness: 1,
                 link: ''
             };
         },
@@ -214,6 +230,8 @@ import Utils from '../../../class/utils';
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
+                me.metalness = assetItem.standardMaterialSetting.metalness;
+                me.roughness = assetItem.standardMaterialSetting.roughness;
             },
             onClickUndo: function () {
                 const me = this;
@@ -382,6 +400,20 @@ import Utils from '../../../class/utils';
 
                     me.$emit('control', 'rotation');
                 }
+            },
+            onChangeMtl: function () {
+                const me = this;
+
+                const assetItem = me.editor.selectedItem;
+
+                console.log(assetItem)
+
+                if (assetItem) {
+                    assetItem.setStdMtlOptions({
+                        metalness: me.metalness,
+                        roughness: me.roughness
+                    });
+                }
             }
         }
     }
@@ -513,6 +545,19 @@ import Utils from '../../../class/utils';
                 .item-value {
                     width: 176px;
                     text-align: center;
+                }
+            }
+        }
+
+        .item-material {
+            .item-control {
+                .item-label {
+                    width: 90px;
+                    margin-right: 10px;
+                }
+
+                .item-value {
+                    width: 50px;
                 }
             }
         }

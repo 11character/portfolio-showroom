@@ -61,12 +61,18 @@ export default class AssetLoader {
     }
 
     __onLoad(assetItem) {
+        const me = this;
+
         const group = assetItem.object3D;
-        const lightArr = [];
+        const removeChildArr = [];
 
         group.traverse(function (object3D) {
             if (assetItem.type != StaticVariable.ITEM_TYPE_SPOT_LIGHT && object3D.isLight) {
-                lightArr.push(object3D);
+                removeChildArr.push(object3D);
+            }
+
+            if (object3D.isCamera) {
+                removeChildArr.push(object3D);
             }
 
             // 객체 양면 표시.
@@ -75,30 +81,24 @@ export default class AssetLoader {
             }
         });
 
-        for(let i = 0; i < lightArr.length; i++) {
-            lightArr[i].parent.remove(lightArr[i]);
+        for(let i = 0; i < removeChildArr.length; i++) {
+            removeChildArr[i].parent.remove(removeChildArr[i]);
         }
 
         assetItem.isLoaded = true;
 
-        return Promise.resolve(assetItem);
+        // standardMaterial을 사용하는 객체를 셋팅한다.
+        return me.__setStdMtl(assetItem);
     }
 
     __loadItem(assetItem) {
         const me = this;
 
-        const onLoad = function (object3D) {
+        const onLoadComplete = function (object3D) {
             const itemGroup = assetItem.object3D;
             const scale = assetItem.scale;
             const position = assetItem.position;
             const rotation = assetItem.rotation;
-
-            itemGroup.traverse(function (object3D) {
-                if (object3D.material) {
-                    object3D.userData[StaticVariable.ORG_TRANSPARENT_NAME] = object3D.material.transparent;
-                    object3D.userData[StaticVariable.ORG_OPACITY_NAME] = object3D.material.opacity;
-                }
-            });
 
             itemGroup.scale.set(scale.x, scale.y, scale.z);
             itemGroup.position.set(position.x, position.y, position.z);
@@ -109,7 +109,7 @@ export default class AssetLoader {
             return Promise.resolve(assetItem);
         };
 
-        const onError = function () {
+        const onLoadError = function () {
             assetItem.object3D.add(new THREE.Object3D());
 
             return Promise.resolve(assetItem);
@@ -117,32 +117,32 @@ export default class AssetLoader {
 
         switch (assetItem.type) {
             case StaticVariable.ITEM_TYPE_3D_OBJ:
-                return me.__loadObjMtl(assetItem).then(onLoad).catch(onError);
+                return me.__loadObjMtl(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_3D_STL:
-                return me.__loadSTL(assetItem).then(onLoad).catch(onError);
+                return me.__loadSTL(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_3D_FBX:
-                return me.__loadFBX(assetItem).then(onLoad).catch(onError);
+                return me.__loadFBX(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_IMAGE:
-                return me.__loadImage(assetItem).then(onLoad).catch(onError);
+                return me.__loadImage(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_HTML:
-                return me.__loadHTML(assetItem).then(onLoad).catch(onError);
+                return me.__loadHTML(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_YOUTUBE:
-                return me.__loadYoutube(assetItem).then(onLoad).catch(onError);
+                return me.__loadYoutube(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_TEXT:
-                return me.__loadText(assetItem).then(onLoad).catch(onError);
+                return me.__loadText(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_SPOT_LIGHT:
-                return me.__loadSpotLight(assetItem).then(onLoad).catch(onError);
+                return me.__loadSpotLight(assetItem).then(onLoadComplete).catch(onLoadError);
 
             default:
                 console.error('type not found');
-                return onError();
+                return onLoadError();
         }
     }
 
@@ -168,12 +168,8 @@ export default class AssetLoader {
                 group.add(spotLight.target);
 
                 const geometry = new THREE.ConeGeometry(1, 1, 32);
-                const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: true});
+                const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
                 const cone = new THREE.Mesh(geometry, material);
-
-                cone.material.depthTest = false;
-                cone.material.transparent = true;
-                cone.material.opacity = 0.7;
 
                 group.add(cone);
 
@@ -454,6 +450,45 @@ export default class AssetLoader {
                     reject(error);
                 }
             });
+        });
+    }
+
+    __setStdMtl(assetItem) {
+        const promise = new Promise(function (resolve, reject) {
+            try {
+                const object3D = assetItem.object3D;
+
+                object3D.traverse(function (obj) {
+                    if (obj.isMesh && obj.material && obj.material.type == 'MeshStandardMaterial' ) {
+                        assetItem.isStdMtl = true;
+
+                        const dir = Utils.dirPath(assetItem.itemUrl) + '/map';
+                        const colorMap = new THREE.TextureLoader().load(dir + '/color.png');
+                        const normalMap = new THREE.TextureLoader().load(dir + '/normal.png');
+                        const roughnessMap = new THREE.TextureLoader().load(dir + '/roughness.png');
+                        const metalnessMap = new THREE.TextureLoader().load(dir + '/metallic.png');
+
+                        obj.material.map = colorMap;
+                        obj.material.normalMap = normalMap;
+                        obj.material.roughnessMap = roughnessMap;
+                        obj.material.metalnessMap = metalnessMap;
+
+                        obj.material.roughness = assetItem.standardMaterialSetting.roughness;
+                        obj.material.metalness = assetItem.standardMaterialSetting.metalness;
+                    }
+                });
+
+                resolve(assetItem);
+
+            } catch (error) {
+                console.error(error);
+                reject(assetItem);
+            }
+
+        });
+
+        return promise.catch(function (object3D) {
+            return Promise.resolve(object3D);
         });
     }
 }
