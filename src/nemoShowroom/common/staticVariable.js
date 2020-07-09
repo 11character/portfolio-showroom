@@ -166,3 +166,8 @@ export const CONTROLS_TF_SPACE_W = 'world';
  * 바탕색.
  */
 export const STYLE_BACKGROUND_COLOR = '#000000';
+
+/**
+ * PBR 대상이 되는 타입.
+ */
+export const PBR_TYPES = [ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_OBJ].join(' ');

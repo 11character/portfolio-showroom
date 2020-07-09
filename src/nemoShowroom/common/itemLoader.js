@@ -87,8 +87,8 @@ export default class AssetLoader {
 
         assetItem.isLoaded = true;
 
-        // standardMaterial을 사용하는 객체를 셋팅한다.
-        return me.__setStdMtl(assetItem);
+        // PBR을 사용하는 객체를 셋팅한다.
+        return me.__setMtl(assetItem);
     }
 
     __loadItem(assetItem) {
@@ -453,42 +453,97 @@ export default class AssetLoader {
         });
     }
 
-    __setStdMtl(assetItem) {
-        const promise = new Promise(function (resolve, reject) {
-            try {
-                const object3D = assetItem.object3D;
+    __setMtl(assetItem) {
+        const me = this;
 
-                object3D.traverse(function (obj) {
-                    if (obj.isMesh && obj.material && obj.material.type == 'MeshStandardMaterial' ) {
-                        assetItem.isStdMtl = true;
+        const object3D = assetItem.object3D;
+        const pbrTypes = StaticVariable.PBR_TYPES;
+        const mapDir = Utils.dirPath(assetItem.itemUrl) + '/map';
+        const promiseArr = [];
 
-                        const dir = Utils.dirPath(assetItem.itemUrl) + '/map';
-                        const colorMap = new THREE.TextureLoader().load(dir + '/color.png');
-                        const normalMap = new THREE.TextureLoader().load(dir + '/normal.png');
-                        const roughnessMap = new THREE.TextureLoader().load(dir + '/roughness.png');
-                        const metalnessMap = new THREE.TextureLoader().load(dir + '/metallic.png');
+        if (pbrTypes.indexOf(assetItem.type) > -1) {
+            object3D.traverse(function (obj) {
+                // PBR 사용 설정.
+                if (obj.isMesh && obj.material && obj.material.type == 'MeshStandardMaterial') {
+                    assetItem.isPbrMtl = true;
 
-                        obj.material.map = colorMap;
-                        obj.material.normalMap = normalMap;
-                        obj.material.roughnessMap = roughnessMap;
-                        obj.material.metalnessMap = metalnessMap;
+                    obj.material.roughness = assetItem.mtlSetting.roughness;
+                    obj.material.metalness = assetItem.mtlSetting.metalness;
 
-                        obj.material.roughness = assetItem.standardMaterialSetting.roughness;
-                        obj.material.metalness = assetItem.standardMaterialSetting.metalness;
-                    }
-                });
+                    promiseArr.push(me.__loadTexture(mapDir + '/color.png').then(function (texture) {
+                        obj.material.map = texture;
+                    }));
 
-                resolve(assetItem);
+                    promiseArr.push(me.__loadTexture(mapDir + '/normal.png').then(function (texture) {
+                        obj.material.normalMap = texture;
+                    }));
 
-            } catch (error) {
-                console.error(error);
-                reject(assetItem);
-            }
+                    promiseArr.push(me.__loadTexture(mapDir + '/roughness.png').then(function (texture) {
+                        obj.material.roughnessMap = texture;
+                    }));
 
+                    promiseArr.push(me.__loadTexture(mapDir + '/metallic.png').then(function (texture) {
+                        obj.material.metalnessMap = texture;
+                    }));
+                }
+
+                // 환경맵 사용 설정.
+                if (obj.isMesh && obj.material && obj.material.type == 'MeshPhongMaterial') {
+                    promiseArr.push(me.__loadTexture(mapDir + '/color.png').then(function (texture) {
+                        obj.material.map = texture;
+                    }));
+
+                    promiseArr.push(me.__loadTexture(mapDir + '/normal.png').then(function (texture) {
+                        obj.material.normalMap = texture;
+                    }));
+
+                    promiseArr.push(me.__loadCubeTexture(Utils.dirPath(assetItem.itemUrl) + '/cube_texture').then(function (cubeTexture) {
+                        obj.material.emissive = new THREE.Color(0xffffff);
+                        obj.material.envMap = cubeTexture;
+                    }));
+                }
+            });
+        }
+
+        return Promise.all(promiseArr).catch(function () {
+            return Promise.resolve();
+
+        }).then(function () {
+            return Promise.resolve(assetItem);
         });
+    }
 
-        return promise.catch(function (object3D) {
-            return Promise.resolve(object3D);
+    __loadTexture(url) {
+        return new Promise(function (resolve) {
+            const loader = new THREE.TextureLoader();
+
+            loader.load(url, function (texture) {
+                resolve(texture);
+
+            }, undefined, function () {
+                resolve(null);
+            });
+        });
+    }
+
+    __loadCubeTexture(url) {
+        return new Promise(function (resolve) {
+            const loader = new THREE.CubeTextureLoader();
+
+            const cubeImgArr = [
+                'px.png', 'nx.png',
+                'py.png', 'ny.png',
+                'pz.png', 'nz.png'
+            ];
+
+            loader.setPath(url + '/');
+
+            loader.load(cubeImgArr, function (cubeTexture) {
+                resolve(cubeTexture);
+
+            }, undefined, function () {
+                resolve(null);
+            });
         });
     }
 }

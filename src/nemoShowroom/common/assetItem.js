@@ -15,7 +15,7 @@ class Xyz {
     }
 }
 
-class StandardMaterialSetting {
+class MtlSetting {
     constructor (obj = {}) {
         this.metalness = (typeof obj.metalness == 'number') ? obj.metalness : 0.5;
         this.roughness = (typeof obj.roughness == 'number') ? obj.roughness : 1;
@@ -59,9 +59,9 @@ export default class AssetItem {
         this.isSprite = !!obj.isSprite;
         this.isUsed = !!obj.isUsed;
         this.isLoaded = !!obj.isLoaded;
-        this.isStdMtl = !!obj.isStdMtl;
+        this.isPbrMtl = !!obj.isPbrMtl;
 
-        this.standardMaterialSetting = new StandardMaterialSetting(obj.standardMaterialSetting);
+        this.mtlSetting = new MtlSetting(obj.mtlSetting);
     }
 
     get isAnimation() {
@@ -103,24 +103,22 @@ export default class AssetItem {
 
             isSprite: me.isSprite,
 
-            standardMaterialSetting: me.standardMaterialSetting
+            mtlSetting: me.mtlSetting
         };
     }
 
-    setStdMtlOptions(obj = {}) {
+    setMtlOptions(obj = {}) {
         const me = this;
 
-        if (me.isStdMtl) {
-            me.standardMaterialSetting = new StandardMaterialSetting(obj);
+        if (me.isPbrMtl) {
+            me.mtlSetting = new MtlSetting(obj);
 
-            me.object3D.traverse(function (object3D) {
-                object3D.traverse(function (obj) {
-                    if (obj.isMesh && obj.material && obj.material.type == 'MeshStandardMaterial' ) {
-                        for (let key in me.standardMaterialSetting) {
-                            obj.material[key] = me.standardMaterialSetting[key];
-                        }
+            me.object3D.traverse(function (obj) {
+                if (obj.isMesh && obj.material) {
+                    for (let key in me.mtlSetting) {
+                        obj.material[key] = me.mtlSetting[key];
                     }
-                });
+                }
             });
         }
     }

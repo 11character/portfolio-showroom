@@ -150,7 +150,7 @@
                 </div>
             </div>
 
-            <div  v-if="assetItem.isStdMtl" class="item-material item-row">
+            <div  v-if="assetItem.isPbrMtl" class="item-material item-row">
                 <div class="item-label">Material</div>
 
                 <div class="item-control">
@@ -237,8 +237,8 @@
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
-                me.metalness = assetItem.standardMaterialSetting.metalness;
-                me.roughness = assetItem.standardMaterialSetting.roughness;
+                me.metalness = assetItem.mtlSetting.metalness;
+                me.roughness = assetItem.mtlSetting.roughness;
             },
             onClickUndo: function () {
                 const me = this;
@@ -414,7 +414,7 @@
                 const assetItem = me.editor.selectedItem;
 
                 if (assetItem) {
-                    assetItem.setStdMtlOptions({
+                    assetItem.setMtlOptions({
                         metalness: me.metalness,
                         roughness: me.roughness
                     });
