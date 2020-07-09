@@ -155,12 +155,14 @@
 
                 <div class="item-control">
                     <div class="item-label">Metalness</div>
-                    <input v-model.number="metalness" @change="onChangeMtl" type="number" class="item-value">
+                    <div class="item-value">{{ metalness }}</div>
+                    <slider v-model.number="metalness" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
                 </div>
 
                 <div class="item-control">
-                    <div class="item-label">roughness</div>
-                    <input v-model.number="roughness" @change="onChangeMtl" type="number" class="item-value">
+                    <div class="item-label">Roughness</div>
+                    <div class="item-value">{{ roughness }}</div>
+                    <slider v-model.number="roughness" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
                 </div>
             </div>
         </div>
@@ -169,13 +171,18 @@
 
 <script>
     import AssetItem from '../../../nemoShowroom/common/assetItem';
-import Utils from '../../../class/utils';
+    import Utils from '../../../class/utils';
+
+    import sliderVue from '../slider.vue';
 
     /**
      * template event : control
      */
     export default {
         props: ['editor'],
+        components: {
+            'slider': sliderVue
+        },
         data: function () {
             const me = this;
 
@@ -401,12 +408,10 @@ import Utils from '../../../class/utils';
                     me.$emit('control', 'rotation');
                 }
             },
-            onChangeMtl: function () {
+            onSlideMtl: function () {
                 const me = this;
 
                 const assetItem = me.editor.selectedItem;
-
-                console.log(assetItem)
 
                 if (assetItem) {
                     assetItem.setStdMtlOptions({
@@ -551,6 +556,8 @@ import Utils from '../../../class/utils';
 
         .item-material {
             .item-control {
+                flex-wrap: wrap;
+
                 .item-label {
                     width: 90px;
                     margin-right: 10px;
@@ -558,6 +565,10 @@ import Utils from '../../../class/utils';
 
                 .item-value {
                     width: 50px;
+                    background-color: #5d5d5d;
+                    border: solid 1px #5d5d5d;
+                    color: #bdbdbd;
+                    text-align: center;
                 }
             }
         }
