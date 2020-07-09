@@ -498,7 +498,7 @@ export default class AssetLoader {
                     }));
 
                     promiseArr.push(me.__loadCubeTexture(Utils.dirPath(assetItem.itemUrl) + '/cube_texture').then(function (cubeTexture) {
-                        obj.material.emissive = new THREE.Color(0xffffff);
+                        obj.material.emissive = new THREE.Color(0x808080);
                         obj.material.envMap = cubeTexture;
                     }));
                 }
