@@ -15,8 +15,8 @@
                                 <table class="model-file-table table table-striped" style="width: 100%;">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>Name</th>
+                                            <th>Memo</th>
                                             <th>Type</th>
                                         </tr>
                                     </thead>
@@ -65,6 +65,7 @@
                     url: ApiUrl.FILE_LIST,
                     dataSrc: 'data'
                 },
+                order: [],
                 autoWidth: false,
                 lengthChange: false,
                 info: false,
@@ -74,11 +75,9 @@
                     items: 'row'
                 },
                 columns: [
-                    {className: 'column-text column-text-user', width: '20%', data: 'TYPE_CODE', render: function (data) {
-                        return data == 0 ? '벽' : '물건';
-                    }},
-                    {className: 'column-text column-text-name', width: '60%', data: 'NAME'},
-                    {className: 'column-text column-text-type', width: '20%', data: 'EXT'}
+                    {className: 'column-text column-text-name', width: '35%', data: 'NAME'},
+                    {className: 'column-text column-text-name', width: '50%', data: 'MEMO'},
+                    {className: 'column-text column-text-type', width: '15%', data: 'EXT'}
                 ]
             });
 
