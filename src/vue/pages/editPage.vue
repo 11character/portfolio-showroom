@@ -191,8 +191,7 @@
                         type: 'image',
                         itemUrl: data.url,
                         width: info.width / 500,
-                        height: info.height / 500,
-                        position: {x: 0, y: 1, z: 0}
+                        height: info.height / 500
                     };
 
                     me.showroomEditor.import(item).then(me.onModelItemLoad);
@@ -204,8 +203,7 @@
                 const item = {
                     name: data.name,
                     type: data.ext,
-                    itemUrl: data.url,
-                    position: {x: 0, y: 1, z: 0}
+                    itemUrl: data.url
                 };
 
                 me.showroomEditor.import(item).then(me.onModelItemLoad);
@@ -254,8 +252,7 @@
                     type: 'html',
                     content: content,
                     scale: {x: scale, y: scale, z: scale},
-                    zeroScale: {x: scale, y: scale, z: scale},
-                    position: {x: 0, y: 1, z: 0}
+                    zeroScale: {x: scale, y: scale, z: scale}
                 };
 
                 const prevItem = me.showroomEditor.selectedItem;
@@ -307,8 +304,7 @@
                     width: 1920,
                     height: 1080,
                     scale: {x: scale, y: scale, z: scale},
-                    zeroScale: {x: scale, y: scale, z: scale},
-                    position: {x: 0, y: 1, z: 0}
+                    zeroScale: {x: scale, y: scale, z: scale}
                 };
 
                 me.showroomEditor.import(item).then(function () {
@@ -326,8 +322,7 @@
                         type: 'youtube',
                         content: url,
                         scale: {x: scale, y: scale, z: scale},
-                        zeroScale: {x: scale, y: scale, z: scale},
-                        position: {x: 0, y: 1, z: 0}
+                        zeroScale: {x: scale, y: scale, z: scale}
                     };
 
                     me.showroomEditor.import(item).then(function () {
