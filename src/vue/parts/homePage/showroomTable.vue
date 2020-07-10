@@ -16,7 +16,7 @@
                     <th style="width: 10%">ID</th>
                     <th style="width: 20%">이름</th>
                     <th style="width: 40%">설명</th>
-                    <th style="width: 15%">날짜</th>
+                    <th style="width: 15%">생성일</th>
                     <th style="width: 15%"></th>
                 </tr>
             </thead>
@@ -95,11 +95,18 @@
             });
         },
         methods: {
+            tableReload: function () {
+                const me = this;
+
+                me.dataTable.ajax.reload();
+            },
             onConfirmDelete: function (bool) {
                 const me = this;
 
                 if (bool) {
                     Utils.apiRequest(ApiUrl.SHOWROOM_DELETE, me.showroom, 'post');
+
+                    me.tableReload();
                 }
             }
         }

@@ -64,7 +64,7 @@
 
             <div class="row mt-5">
                 <div class="col-12">
-                    <file-table class="w-100"></file-table>
+                    <file-table ref="fileTable"></file-table>
                 </div>
             </div>
         </div>
@@ -146,6 +146,9 @@
                         }).done(function (data) {
                             if (data.code == 0) {
                                 el.value = '';
+
+                                me.$refs.fileTable.tableReload();
+
                                 $('.upload-modal').modal('hide');
 
                             } else {

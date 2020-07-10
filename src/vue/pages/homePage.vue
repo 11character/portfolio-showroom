@@ -30,7 +30,7 @@
 
             <div class="row mt-5">
                 <div class="col-12">
-                    <showroom-table></showroom-table>
+                    <showroom-table ref="showroomTable"></showroom-table>
                 </div>
             </div>
         </div>
@@ -87,6 +87,8 @@
 
                         }).then(function () {
                             me.disabled = false;
+
+                            me.$refs.showroomTable.tableReload();
 
                             $('.create-modal').modal('hide');
                         });

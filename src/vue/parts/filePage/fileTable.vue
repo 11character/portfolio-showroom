@@ -7,7 +7,7 @@
                     <th>타입</th>
                     <th>이름</th>
                     <th>설명</th>
-                    <th>날짜</th>
+                    <th>생성일</th>
                 </tr>
             </thead>
         </table>
@@ -46,6 +46,13 @@
                     {width: '20%', data: 'C_DATE', className:'text-center'}
                 ]
             });
+        },
+        methods: {
+            tableReload: function () {
+                const me = this;
+
+                me.dataTable.ajax.reload();
+            }
         }
     }
 </script>
