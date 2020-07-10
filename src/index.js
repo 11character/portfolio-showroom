@@ -10,18 +10,17 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
 // datatables;
-import dt from 'datatables.net';
 import dtBs4 from 'datatables.net-bs4';
-import dtButton from 'datatables.net-buttons';
-import dtButtonBs4 from 'datatables.net-buttons-bs4';
-import dtSelect from 'datatables.net-select';
-import dtSelectBs4 from 'datatables.net-select-bs4';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.css';
 
-dt(window, $);
+import dtButtonBs4 from 'datatables.net-buttons-bs4';
+import 'datatables.net-buttons-bs4/css/buttons.bootstrap4.css';
+
+import dtSelectBs4 from 'datatables.net-select-bs4';
+import 'datatables.net-select-bs4/css/select.bootstrap4.css';
+
 dtBs4(window, $);
-dtButton(window, $);
 dtButtonBs4(window, $);
-dtSelect(window, $);
 dtSelectBs4(window, $);
 
 // vue

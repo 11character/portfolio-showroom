@@ -44,7 +44,7 @@
                     // 정보를 준비한다.
                     $file_list = scandir($dir_path);
                     $has_file = false;
-                    $name = '';
+                    $name = $_POST['name'];
                     $ext = '';
                     $full_name = '';
 
@@ -55,10 +55,8 @@
 
                         if (strpos('jpg jpeg png gif fbx stl obj', $file_extension) !== false) {
                             $has_file = true;
-                            $name = $path_info['filename'];
                             $ext = $file_extension;
                             $full_name = $path_info['basename'];
-
                             break;
                         }
                     }

@@ -42,7 +42,7 @@
                 </div>
             </nav>
 
-            <div class="view-field"></div>
+            <div ref="viewField"></div>
 
             <div class="control-field">
                 <control-panel @control="onControl" v-bind:editor="showroomEditor"></control-panel>
@@ -102,7 +102,7 @@
 
             // 에디터 객체는 mounted 실행시 초기화 하여 자식 컴포넌트에 넘겨주려고 하면 오류가 발생한다.
             // data 초기화 후에 에디터의 위치를 이동하는 식으로 처리한다.
-            $('.view-field').get(0).appendChild(me.showroomEditor.rootEl);
+            me.$refs.viewField.appendChild(me.showroomEditor.rootEl);
 
             $(window).on('resize.edit.page', function () {
                 setTimeout(function () {

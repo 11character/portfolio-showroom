@@ -43,7 +43,7 @@
 <script>
     import * as ApiUrl from '../../../class/apiUrl';
     import Utils from '../../../class/utils';
-    import ObjectFile from '../../../class/objectFile';
+    import ModelFileInfo from '../../../class/modelFileInfo';
 
     const Promise = window.Promise;
 
@@ -122,7 +122,7 @@
                 const arr = [];
 
                 for (let i = 0; i < rows.length; i++) {
-                    arr.push(new ObjectFile(Utils.snakeObjToCamelObj(rows[i])));
+                    arr.push(new ModelFileInfo(Utils.snakeObjToCamelObj(rows[i])));
                 }
 
                 me.$emit('apply', arr);
