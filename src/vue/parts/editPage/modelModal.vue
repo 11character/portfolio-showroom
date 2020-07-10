@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="row w-100">
                         <div class="col-12">
-                            <div class="table-background w-100">
+                            <div class="table-background">
                                 <table class="model-file-table table table-striped">
                                     <thead>
                                         <tr>
@@ -76,8 +76,8 @@
                 },
                 columns: [
                     {className: 'column-text column-text-name', width: '35%', data: 'NAME'},
-                    {className: 'column-text column-text-name', width: '50%', data: 'MEMO'},
-                    {className: 'column-text column-text-type', width: '15%', data: 'EXT'}
+                    {className: 'column-text column-text-name', width: '45%', data: 'MEMO'},
+                    {className: 'column-text column-text-type', width: '20%', data: 'EXT'}
                 ]
             });
 
