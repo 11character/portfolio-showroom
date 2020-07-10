@@ -54,13 +54,13 @@
         data: function () {
             return {
                 disabled: false,
-                jDataTable: null
+                dataTable: null
             };
         },
         mounted: function () {
             const me = this;
 
-            me.jDataTable = $('.model-file-table').DataTable({
+            me.dataTable = $('.model-file-table').DataTable({
                 ajax: {
                     url: ApiUrl.FILE_LIST,
                     dataSrc: 'data'
@@ -81,7 +81,7 @@
                 ]
             });
 
-            me.jDataTable.on('init.dt', function () {
+            me.dataTable.on('init.dt', function () {
                 // 스카일을 적용하기 위한 클래스 삽입.
                 // 브라우저의 개발자 모드에서 구조를 확인하면서 값을 변경.
                 const $search = $('.dataTables_filter').parent();
@@ -104,8 +104,8 @@
         beforeDestroy: function () {
             const me = this;
 
-            me.jDataTable.destroy();
-            me.jDataTable = null;
+            me.dataTable.destroy();
+            me.dataTable = null;
 
             $(me.$el).off('hidden.bs.modal');
         },
@@ -118,7 +118,7 @@
             onClickOk: function () {
                 const me = this;
 
-                const rows = me.jDataTable.rows({selected: true}).data();
+                const rows = me.dataTable.rows({selected: true}).data();
                 const arr = [];
 
                 for (let i = 0; i < rows.length; i++) {

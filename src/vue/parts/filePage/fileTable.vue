@@ -22,13 +22,13 @@
     export default {
         data: function () {
             return {
-                jDataTable: null
+                dataTable: null
             };
         },
         mounted: function () {
             const me = this;
 
-            me.jDataTable = $('.file-table').DataTable({
+            me.dataTable = $('.file-table').DataTable({
                 ajax: {
                     url: ApiUrl.FILE_LIST,
                     dataSrc: 'data'

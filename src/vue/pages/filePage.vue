@@ -3,7 +3,7 @@
         <top-nav page-name="file"></top-nav>
 
         <!-- 업로드 모달 -->
-        <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmUpload" class="upload-modal">
+        <confirm-modal :disable-ok-hide="true" @confirm="onConfirmUpload" class="upload-modal">
             <template v-slot:message>
                 <div class="row">
                    <div class="col-12">
@@ -15,7 +15,7 @@
 
                         <div class="row my-3">
                             <div class="col-3">
-                                <select v-model.number="modelFileInfo.typeCode" class="form-control form-control-sm">
+                                <select v-model.number="modelFileInfo.typeCode" :disabled="disabled" class="form-control form-control-sm">
                                     <option value="1">물건</option>
                                     <option value="0">벽</option>
                                 </select>
@@ -58,7 +58,7 @@
         <div class="container mt-5">
             <div class="row">
                 <div class="offset-lg-3 col-lg-6">
-                    <button :disabled="disabled" @click="onClickUpload" type="button" class="w-100 btn btn-sm btn-outline-primary">파일 올리기</button>
+                    <button @click="onClickUpload" type="button" class="w-100 btn btn-sm btn-outline-primary">파일 올리기</button>
                 </div>
             </div>
 

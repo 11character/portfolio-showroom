@@ -8,109 +8,29 @@
                 <div class="row">
                     <label class="col-12 form-label">이름</label>
                     <div class="col-12">
-                        <input v-model.trim="selectShowroom.name" :disabled="disabled" type="text" class="w-100 form-control form-control-sm">
+                        <input v-model.trim="showroom.name" :disabled="disabled" type="text" class="w-100 form-control form-control-sm">
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <label class="col-12 form-label">메모</label>
+                    <label class="col-12 form-label">설명</label>
                     <div class="col-12">
-                        <input v-model.trim="selectShowroom.memo" :disabled="disabled" type="text" class="w-100 form-control form-control-sm">
+                        <input v-model.trim="showroom.memo" :disabled="disabled" type="text" class="w-100 form-control form-control-sm">
                     </div>
                 </div>
             </template>
         </confirm-modal>
         <!-- END-생성 모달 -->
 
-        <!-- 제거 모달 -->
-        <confirm-modal @confirm="onConfirmDelete" class="delete-modal">
-            <template v-slot:message>
-                <div class="h4 my-5 text-center">
-                    <span>해당 전시장을 삭제하나요?</span>
-                </div>
-            </template>
-        </confirm-modal>
-        <!-- END-제거 모달 -->
-
         <div class="container mt-5">
             <div class="row">
                 <div class="offset-lg-3 col-lg-6">
-                    <button :disabled="disabled" @click="onClickCreate" type="button" class="w-100 btn btn-sm btn-outline-primary">생성</button>
+                    <button @click="onClickCreate" type="button" class="w-100 btn btn-sm btn-outline-primary">생성</button>
                 </div>
             </div>
 
             <div class="row mt-5">
-                <div class="order-lg-last col-lg-4">
-                    <div class="row">
-                        <div class="col-8">
-                            <input v-model.trim="search" type="text" class="form-control form-control-sm">
-                        </div>
-
-                        <div class="col-4">
-                            <button @click="loadShowroomList" type="button" class="w-100 btn btn-sm btn-outline-secondary">검색</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="order-lg-first col-lg-8 mt-3 mt-lg-0">
-                    <button @click="onClickRefresh" type="button" class="mr-3 btn btn-sm btn-outline-secondary">
-                        <font-awesome-icon :icon="['fas', 'sync-alt']"></font-awesome-icon>
-                    </button>
-
-                    <label class="form-label">개수 : {{ showroomArr.length }}</label>
-                </div>
-            </div>
-
-            <div class="row mt-3">
-                <div class="table-field col-12">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th style="width: 10%">ID</th>
-                                <th style="width: 20%">이름</th>
-                                <th style="width: 40%">설명</th>
-                                <th style="width: 15%">날짜</th>
-                                <th style="width: 15%"></th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr v-for="(showroom, i) in showroomArr" :key="i">
-                                <td>
-                                    <div class="pt-1 text-truncate">{{ showroom.seqId }}</div>
-                                </td>
-
-                                <td>
-                                    <div class="pt-1 text-truncate">
-                                        <router-link :to="{name: 'view', params: {id: showroom.seqId}}">{{ showroom.name }}</router-link>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="pt-1 text-truncate">{{ showroom.memo }}</div>
-                                </td>
-
-                                <td>
-                                    <div class="pt-1 text-truncate">{{ dateToDateString(showroom.cDate) }}</div>
-                                </td>
-
-                                <td>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <router-link :to="{name: 'edit', params: {id: showroom.seqId}}" class="w-100 btn btn-sm btn-outline-primary">
-                                                <font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon>
-                                            </router-link>
-                                        </div>
-
-                                        <div class="col-6">
-                                            <button :disabled="disabled" @click="onClickDelete(showroom)" type="button" class="w-100 btn btn-sm btn-outline-danger">
-                                                <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="col-12">
+                    <showroom-table></showroom-table>
                 </div>
             </div>
         </div>
@@ -124,64 +44,29 @@
 
     import topNavVue from '../parts/topNav.vue';
     import confirmModalVue from '../parts/confirmModal.vue';
+    import showroomTableVue from '../parts/homePage/showroomTable.vue';
 
     const Promise = window.Promise;
 
     export default {
         components: {
             'top-nav': topNavVue,
-            'confirm-modal': confirmModalVue
+            'confirm-modal': confirmModalVue,
+            'showroom-table': showroomTableVue
         },
         data: function () {
             return {
                 disabled: false,
-                selectShowroom: new Showroom(),
+                showroom: new Showroom(),
                 showroomArr: [],
                 search: ''
             };
         },
-        mounted: function () {
-            const me = this;
-
-            me.loadShowroomList();
-        },
         methods: {
-            dateToDateString: function (date) {
-                return Utils.dateToDateString(new Date(date))
-            },
-            loadShowroomList: function () {
-                const me = this;
-
-                const param = {
-                    s: me.search
-                };
-
-                return Utils.apiRequest(ApiUrl.SHOWROOM_LIST, param).catch(function () {
-                    return Promise.resolve({data: []});
-
-                }).then(function (data) {
-                    const arr = data.data;
-                    const dataArr = [];
-
-                    for (let i = 0; i < arr.length; i++) {
-                        dataArr.push(new Showroom(Utils.snakeObjToCamelObj(arr[i])));
-                    }
-
-                    me.showroomArr = dataArr;
-
-                    return Promise.resolve(dataArr);
-                });
-            },
-            onClickRefresh: function () {
-                const me = this;
-
-                me.search = '';
-                me.loadShowroomList();
-            },
             onClickCreate: function () {
                 const me = this;
 
-                me.selectShowroom = new Showroom();
+                me.showroom = new Showroom();
 
                 $('.create-modal').modal('show');
             },
@@ -189,7 +74,7 @@
                 const me = this;
 
                 if (bool) {
-                    const message = me.selectShowroom.validate();
+                    const message = me.showroom.validate();
 
                     if (message) {
                         alert(message);
@@ -197,13 +82,11 @@
                     } else {
                         me.disabled = true;
 
-                        Utils.apiRequest(ApiUrl.SHOWROOM_CREATE, me.selectShowroom, 'post').catch(function () {
+                        Utils.apiRequest(ApiUrl.SHOWROOM_CREATE, me.showroom, 'post').catch(function () {
                             return Promise.resolve();
 
                         }).then(function () {
                             me.disabled = false;
-
-                            me.loadShowroomList();
 
                             $('.create-modal').modal('hide');
                         });
@@ -213,26 +96,11 @@
             onClickDelete: function (showroom) {
                 const me = this;
 
-                me.selectShowroom = showroom;
+                me.showroom = showroom;
 
                 $('.delete-modal').modal('show');
             },
-            onConfirmDelete: function (bool) {
-                const me = this;
-
-                if (bool) {
-                    me.disabled = true;
-
-                    Utils.apiRequest(ApiUrl.SHOWROOM_DELETE, me.selectShowroom, 'post').catch(function () {
-                        return Promise.resolve();
-
-                    }).then(function () {
-                        me.disabled = false;
-
-                        me.loadShowroomList();
-                    });
-                }
-            }
+            
         }
     }
 </script>

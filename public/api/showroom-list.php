@@ -12,16 +12,9 @@
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $search = isset($_GET['s']) ? ('%' . $_GET['s'] . '%') : '%%';
-
-        $value = [
-            SEARCH1 => $search,
-            SEARCH2 => $search
-        ];
-
         $stmt = $pdo->prepare($sql_select_tb_showroom);
 
-        if ($stmt->execute($value)) {
+        if ($stmt->execute()) {
             $arr = [];
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
