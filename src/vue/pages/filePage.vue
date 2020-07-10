@@ -100,14 +100,6 @@
                 search: ''
             };
         },
-        mounted: function () {
-            const me = this;
-
-            $('.upload-modal').on('hide.bs.modal', function () {
-                me.$refs.uploadFile.value = '';
-                me.modelFileInfo = new ModelFileInfo();
-            });
-        },
         methods: {
             onChangefile: function (evt) {
                 const me = this;
@@ -166,6 +158,10 @@
                     } else {
                         alert('ZIP 압축파일만 업로드가 가능합니다.');
                     }
+
+                } else {
+                    me.$refs.uploadFile.value = '';
+                    me.modelFileInfo = new ModelFileInfo();
                 }
             }
         }
