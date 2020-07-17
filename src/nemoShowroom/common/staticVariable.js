@@ -176,3 +176,8 @@ export const CONTROLS_Y = 1;
  * 컨트롤 충돌 체크 길이.
  */
 export const CONTROLS_RAY_FAR = 1;
+
+/**
+ * cone 메쉬 이름.
+ */
+export const MESH_NAME_CONE = 'cone';

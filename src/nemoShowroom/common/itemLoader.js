@@ -171,6 +171,8 @@ export default class AssetLoader {
                 const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
                 const cone = new THREE.Mesh(geometry, material);
 
+                cone.name = StaticVariable.MESH_NAME_CONE;
+
                 group.add(cone);
 
                 resolve(group);

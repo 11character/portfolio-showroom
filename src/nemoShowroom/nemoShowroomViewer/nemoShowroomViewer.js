@@ -179,6 +179,10 @@ export default class NemoShowroomEditor {
                 for (let i = 0; i < itemArr.length; i++) {
                     assetItem = itemArr[i];
 
+                    if (assetItem.type == StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
+                        assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_CONE));
+                    }
+
                     me.objectField.add(assetItem.object3D);
                     me.cssRenderer.add(assetItem);
                     me.assetItemManager.add(assetItem);
