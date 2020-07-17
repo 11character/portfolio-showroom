@@ -11,11 +11,6 @@ export const CAMERA_NEAR = 0.1;
 export const CAMERA_FAR = 50000;
 
 /**
- * 건물이 배치되는 그룹 이름.
- */
-export const ITEM_BASE_FIELD_NAME = 'itemBaseField';
-
-/**
  * 아이템이 배치되어 있는 그룹 이름.
  */
 export const ITEM_OBJECT_FIELD_NAME = 'itemObjectField';
@@ -171,3 +166,13 @@ export const STYLE_BACKGROUND_COLOR = '#000000';
  * PBR 대상이 되는 타입.
  */
 export const PBR_TYPES = [ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_OBJ].join(' ');
+
+/**
+ * 컨트롤의 높이.
+ */
+export const CONTROLS_Y = 1;
+
+/**
+ * 컨트롤 충돌 체크 길이.
+ */
+export const CONTROLS_RAY_FAR = 1;

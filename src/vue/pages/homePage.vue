@@ -3,7 +3,7 @@
         <top-nav page-name="home"></top-nav>
 
         <!-- 생성 모달 -->
-        <confirm-modal :disable-ok-hide="true" @confirm="onConfirmCreate" class="create-modal">
+        <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmCreate" class="create-modal">
             <template v-slot:message>
                 <div class="row">
                     <label class="col-12 form-label">이름</label>

@@ -3,16 +3,15 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
 
 import * as StaticVariable from '../common/staticVariable';
-import Raycaster from '../common/raycaster';
-import Options from './options';
+import MouseRaycaster from '../common/mouseRaycaster';
 import HistoryManager from './historyManager';
 import AssetItem from '../common/assetItem';
 import ItemLoader from '../common/itemLoader';
-import Utils from '../../class/utils';
 import CssRenderer from '../common/cssRenderer';
-import AssetItemManager from './assetItemManager';
+import AssetItemManager from '../common/assetItemManager';
+import Options from './options';
+import Utils from '../../class/utils';
 import TransformHistory from './transformHistory';
-import { grep } from 'jquery';
 
 const Promise = window.Promise;
 
@@ -62,10 +61,6 @@ export default class NemoShowroomEditor {
         me.assetItemManager = new AssetItemManager();
 
         // ---
-        me.baseField = new THREE.Group();
-        me.baseField.name = StaticVariable.ITEM_BASE_FIELD_NAME;
-
-        // ---
         me.objectField = new THREE.Group();
         me.objectField.name = StaticVariable.ITEM_OBJECT_FIELD_NAME;
 
@@ -83,7 +78,7 @@ export default class NemoShowroomEditor {
         });
 
         // ---
-        me.raycaster = new Raycaster(me.renderer, me.camera);
+        me.mouseRaycaster = new MouseRaycaster(me.renderer, me.camera);
 
         // ---
         me.clock = new THREE.Clock();
@@ -103,7 +98,6 @@ export default class NemoShowroomEditor {
         // ---
         me.scene.add(me.camera);
         me.scene.add(me.light);
-        me.scene.add(me.baseField);
         me.scene.add(me.objectField);
         me.scene.add(me.tfControls);
         me.scene.add(me.gridObject3D);
@@ -883,7 +877,7 @@ export default class NemoShowroomEditor {
     __intersect(evt) {
         const me = this;
 
-        const intersectChild = me.raycaster.intersect(this.objectField.children, evt.offsetX, evt.offsetY);
+        const intersectChild = me.mouseRaycaster.intersect(this.objectField.children, evt.offsetX, evt.offsetY);
 
         let group = null;
 

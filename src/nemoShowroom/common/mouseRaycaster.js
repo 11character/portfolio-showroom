@@ -1,6 +1,6 @@
 import * as THREE from 'three/build/three.module';
 
-export default class Raycaster {
+export default class MouseRaycaster {
     constructor (renderer, camera) {
         this.raycaster = new THREE.Raycaster();
         this.renderer = renderer;

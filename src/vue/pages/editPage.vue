@@ -10,7 +10,7 @@
 
         <youtube-modal @apply="onApplyYouTube" class="youtube-modal"></youtube-modal>
 
-        <div class="editor-field">
+        <div ref="editorField" class="editor-field">
             <nav class="nav-field">
                 <div @click="onClickSave" class="nav-btn nav-btn-sm">
                     <div class="nav-btn-font">SAVE</div>
@@ -109,7 +109,7 @@
                     const w = $(window).width() - $('.nav-field').outerWidth() - $('.control-field').outerWidth();
                     const h = $(window).height() - $('.navbar').outerHeight();
 
-                    $('.editor-field').css('width', w + 'px').css('height', h + 'px');
+                    $(me.$refs.editorField).css('width', w + 'px').css('height', h + 'px');
 
                     me.showroomEditor.resize(w, h);
                 }, 100);
@@ -125,12 +125,13 @@
             // 에디터의 위치가 변경되기를 기다렸다가 처리.
             setTimeout(function () {
                 $(window).trigger('resize.edit.page');
+                
+                // 크기가 변경된 이후에 처리.
+                setTimeout(function () {
+                    me.openData();
+                }, 100);
             }, 100);
 
-            // 크기가 변경된 이후에 처리.
-            setTimeout(function () {
-                me.openData();
-            }, 200);
         },
         beforeDestroy: function () {
             const me = this;

@@ -3,7 +3,7 @@
         <top-nav page-name="file"></top-nav>
 
         <!-- 업로드 모달 -->
-        <confirm-modal :disable-ok-hide="true" @confirm="onConfirmUpload" class="upload-modal">
+        <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmUpload" class="upload-modal">
             <template v-slot:message>
                 <div class="row">
                    <div class="col-12">
