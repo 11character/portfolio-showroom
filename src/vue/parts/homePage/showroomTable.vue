@@ -24,13 +24,19 @@
 
         <div ref="buttons" hidden>
             <div class="row">
-                <div class="col-6 pr-1">
+                <div class="col-4 px-1 pl-2">
+                    <button type="button" class="l-btn w-100 btn btn-sm btn-outline-primary">
+                        <font-awesome-icon :icon="['fas', 'eye']"></font-awesome-icon>
+                    </button>
+                </div>
+
+                <div class="col-4 px-1">
                     <button type="button" class="e-btn w-100 btn btn-sm btn-outline-primary">
                         <font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon>
                     </button>
                 </div>
 
-                <div class="col-6 pl-1">
+                <div class="col-4 px-1 pr-2">
                     <button type="button" class="d-btn w-100 btn btn-sm btn-outline-danger">
                         <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>
                     </button>
@@ -78,6 +84,12 @@
                     {width: '20%', data: 'C_DATE', className:'text-center'},
                     {width: '15%', data: null, className:'text-center', orderable:false, defaultContent: buttonsHtml}
                 ]
+            });
+
+            me.dataTable.on('click', '.l-btn', function () {
+                const data = me.dataTable.row($(this).parents('tr')).data();
+
+                me.$router.push({name: 'view', params:{id: data['SEQ_ID']}});
             });
 
             me.dataTable.on('click', '.e-btn', function () {

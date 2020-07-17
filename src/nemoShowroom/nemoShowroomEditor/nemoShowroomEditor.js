@@ -91,9 +91,9 @@ export default class NemoShowroomEditor {
         me.gridObject3D.position.setY(0.055);
 
         // ---
-        const geoFloor = new THREE.BoxBufferGeometry(2000, 0.1, 2000);
-        const matStdFloor = new THREE.MeshPhongMaterial({color: StaticVariable.FLOOR_COLOR});
-        me.baseFloor = new THREE.Mesh(geoFloor, matStdFloor);
+        const floorGeo = new THREE.BoxBufferGeometry(2000, 0.1, 2000);
+        const floorMat = new THREE.MeshPhongMaterial({color: StaticVariable.FLOOR_COLOR});
+        me.baseFloor = new THREE.Mesh(floorGeo, floorMat);
 
         // ---
         me.scene.add(me.camera);

@@ -68,12 +68,12 @@ export const FLOOR_COLOR = new THREE.Color(0x808080);
 /**
  * 그리드 사이즈.
  */
-export const GRID_SIZE = 100;
+export const GRID_SIZE = 1000;
 
 /**
  * 그리드 간격.
  */
-export const GRID_DIVISIONS = 100;
+export const GRID_DIVISIONS = 1000;
 
 /**
  * 아이템 타입

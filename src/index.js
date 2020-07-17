@@ -39,7 +39,8 @@ import {
     faRedoAlt,
     faArrowsAlt,
     faExpand,
-    faCompress
+    faCompress,
+    faEye
 
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -53,6 +54,7 @@ FaLibrary.add(faRedoAlt);
 FaLibrary.add(faArrowsAlt);
 FaLibrary.add(faExpand);
 FaLibrary.add(faCompress);
+FaLibrary.add(faEye);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
