@@ -22,6 +22,12 @@ class MtlSetting {
     }
 }
 
+class LightSetting {
+    constructor (obj = {}) {
+        this.intensity = (typeof obj.intensity == 'number') ? obj.intensity : 1;
+    }
+}
+
 export default class AssetItem {
     constructor (obj = {}) {
         this.id = Utils.randomString();
@@ -60,8 +66,10 @@ export default class AssetItem {
         this.isUsed = !!obj.isUsed;
         this.isLoaded = !!obj.isLoaded;
         this.isPbrMtl = !!obj.isPbrMtl;
+        this.isLight = !!obj.isLight;
 
         this.mtlSetting = new MtlSetting(obj.mtlSetting);
+        this.lightSetting = new LightSetting(obj.lightSetting);
     }
 
     get isAnimation() {
@@ -103,7 +111,8 @@ export default class AssetItem {
 
             isSprite: me.isSprite,
 
-            mtlSetting: me.mtlSetting
+            mtlSetting: me.mtlSetting,
+            lightSetting: me.lightSetting
         };
     }
 
@@ -117,6 +126,22 @@ export default class AssetItem {
                 if (obj.isMesh && obj.material) {
                     for (let key in me.mtlSetting) {
                         obj.material[key] = me.mtlSetting[key];
+                    }
+                }
+            });
+        }
+    }
+
+    setLightOptions(obj = {}) {
+        const me = this;
+
+        if (me.isLight) {
+            me.lightSetting = new LightSetting(obj);
+
+            me.object3D.traverse(function (obj) {
+                if (obj instanceof THREE.SpotLight) {
+                    for (let key in me.lightSetting) {
+                        obj[key] = me.lightSetting[key];
                     }
                 }
             });

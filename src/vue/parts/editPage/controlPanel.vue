@@ -69,7 +69,7 @@
                 </div>
             </template>
 
-            <div class="item-row">
+            <div class="item-x item-row">
                 <div class="item-label">Scale ( &percnt; )</div>
                 <div class="item-control">
                     <button @click="onScale(-1)" type="button" class="incr-decr-btn decr-btn" tabindex="-1">-</button>
@@ -78,7 +78,7 @@
                 </div>
             </div>
 
-            <div class="item-position item-row">
+            <div class="item-xyz item-row">
                 <div class="item-label">Position</div>
 
                 <div class="item-control">
@@ -103,7 +103,7 @@
                 </div>
             </div>
 
-            <div v-if="!assetItem.isSprite" class="item-rotation item-row">
+            <div v-if="!assetItem.isSprite" class="item-xyz item-row">
                 <div class="item-label">Rotation ( &deg; )</div>
 
                 <div class="item-control">
@@ -128,14 +128,14 @@
                 </div>
             </div>
 
-            <div v-if="assetItem.isAnimation" class="item-animation-time item-row">
+            <div v-if="assetItem.isAnimation" class="item-row">
                 <div class="item-label">Animation time ( ms )</div>
                 <div class="item-control">
                     <input v-model.number="animationEndTime" @change="onChangeAnimationTime" type="number" class="item-value">
                 </div>
             </div>
 
-            <div v-if="assetItem.type != 'youtube' && assetItem.type != 'spotLight'" class="item-link item-row">
+            <div v-if="assetItem.type != 'youtube' && assetItem.type != 'spotLight'" class="item-row">
                 <div class="item-label">Link</div>
                 <div class="item-control">
                     <input v-model.trim="link" @change="onChangeLink" type="text" class="item-value">
@@ -150,19 +150,29 @@
                 </div>
             </div>
 
-            <div  v-if="assetItem.isPbrMtl" class="item-material item-row">
+            <div  v-if="assetItem.isPbrMtl" class="item-slider item-row">
                 <div class="item-label">Material</div>
 
                 <div class="item-control">
                     <div class="item-label">Metalness</div>
-                    <div class="item-value">{{ metalness }}</div>
-                    <slider v-model.number="metalness" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
+                    <div class="item-value">{{ mtlMetalness }}</div>
+                    <slider v-model.number="mtlMetalness" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
                 </div>
 
                 <div class="item-control">
                     <div class="item-label">Roughness</div>
-                    <div class="item-value">{{ roughness }}</div>
-                    <slider v-model.number="roughness" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
+                    <div class="item-value">{{ mtlRoughness }}</div>
+                    <slider v-model.number="mtlRoughness" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
+                </div>
+            </div>
+
+            <div v-if="assetItem.isLight" class="item-slider item-row">
+                <div class="item-label">Light</div>
+
+                <div class="item-control">
+                    <div class="item-label">Intensity</div>
+                    <div class="item-value">{{ lightIntensity }}</div>
+                    <slider v-model.number="lightIntensity" @slide="onSlideLightIntensity" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
                 </div>
             </div>
         </div>
@@ -197,8 +207,9 @@
                 rotationY: 0,
                 rotationZ: 0,
                 animationEndTime: 0,
-                metalness: 0.5,
-                roughness: 1,
+                mtlMetalness: 0.5,
+                mtlRoughness: 1,
+                lightIntensity: 1,
                 link: ''
             };
         },
@@ -238,8 +249,9 @@
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
-                me.metalness = assetItem.mtlSetting.metalness;
-                me.roughness = assetItem.mtlSetting.roughness;
+                me.mtlMetalness = assetItem.mtlSetting.metalness;
+                me.mtlRoughness = assetItem.mtlSetting.roughness;
+                me.lightIntensity = assetItem.lightSetting.intensity;
             },
             onClickUndo: function () {
                 const me = this;
@@ -416,8 +428,19 @@
 
                 if (assetItem) {
                     assetItem.setMtlOptions({
-                        metalness: me.metalness,
-                        roughness: me.roughness
+                        metalness: me.mtlMetalness,
+                        roughness: me.mtlRoughness
+                    });
+                }
+            },
+            onSlideLightIntensity: function () {
+                const me = this;
+
+                const assetItem = me.editor.selectedItem;
+
+                if (assetItem) {
+                    assetItem.setLightOptions({
+                        intensity: me.lightIntensity
                     });
                 }
             }
@@ -482,6 +505,16 @@
             padding-top: 5px;
         }
 
+        .item-value {
+            width: 176px;
+            height: 28px;
+            border-radius: 2px;
+            background-color: #f6f6f6;
+            border: solid 1px #e9e9e9;
+            text-align: center;
+            font-size: 14px;
+        }
+
         .incr-decr-btn {
             width: 28px;
             height: 28px;
@@ -494,16 +527,6 @@
 
         .incr-decr-btn:hover {
             background-color: #8c8c8c;
-        }
-
-        .item-value {
-            width: 120px;
-            height: 28px;
-            border-radius: 2px;
-            background-color: #f6f6f6;
-            border: solid 1px #e9e9e9;
-            text-align: right;
-            font-size: 14px;
         }
 
         .item-control-btn {
@@ -520,7 +543,16 @@
             color: #eaeaea;
         }
 
-        .item-position {
+        .item-x {
+            .item-control {
+                .item-value {
+                    width: 120px;
+                    text-align: right;
+                }
+            }
+        }
+
+        .item-xyz {
             .item-control {
                 .item-label {
                     width: 10px;
@@ -533,29 +565,7 @@
             }
         }
 
-        .item-rotation {
-            .item-control {
-                .item-label {
-                    width: 10px;
-                    margin-right: 10px;
-                }
-
-                .item-value {
-                    width: 80px;
-                }
-            }
-        }
-
-        .item-link {
-            .item-control {
-                .item-value {
-                    width: 176px;
-                    text-align: center;
-                }
-            }
-        }
-
-        .item-material {
+        .item-slider {
             .item-control {
                 flex-wrap: wrap;
 
@@ -569,15 +579,6 @@
                     background-color: #5d5d5d;
                     border: solid 1px #5d5d5d;
                     color: #bdbdbd;
-                    text-align: center;
-                }
-            }
-        }
-
-        .item-animation-time {
-            .item-control {
-                .item-value {
-                    width: 176px;
                     text-align: center;
                 }
             }

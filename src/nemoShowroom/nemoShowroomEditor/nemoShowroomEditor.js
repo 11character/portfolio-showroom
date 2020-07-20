@@ -134,7 +134,10 @@ export default class NemoShowroomEditor {
     addSpotLight() {
         const me = this;
 
-        const assetItem = new AssetItem({type: StaticVariable.ITEM_TYPE_SPOT_LIGHT});
+        const assetItem = new AssetItem({
+            name: 'Light',
+            type: StaticVariable.ITEM_TYPE_SPOT_LIGHT
+        });
 
         return me.itemLoader.load(assetItem).then(function (currentItem) {
             me.objectField.add(currentItem.object3D);
