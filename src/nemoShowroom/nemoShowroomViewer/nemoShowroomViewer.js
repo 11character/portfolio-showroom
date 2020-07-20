@@ -160,7 +160,10 @@ export default class NemoShowroomEditor {
     openJson(json) {
         const me = this;
 
-        const arr = JSON.parse(json);
+        const data = JSON.parse(json);
+        const arr = data.itemArray;
+
+        me.light.intensity = (typeof data.lightIntensity == 'number') ? data.lightIntensity : 1;
 
         if (arr.length) {
             const promiseArr = [];

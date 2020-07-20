@@ -339,11 +339,15 @@ export default class NemoShowroomEditor {
     openJson(json) {
         const me = this;
 
-        const arr = JSON.parse(json);
-        const hasPrveOpen = me.objectField.children.length;
+        const data = JSON.parse(json);
+        const arr = data.itemArray;
 
-        if (arr.length) {
+        me.light.intensity = (typeof data.lightIntensity == 'number') ? data.lightIntensity : 1;
+
+        if (Array.isArray(arr) && arr.length) {
             // 이전에 그려진 대상이 있으면 전부 지운다.
+            const hasPrveOpen = me.objectField.children.length;
+
             if (hasPrveOpen) {
                 me.removeAll();
 
@@ -433,7 +437,12 @@ export default class NemoShowroomEditor {
     exportJson() {
         const me = this;
 
-        return JSON.stringify(me.assetItemManager.getItemArray());
+        const obj = {
+            lightIntensity: me.light.intensity,
+            itemArray: me.assetItemManager.getItemArray()
+        };
+
+        return JSON.stringify(obj);
     }
 
     /**

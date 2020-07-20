@@ -30,8 +30,20 @@
             </div>
         </div>
 
-        <div v-if="editor.selectedItem != null" class="item-menu">
-            <div class="item-row pt-4">
+        <div class="item-menu">
+            <div class="item-slider item-row">
+                <div class="item-label">World light</div>
+
+                <div class="item-control">
+                    <div class="item-label">Intensity</div>
+                    <div class="item-value">{{ light.intensity }}</div>
+                    <slider v-model.number="light.intensity" @slide="onSlideWorldLightIntensity" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="editor.selectedItem != null" class="item-menu border-top">
+            <div class="item-row">
                 <div class="h5 m-0 text-white text-center text-truncate">{{ assetItem.name }}</div>
             </div>
 
@@ -199,6 +211,7 @@
             return {
                 contentType: '',
                 assetItem: new AssetItem(),
+                light: me.editor.light,
                 scalePercent: 0,
                 positionX: 0,
                 positionY: 0,
@@ -282,6 +295,11 @@
 
                 me.editor.multiplyScaleAll(0.9, 0.9, 0.9);
                 me.$emit('control', 'scaleDown');
+            },
+            onSlideWorldLightIntensity: function () {
+                const me = this;
+
+                me.editor.light.intensity = me.light.intensity;
             },
             onClickCopy: function () {
                 const me = this;
