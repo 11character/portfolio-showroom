@@ -36,7 +36,7 @@
                     <div class="nav-btn-font">YouTube</div>
                 </div>
 
-                <div @click="onClickLight" class="nav-btn" data-toggle="modal">
+                <div @click="onApplyLight" class="nav-btn" data-toggle="modal">
                     <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
                     <div class="nav-btn-font">Light</div>
                 </div>
@@ -157,13 +157,6 @@
                     }
                 });
             },
-            onClickLight: function () {
-                const me = this;
-
-                me.showroomEditor.addSpotLight();
-
-                me.isConfigEdited = true;
-            },
             onClickModelModalOpen: function () {
                 $('.model-modal').modal('show');
             },
@@ -222,6 +215,7 @@
                 assetItem.syncMembers();
 
                 me.isConfigEdited = true;
+                me.showroomEditor.attach(assetItem);
             },
             onApplyModel: function (dataArr) {
                 const me = this;
@@ -267,6 +261,7 @@
 
                 me.showroomEditor.import(item).then(function (assetItem) {
                     me.isConfigEdited = true;
+                    me.showroomEditor.attach(assetItem);
 
                     if (me.isTextEdit && prevItem) {
                         me.showroomEditor.attach(prevItem);
@@ -313,6 +308,7 @@
 
                 me.showroomEditor.import(item).then(function () {
                     me.isConfigEdited = true;
+                    me.showroomEditor.attach(assetItem);
                 });
             },
             onApplyYouTube: function (url) {
@@ -331,8 +327,17 @@
 
                     me.showroomEditor.import(item).then(function () {
                         me.isConfigEdited = true;
+                        me.showroomEditor.attach(assetItem);
                     });
                 }
+            },
+            onApplyLight: function () {
+                const me = this;
+
+                me.showroomEditor.addSpotLight().then(function (assetItem) {
+                    me.isConfigEdited = true;
+                    me.showroomEditor.attach(assetItem);
+                });
             },
             onClickSave: function () {
                 const me = this;
@@ -342,10 +347,10 @@
                 Utils.apiRequest(ApiUrl.SHOWROOM_UPDATE, me.showroom, 'post').then(function () {
                     me.isConfigEdited = false;
 
-                    alert('저장에 성공했습니다.');
+                    alert('저장 완료.');
 
                 }).catch(function () {
-                    alert('저장에 실패했습니다.');
+                    alert('오류!')
                 });
             }
         }
