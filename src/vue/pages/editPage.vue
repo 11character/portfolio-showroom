@@ -81,6 +81,7 @@
                 isConfigEdited: false,
                 isTextEdit: false,
                 showroom: new Showroom(),
+                // 이벤트는 controlPanel 에서 처리.
                 showroomEditor: new NemoShowroomEditor({
                     width: 100,
                     height: 100
@@ -160,6 +161,8 @@
                 const me = this;
 
                 me.showroomEditor.addSpotLight();
+
+                me.isConfigEdited = true;
             },
             onClickModelModalOpen: function () {
                 $('.model-modal').modal('show');
@@ -243,7 +246,7 @@
 
                 const html = data.html;
                 const backgroundColor = data.backgroundColor;
-                const scale = 0.005;
+                const scale = 0.025;
 
                 // 텍스트 에디터에서 출력값 마지막 라인 아래에 여백이 없도록 처리.
                 const content = '<div class="asset-text-item" data-type="text" style="word-wrap:break-word; overflow:hidden; background-color:' + backgroundColor + ';">' + html + '</div>';
@@ -295,7 +298,7 @@
             onApplyWeb: function (url) {
                 const me = this;
 
-                const scale = 0.001;
+                const scale = 0.005;
                 const apiUrl = './api/page-item.php?url=' + url;
 
                 const item = {
@@ -315,7 +318,7 @@
             onApplyYouTube: function (url) {
                 const me = this;
 
-                const scale = 0.001;
+                const scale = 0.025;
 
                 if (url) {
                     const item = {

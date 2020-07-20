@@ -72,9 +72,9 @@
             <div class="item-row">
                 <div class="item-label">Scale ( &percnt; )</div>
                 <div class="item-control">
-                    <button @click="onScale(-10)" type="button" class="incr-decr-btn decr-btn" tabindex="-1">-</button>
+                    <button @click="onScale(-1)" type="button" class="incr-decr-btn decr-btn" tabindex="-1">-</button>
                     <input v-model.number="scalePercent" @change="onScale(0)" type="number" class="item-value" value="100.000">
-                    <button @click="onScale(10)" type="button" class="incr-decr-btn incr-btn" tabindex="-1">＋</button>
+                    <button @click="onScale(1)" type="button" class="incr-decr-btn incr-btn" tabindex="-1">＋</button>
                 </div>
             </div>
 
@@ -216,6 +216,7 @@
 
             me.editor.options.onMove = function () {
                 me.setItemData(me.assetItem);
+                me.$emit('control', 'move')
             };
         },
         methods: {
@@ -277,7 +278,7 @@
 
                 if (assetItem) {
                     assetItem = assetItem.clone();
-                    assetItem.position.z += 1;
+                    assetItem.position.y += 1;
 
                     me.editor.detach();
 

@@ -1,7 +1,6 @@
 export default class Options {
     constructor(obj = {}) {
         this.el = obj.el || document.body;
-        this.mode = obj.mode || 'edit';
         this.width = obj.width || 800;
         this.height = obj.height || 600;
 
