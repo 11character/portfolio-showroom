@@ -37,7 +37,7 @@
                 <div class="item-control">
                     <div class="item-label">Intensity</div>
                     <div class="item-value">{{ light.intensity }}</div>
-                    <slider v-model.number="light.intensity" @slide="onSlideWorldLightIntensity" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
+                    <slider v-model.number="light.intensity" @slide="onSlideWorldLightIntensity" :min="0" :max="2" :step="0.1" class="w-75 my-2"></slider>
                 </div>
             </div>
         </div>
@@ -154,14 +154,6 @@
                 </div>
             </div>
 
-            <div class="item-row mb-3">
-                <div class="item-control">
-                    <button @click="onClickRemove" type="button" class="item-control-btn" tabindex="-1">
-                        <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>&nbsp;Remove
-                    </button>
-                </div>
-            </div>
-
             <div  v-if="assetItem.isPbrMtl" class="item-slider item-row">
                 <div class="item-label">Material</div>
 
@@ -184,7 +176,15 @@
                 <div class="item-control">
                     <div class="item-label">Intensity</div>
                     <div class="item-value">{{ lightIntensity }}</div>
-                    <slider v-model.number="lightIntensity" @slide="onSlideLightIntensity" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
+                    <slider v-model.number="lightIntensity" @slide="onSlideLightIntensity" :min="0" :max="2" :step="0.1" class="w-75 my-2"></slider>
+                </div>
+            </div>
+
+            <div class="item-row">
+                <div class="item-control">
+                    <button @click="onClickRemove" type="button" class="item-control-btn" tabindex="-1">
+                        <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>&nbsp;Remove
+                    </button>
                 </div>
             </div>
         </div>
