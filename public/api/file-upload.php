@@ -53,7 +53,7 @@
                         $path_info = pathinfo($path);
                         $file_extension = strtolower($path_info['extension']);
 
-                        if (strpos('jpg jpeg png gif fbx stl obj', $file_extension) !== false) {
+                        if (strpos('jpg jpeg png gif fbx stl obj gltf glb', $file_extension) !== false) {
                             $has_file = true;
                             $ext = $file_extension;
                             $full_name = $path_info['basename'];

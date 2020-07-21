@@ -122,7 +122,11 @@ export default class Utils {
         return (Math.PI / 180) * d;
     }
 
-    static dirPath(url) {
+    static urlToDirPath(url) {
         return url.substring(0, url.lastIndexOf('/'));
+    }
+
+    static urlToFileName(url) {
+        return url.substring(url.lastIndexOf('/') + 1);
     }
 }

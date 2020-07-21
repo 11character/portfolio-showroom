@@ -79,6 +79,8 @@ export const GRID_DIVISIONS = 1000;
  * 아이템 타입
  */
 export const ITEM_TYPE_NONE = 'none';
+export const ITEM_TYPE_3D_GLTF = 'gltf';
+export const ITEM_TYPE_3D_GLB = 'glb';
 export const ITEM_TYPE_3D_OBJ = 'obj';
 export const ITEM_TYPE_3D_STL = 'stl';
 export const ITEM_TYPE_3D_FBX = 'fbx';

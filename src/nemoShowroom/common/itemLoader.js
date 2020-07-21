@@ -1,4 +1,5 @@
 import * as THREE from 'three/build/three.module';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
@@ -116,20 +117,24 @@ export default class AssetLoader {
         };
 
         switch (assetItem.type) {
+            case StaticVariable.ITEM_TYPE_3D_GLB:
+            case StaticVariable.ITEM_TYPE_3D_GLTF:
+                return me.__loadGltf(assetItem).then(onLoadComplete).catch(onLoadError);
+
             case StaticVariable.ITEM_TYPE_3D_OBJ:
                 return me.__loadObjMtl(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_3D_STL:
-                return me.__loadSTL(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadStl(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_3D_FBX:
-                return me.__loadFBX(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadFbx(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_IMAGE:
                 return me.__loadImage(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_HTML:
-                return me.__loadHTML(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadHtml(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_YOUTUBE:
                 return me.__loadYoutube(assetItem).then(onLoadComplete).catch(onLoadError);
@@ -261,7 +266,7 @@ export default class AssetLoader {
         });
     }
 
-    __loadHTML(assetItem) {
+    __loadHtml(assetItem) {
         let object3D;
 
         if (assetItem.isSprite) {
@@ -324,7 +329,22 @@ export default class AssetLoader {
         return Promise.resolve(object3D);
     }
 
-    __loadFBX(assetItem) {
+    __loadGltf(assetItem) {
+        const me = this;
+
+        return new Promise(function (resolve, reject) {
+            const loader = new GLTFLoader();
+            const glthUrl = me.baseUrl + '/' + assetItem.itemUrl;
+
+            loader.setPath(Utils.urlToDirPath(glthUrl) + '/');
+
+            loader.load(Utils.urlToFileName(glthUrl), function (gltf) {
+                resolve(gltf.scene);
+            }, null, reject);
+        });
+    }
+
+    __loadFbx(assetItem) {
         const me = this;
 
         return new Promise(function (resolve, reject) {
@@ -368,7 +388,7 @@ export default class AssetLoader {
         });
     }
 
-    __loadSTL(assetItem) {
+    __loadStl(assetItem) {
         const me = this;
 
         return new Promise(function (resolve, reject) {
@@ -463,7 +483,7 @@ export default class AssetLoader {
 
         const object3D = assetItem.object3D;
         const pbrTypes = StaticVariable.PBR_TYPES;
-        const mapDir = Utils.dirPath(assetItem.itemUrl) + '/map';
+        const mapDir = Utils.urlToDirPath(assetItem.itemUrl) + '/map';
         const promiseArr = [];
 
         if (pbrTypes.indexOf(assetItem.type) > -1) {
@@ -502,7 +522,7 @@ export default class AssetLoader {
                         obj.material.normalMap = texture;
                     }));
 
-                    promiseArr.push(me.__loadCubeTexture(Utils.dirPath(assetItem.itemUrl) + '/cube_texture').then(function (cubeTexture) {
+                    promiseArr.push(me.__loadCubeTexture(Utils.urlToDirPath(assetItem.itemUrl) + '/cube_texture').then(function (cubeTexture) {
                         obj.material.emissive = new THREE.Color(0x808080);
                         obj.material.envMap = cubeTexture;
                     }));
