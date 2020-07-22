@@ -167,7 +167,7 @@ export const STYLE_BACKGROUND_COLOR = '#000000';
 /**
  * PBR 대상이 되는 타입.
  */
-export const PBR_TYPES = [ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_OBJ].join(' ');
+export const PBR_TYPES = [ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB].join(' ');
 
 /**
  * 컨트롤의 높이.

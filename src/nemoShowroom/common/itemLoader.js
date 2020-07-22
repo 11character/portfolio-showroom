@@ -488,44 +488,53 @@ export default class AssetLoader {
 
         if (pbrTypes.indexOf(assetItem.type) > -1) {
             object3D.traverse(function (obj) {
-                // PBR 사용 설정.
-                if (obj.isMesh && obj.material && obj.material.type == 'MeshStandardMaterial') {
-                    assetItem.isPbrMtl = true;
-
-                    obj.material.roughness = assetItem.mtlSetting.roughness;
-                    obj.material.metalness = assetItem.mtlSetting.metalness;
-
-                    promiseArr.push(me.__loadTexture(mapDir + '/color.png').then(function (texture) {
-                        obj.material.map = texture;
-                    }));
-
-                    promiseArr.push(me.__loadTexture(mapDir + '/normal.png').then(function (texture) {
-                        obj.material.normalMap = texture;
-                    }));
-
-                    promiseArr.push(me.__loadTexture(mapDir + '/roughness.png').then(function (texture) {
-                        obj.material.roughnessMap = texture;
-                    }));
-
-                    promiseArr.push(me.__loadTexture(mapDir + '/metallic.png').then(function (texture) {
-                        obj.material.metalnessMap = texture;
-                    }));
-                }
-
-                // 환경맵 사용 설정.
-                if (obj.isMesh && obj.material && obj.material.type == 'MeshPhongMaterial') {
-                    promiseArr.push(me.__loadTexture(mapDir + '/color.png').then(function (texture) {
-                        obj.material.map = texture;
-                    }));
-
-                    promiseArr.push(me.__loadTexture(mapDir + '/normal.png').then(function (texture) {
-                        obj.material.normalMap = texture;
-                    }));
-
-                    promiseArr.push(me.__loadCubeTexture(Utils.urlToDirPath(assetItem.itemUrl) + '/cube_texture').then(function (cubeTexture) {
-                        obj.material.emissive = new THREE.Color(0x808080);
-                        obj.material.envMap = cubeTexture;
-                    }));
+                if (obj.isMesh && obj.material) {
+                    // PBR 사용 설정.
+                    let isMaterial = (
+                        obj.material instanceof THREE.MeshStandardMaterial
+                        || obj.material instanceof THREE.MeshPhysicalMaterial
+                    );
+    
+                    if (isMaterial) {
+                        assetItem.isPbrMtl = true;
+    
+                        obj.material.roughness = assetItem.mtlSetting.roughness;
+                        obj.material.metalness = assetItem.mtlSetting.metalness;
+    
+                        promiseArr.push(me.__loadTexture(mapDir + '/color.png').then(function (texture) {
+                            obj.material.map = texture;
+                        }));
+    
+                        promiseArr.push(me.__loadTexture(mapDir + '/normal.png').then(function (texture) {
+                            obj.material.normalMap = texture;
+                        }));
+    
+                        promiseArr.push(me.__loadTexture(mapDir + '/roughness.png').then(function (texture) {
+                            obj.material.roughnessMap = texture;
+                        }));
+    
+                        promiseArr.push(me.__loadTexture(mapDir + '/metallic.png').then(function (texture) {
+                            obj.material.metalnessMap = texture;
+                        }));
+                    }
+    
+                    // 환경맵 사용 설정.
+                    isMaterial = (obj.material instanceof THREE.MeshPhongMaterial);
+    
+                    if (isMaterial) {
+                        promiseArr.push(me.__loadTexture(mapDir + '/color.png').then(function (texture) {
+                            obj.material.map = texture;
+                        }));
+    
+                        promiseArr.push(me.__loadTexture(mapDir + '/normal.png').then(function (texture) {
+                            obj.material.normalMap = texture;
+                        }));
+    
+                        promiseArr.push(me.__loadCubeTexture(Utils.urlToDirPath(assetItem.itemUrl) + '/cube_texture').then(function (cubeTexture) {
+                            obj.material.emissive = new THREE.Color(0x808080);
+                            obj.material.envMap = cubeTexture;
+                        }));
+                    }
                 }
             });
         }
@@ -539,15 +548,12 @@ export default class AssetLoader {
     }
 
     __loadTexture(url) {
-        return new Promise(function (resolve) {
+        return new Promise(function (resolve, reject) {
             const loader = new THREE.TextureLoader();
 
             loader.load(url, function (texture) {
                 resolve(texture);
-
-            }, undefined, function () {
-                resolve(null);
-            });
+            }, undefined, reject);
         });
     }
 
