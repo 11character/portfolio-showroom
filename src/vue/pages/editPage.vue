@@ -1,5 +1,7 @@
 <template>
     <div>
+        <loading :hidden="!disabled"></loading>
+
         <top-nav separate-page="Edit"></top-nav>
 
         <model-modal @apply="onApplyModel" class="model-modal"></model-modal>
@@ -57,6 +59,7 @@
     import Showroom from '../../class/showroom';
 
     import topNavVue from '../parts/topNav.vue';
+    import loadingVue from '../parts/loading.vue';
     import controlPanelVue from '../parts/editPage/controlPanel.vue';
     import modelModalVue from '../parts/editPage/modelModal.vue';
     import textModalVue from '../parts/editPage/textModal.vue';
@@ -69,6 +72,7 @@
         props: ['id'],
         components: {
             'top-nav': topNavVue,
+            'loading': loadingVue,
             'control-panel': controlPanelVue,
             'model-modal': modelModalVue,
             'text-modal': textModalVue,
@@ -77,7 +81,7 @@
         },
         data: function () {
             return {
-                disabled: false,
+                disabled: true,
                 isConfigEdited: false,
                 isTextEdit: false,
                 showroom: new Showroom(),
@@ -126,7 +130,7 @@
             // 에디터의 위치가 변경되기를 기다렸다가 처리.
             setTimeout(function () {
                 $(window).trigger('resize.edit.page');
-                
+
                 // 크기가 변경된 이후에 처리.
                 setTimeout(function () {
                     me.openData();
@@ -150,7 +154,9 @@
                     if (data.data.length > 0) {
                         me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
 
-                        me.showroomEditor.openJson(me.showroom.data || '[]');
+                        me.showroomEditor.openJson(me.showroom.data || '[]').then(function () {
+                            me.disabled = false;
+                        });
 
                     } else {
                         alert('해당 정보가 없습니다.');

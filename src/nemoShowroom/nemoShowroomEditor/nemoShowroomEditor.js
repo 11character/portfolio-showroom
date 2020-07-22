@@ -342,6 +342,8 @@ export default class NemoShowroomEditor {
         const data = JSON.parse(json);
         const arr = data.itemArray;
 
+        let promise = Promise.resolve();
+
         me.light.intensity = (typeof data.lightIntensity == 'number') ? data.lightIntensity : 1;
 
         if (Array.isArray(arr) && arr.length) {
@@ -370,7 +372,7 @@ export default class NemoShowroomEditor {
                 promiseArr.push(me.itemLoader.load(assetItem));
             }
 
-            Promise.all(promiseArr).then(function (itemArr) {
+            promise = Promise.all(promiseArr).then(function (itemArr) {
                 let assetItem;
 
                 for (let i = 0; i < itemArr.length; i++) {
@@ -399,6 +401,8 @@ export default class NemoShowroomEditor {
                 });
             });
         }
+
+        return promise;
     }
 
     /**

@@ -1,5 +1,7 @@
 <template>
     <div class="field">
+        <loading :hidden="!disabled"></loading>
+        
         <div ref="viewField" class="view-field"></div>
 
         <!-- <div ref="waitField" class="wait-field">
@@ -13,12 +15,18 @@
     import Utils from '../../class/utils';
     import Showroom from '../../class/showroom';
 
+    import loadingVue from '../parts/loading.vue';
+
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
     export default {
+        components: {
+            'loading': loadingVue
+        },
         props: ['id'],
         data: function () {
             return {
+                disabled: true,
                 showroomViewer: new NemoShowroomViewer({
                     width: 100,
                     height: 100
@@ -70,7 +78,9 @@
                     if (data.data.length > 0) {
                         me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
 
-                        me.showroomViewer.openJson(me.showroom.data || '[]');
+                        me.showroomViewer.openJson(me.showroom.data || '[]').then(function () {
+                            me.disabled = false;
+                        });
 
                     } else {
                         alert('해당 정보가 없습니다.');
