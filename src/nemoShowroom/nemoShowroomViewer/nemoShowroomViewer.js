@@ -108,11 +108,7 @@ export default class NemoShowroomEditor {
         me.isRun = true;
 
         // ---
-        me.isLock = false;
-
-        //--
-        me.disableAttach = false;
-        me.selectedItem = null;
+        me.checkBoxArr = [];
 
         //--
         me.start();
@@ -179,6 +175,8 @@ export default class NemoShowroomEditor {
             }
 
             promise = Promise.all(promiseArr).then(function (itemArr) {
+                const tempArr = [];
+
                 let assetItem;
 
                 for (let i = 0; i < itemArr.length; i++) {
@@ -186,6 +184,9 @@ export default class NemoShowroomEditor {
 
                     if (assetItem.type == StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
                         assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_CONE));
+
+                    } else {
+                        tempArr.push(assetItem.getBox3());
                     }
 
                     me.objectField.add(assetItem.object3D);
@@ -194,6 +195,8 @@ export default class NemoShowroomEditor {
 
                     assetItem.animationPlay();
                 }
+
+                me.checkBoxArr = tempArr;
             });
         }
 
@@ -243,12 +246,21 @@ export default class NemoShowroomEditor {
 
         // 계산된 방향으로 선을 긋는다.
         const position = me.controls.getObject().position.clone();
-        const rayCaster = new THREE.Raycaster(position, direction, 0, StaticVariable.CONTROLS_RAY_FAR);
+        const ray = new THREE.Ray(position, direction);
 
         // 충돌검사.
-        const intersects = rayCaster.intersectObjects(me.objectField.children, true);
+        let check = false;
 
-        return intersects.length > 0;
+        for (let i = 0; i < me.checkBoxArr.length; i++) {
+            let vec3 = ray.intersectBox(me.checkBoxArr[i]);
+
+            if (vec3 && vec3.distanceTo(position) < StaticVariable.CONTROLS_RAY_FAR) {
+                check = true;
+                break;
+            }
+        }
+
+        return check;
     }
 
     __move(delta) {

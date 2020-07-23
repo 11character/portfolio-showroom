@@ -316,6 +316,7 @@ export default class NemoShowroomEditor {
             }
 
             me.renderer.render(me.scene, me.camera);
+
             me.assetItemManager.animationUpdate(me.clock.getDelta());
 
             me.cssRenderer.updateAll();

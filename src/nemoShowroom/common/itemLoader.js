@@ -4,7 +4,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import { OBJLoader2 } from 'three/examples/jsm/loaders/OBJLoader2';
-import { MtlObjBridge } from "three/examples/jsm/loaders/obj2/bridge/MtlObjBridge";
+import { MtlObjBridge } from 'three/examples/jsm/loaders/obj2/bridge/MtlObjBridge';
 
 import html2canvas from 'html2canvas';
 
@@ -411,7 +411,7 @@ export default class AssetLoader {
             const loader = new OBJLoader2();
 
             if (mtlParseResult) {
-                loader.addMaterials(MtlObjBridge.addMaterialsFromMtlLoader( mtlParseResult ), true);
+                loader.addMaterials(MtlObjBridge.addMaterialsFromMtlLoader(mtlParseResult), true);
             }
 
             loader.load(objUrl, function (object3D) {
