@@ -123,6 +123,7 @@ export default class NemoShowroomEditor {
         // ---
         me.checkBoxArr = [];
         me.checkItemArr = [];
+        me.detectedItem = null;
 
         //--
         me.start();
@@ -151,7 +152,7 @@ export default class NemoShowroomEditor {
             me.cssRenderer.updateAll();
             me.cssRenderer.render();
 
-            me.__outline();
+            me.__detectItem();
 
             me.composer.render();
         })();
@@ -244,7 +245,7 @@ export default class NemoShowroomEditor {
         me.camera.updateProjectionMatrix();
     }
 
-    __outline() {
+    __detectItem() {
         const me = this;
 
         // 바라보는 방향.
@@ -274,7 +275,12 @@ export default class NemoShowroomEditor {
             }
         }
 
-        me.outlinePass.selectedObjects = (index != -1) ? [me.checkItemArr[index].object3D] : [];
+        const bool = (index != -1);
+
+        me.detectedItem = bool ? me.checkItemArr[index] : null;
+
+        // 테두리 표시.
+        me.outlinePass.selectedObjects = (bool && !me.checkItemArr[index].disableOutline) ? [me.detectedItem.object3D] : [];
     }
 
     __detectPlayerCollision() {
@@ -385,8 +391,18 @@ export default class NemoShowroomEditor {
     __initEvent() {
         const me = this;
 
-        me.rootEl.addEventListener('click', function () {
-            me.controls.lock();
+        me.rootEl.addEventListener('click', function (evt) {
+            if (me.controls.isLocked) {
+                switch(evt.button) {
+                    case 0:
+                        if (me.detectedItem) {
+                            me.options.onSelect(me.detectedItem);
+                        }
+                        break;
+                }
+            } else {
+                me.controls.lock();
+            }
         });
 
         me.rootEl.addEventListener('keydown', function (evt) {

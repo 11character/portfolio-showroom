@@ -180,6 +180,13 @@
                 </div>
             </div>
 
+            <div class="item-check item-row">
+                <div class="item-label">테두리 막기</div>
+                <div class="item-control">
+                    <input v-model="disableOutline" @change="onChangeOutline" type="checkbox" class="item-value">
+                </div>
+            </div>
+
             <div class="item-row">
                 <div class="item-control">
                     <button @click="onClickRemove" type="button" class="item-control-btn" tabindex="-1">
@@ -223,7 +230,8 @@
                 mtlMetalness: 0.5,
                 mtlRoughness: 1,
                 lightIntensity: 1,
-                link: ''
+                link: '',
+                disableOutline: false
             };
         },
         mounted: function () {
@@ -262,6 +270,7 @@
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
+                me.disableOutline = assetItem.disableOutline;
                 me.mtlMetalness = assetItem.mtlSetting.metalness;
                 me.mtlRoughness = assetItem.mtlSetting.roughness;
                 me.lightIntensity = assetItem.lightSetting.intensity;
@@ -342,6 +351,17 @@
                 me.editor.setLink(me.link);
 
                 me.$emit('control', 'link');
+            },
+            onChangeOutline: function () {
+                const me = this;
+
+                const assetItem = me.editor.selectedItem;
+
+                if (assetItem) {
+                    assetItem.disableOutline = me.disableOutline;
+                }
+
+                me.$emit('control', 'disableOutline');
             },
             onClickRemove: function () {
                 const me = this;
@@ -579,6 +599,14 @@
 
                 .item-value {
                     width: 80px;
+                }
+            }
+        }
+
+        .item-check {
+            .item-control {
+                .item-value {
+                    height: 20px;
                 }
             }
         }

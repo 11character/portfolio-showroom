@@ -27,7 +27,10 @@
                 disabled: true,
                 showroomViewer: new NemoShowroomViewer({
                     width: 100,
-                    height: 100
+                    height: 100,
+                    onSelect: function (assetItem) {
+                        console.log(assetItem.name);
+                    }
                 })
             };
         },

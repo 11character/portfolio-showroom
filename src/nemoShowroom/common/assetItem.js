@@ -63,6 +63,8 @@ export default class AssetItem {
         this.onAnimationEnd = (typeof obj.onAnimationEnd === 'function') ? obj.onAnimationEnd : function () {};
 
         this.isSprite = !!obj.isSprite;
+        this.disableOutline = !!obj.disableOutline;
+
         this.isUsed = !!obj.isUsed;
         this.isLoaded = !!obj.isLoaded;
         this.isPbrMtl = !!obj.isPbrMtl;
@@ -110,6 +112,7 @@ export default class AssetItem {
             animationLoop: me.animationLoop,
 
             isSprite: me.isSprite,
+            disableOutline: me.disableOutline,
 
             mtlSetting: me.mtlSetting,
             lightSetting: me.lightSetting
