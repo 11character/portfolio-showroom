@@ -1,5 +1,5 @@
 <template>
-    <div :hidden="hidden" class="field">
+    <div :hidden="hidden" class="loading-field">
         <div class="box">
             <div class="loader"></div>
         </div>
@@ -18,7 +18,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .field {
+    .loading-field {
         position:fixed;
         width: 100vw;
         height: 100vh;

@@ -1,5 +1,8 @@
 import * as THREE from 'three/build/three.module';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import * as StaticVariable from '../common/staticVariable';
 import AssetItem from '../common/assetItem';
@@ -91,6 +94,16 @@ export default class NemoShowroomEditor {
         me.scene.add(me.objectField);
         me.scene.add(me.baseFloor);
 
+        // 후처리. 화면에 보여지는 결과. ---
+        me.composer = new EffectComposer(me.renderer);
+        me.renderPass = new RenderPass(me.scene, me.camera);
+
+        me.outlinePass = new OutlinePass( new THREE.Vector2(winW, winH), me.scene, me.camera);
+        me.outlinePass.edgeStrength = 10;
+
+        me.composer.addPass(me.renderPass);
+        me.composer.addPass(me.outlinePass);
+
         // ---
         me.rootEl.classList.add(StaticVariable.ELEMENT_FIELD_CLASS_NAME);
         me.rootEl.id = StaticVariable.ELEMENT_FIELD_ID;
@@ -109,6 +122,7 @@ export default class NemoShowroomEditor {
 
         // ---
         me.checkBoxArr = [];
+        me.checkItemArr = [];
 
         //--
         me.start();
@@ -130,13 +144,16 @@ export default class NemoShowroomEditor {
 
             const delta = me.clock.getDelta();
 
-            me.renderer.render(me.scene, me.camera);
             me.assetItemManager.animationUpdate(delta);
 
             me.__move(delta);
 
             me.cssRenderer.updateAll();
             me.cssRenderer.render();
+
+            me.__outline();
+
+            me.composer.render();
         })();
     }
 
@@ -175,9 +192,10 @@ export default class NemoShowroomEditor {
             }
 
             promise = Promise.all(promiseArr).then(function (itemArr) {
-                const tempArr = [];
+                me.checkBoxArr = [];
+                me.checkItemArr = [];
 
-                let assetItem;
+                let assetItem, box;
 
                 for (let i = 0; i < itemArr.length; i++) {
                     assetItem = itemArr[i];
@@ -186,7 +204,10 @@ export default class NemoShowroomEditor {
                         assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_CONE));
 
                     } else {
-                        tempArr.push(assetItem.getBox3());
+                        box = assetItem.getBox3();
+                        // 두 배열의 순서 일치.
+                        me.checkBoxArr.push(box);
+                        me.checkItemArr.push(assetItem);
                     }
 
                     me.objectField.add(assetItem.object3D);
@@ -195,8 +216,6 @@ export default class NemoShowroomEditor {
 
                     assetItem.animationPlay();
                 }
-
-                me.checkBoxArr = tempArr;
             });
         }
 
@@ -215,6 +234,7 @@ export default class NemoShowroomEditor {
         me.rootEl.style.height = height + 'px';
 
         me.renderer.setSize(width, height);
+        me.composer.setSize(width, height);
 
         me.cssRenderer.resize();
         me.cssRenderer.domElement.style.left = '0px';
@@ -222,6 +242,39 @@ export default class NemoShowroomEditor {
 
         me.camera.aspect = width / height;
         me.camera.updateProjectionMatrix();
+    }
+
+    __outline() {
+        const me = this;
+
+        // 바라보는 방향.
+        const direction = me.controls.getDirection(new THREE.Vector3()).clone();
+
+        // 계산된 방향으로 선을 긋는다.
+        const position = me.controls.getObject().position.clone();
+        const ray = new THREE.Ray(position, direction);
+        const vec3 = new THREE.Vector3();
+
+        // 충돌검사.
+        let distance = 0;
+        let prevDistance = 0;
+        let index = -1;
+
+        for (let i = 0; i < me.checkBoxArr.length; i++) {
+            ray.intersectBox(me.checkBoxArr[i], vec3);
+
+            if (vec3.lengthSq()) {
+                distance = vec3.distanceTo(position);
+
+                // 처음이거나 이전 박스보다 가까운 경우.
+                if (index == -1 || distance < prevDistance) {
+                    prevDistance = distance;
+                    index = i;
+                }
+            }
+        }
+
+        me.outlinePass.selectedObjects = (index != -1) ? [me.checkItemArr[index].object3D] : [];
     }
 
     __detectPlayerCollision() {
@@ -235,10 +288,7 @@ export default class NemoShowroomEditor {
 
         // 전방을 기준으로 카메라가 바라보는 각도.
         const quaternion = new THREE.Quaternion();
-        quaternion.setFromUnitVectors(
-            new THREE.Vector3(0, 0, -1),
-            cameraDirection
-        );
+        quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), cameraDirection);
 
         // 카메라 방향 기준으로 이동하는 방향. (방향 오차를 줄이기 위해 normalize)
         direction.applyQuaternion(quaternion);
@@ -273,7 +323,7 @@ export default class NemoShowroomEditor {
                     check = true;
                     break;
                 }
-    
+
                 // 아래.
                 ray.origin.setY(originY - (StaticVariable.CONTROLS_RAY_FAR * 0.75));
                 ray.intersectBox(me.checkBoxArr[i], vec3);

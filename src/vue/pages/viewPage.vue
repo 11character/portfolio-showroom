@@ -2,11 +2,9 @@
     <div class="field">
         <loading :hidden="!disabled"></loading>
         
-        <div ref="viewField" class="view-field"></div>
-
-        <!-- <div ref="waitField" class="wait-field">
-            <h1>클릭하세요.</h1>
-        </div> -->
+        <div ref="viewField" class="view-field">
+            <div class="cross-hair"></div>
+        </div>
     </div>
 </template>
 
@@ -99,6 +97,19 @@
         position: absolute;
         left: 0px;
         top: 0px;
+
+        .cross-hair {
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: #ffffff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -0.25rem;
+            margin-left: -0.25rem;
+            border-radius: 50%;
+            z-index: 1;
+        }
     }
 
     .wait-field {
