@@ -170,11 +170,6 @@ export const STYLE_BACKGROUND_COLOR = '#000000';
 export const PBR_TYPES = [ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB].join(' ');
 
 /**
- * 컨트롤의 높이.
- */
-export const CONTROLS_Y = 1;
-
-/**
  * 컨트롤 충돌 체크 길이.
  */
 export const CONTROLS_RAY_FAR = 1;

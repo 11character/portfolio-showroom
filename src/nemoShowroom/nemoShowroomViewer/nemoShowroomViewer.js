@@ -40,7 +40,7 @@ export default class NemoShowroomEditor {
 
         //--
         me.controls = new PointerLockControls(me.camera, me.rootEl);
-        me.controls.getObject().position.setY(StaticVariable.CONTROLS_Y);
+        me.controls.getObject().position.setY(StaticVariable.CONTROLS_RAY_FAR);
 
         // --
         me.moveInfo = {
@@ -247,16 +247,41 @@ export default class NemoShowroomEditor {
         // 계산된 방향으로 선을 긋는다.
         const position = me.controls.getObject().position.clone();
         const ray = new THREE.Ray(position, direction);
+        const originY = position.y;
+        const vec3 = new THREE.Vector3();
 
         // 충돌검사.
         let check = false;
 
         for (let i = 0; i < me.checkBoxArr.length; i++) {
-            let vec3 = ray.intersectBox(me.checkBoxArr[i]);
+            // 중심.
+            ray.origin.setY(originY);
+            ray.intersectBox(me.checkBoxArr[i], vec3);
 
-            if (vec3 && vec3.distanceTo(position) < StaticVariable.CONTROLS_RAY_FAR) {
+            if (vec3.lengthSq() && vec3.distanceTo(position) < StaticVariable.CONTROLS_RAY_FAR) {
                 check = true;
                 break;
+            }
+
+            // 위, 아래 이동이 아닌 경우.
+            if (direction.y == 0) {
+                // 위.
+                ray.origin.setY(originY + (StaticVariable.CONTROLS_RAY_FAR * 0.75));
+                ray.intersectBox(me.checkBoxArr[i], vec3);
+
+                if (vec3.lengthSq() && vec3.distanceTo(position) < StaticVariable.CONTROLS_RAY_FAR) {
+                    check = true;
+                    break;
+                }
+    
+                // 아래.
+                ray.origin.setY(originY - (StaticVariable.CONTROLS_RAY_FAR * 0.75));
+                ray.intersectBox(me.checkBoxArr[i], vec3);
+
+                if (vec3.lengthSq() && vec3.distanceTo(position) < StaticVariable.CONTROLS_RAY_FAR) {
+                    check = true;
+                    break;
+                }
             }
         }
 
@@ -300,9 +325,9 @@ export default class NemoShowroomEditor {
             // y축.
             me.controls.getObject().position.y -= (velocity.y * delta);
 
-            if (me.controls.getObject().position.y < 1) {
+            if (me.controls.getObject().position.y < StaticVariable.CONTROLS_RAY_FAR) {
                 velocity.y = 0;
-                me.controls.getObject().position.y = 1;
+                me.controls.getObject().position.y = StaticVariable.CONTROLS_RAY_FAR;
             }
         }
     }
