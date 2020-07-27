@@ -14,7 +14,7 @@
                             <button type="button" class="text-page-color w-100 btn btn-outline-secondary">배경색</button>
                         </div>
 
-                        <div class="col-12 mt-3">
+                        <div class="col-12 mt-3 font-neuemachina">
                             <textarea class="col-12" style="resize:none;"></textarea>
                         </div>
                     </div>

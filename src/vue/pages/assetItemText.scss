@@ -1,0 +1,19 @@
+/* 화면에 표시되는 텍스트 아이템의 스타일 통일. */
+.asset-text-item {
+    padding-left: 0.25rem !important;
+
+    padding-right: 0.25rem !important;
+
+    & > * {
+        margin-bottom: 0px !important;
+    }
+}
+
+.note-editable {
+    -webkit-user-select: initial;
+    user-select: initial;
+
+    & > * {
+        margin-bottom: 0px !important;
+    }
+}

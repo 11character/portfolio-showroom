@@ -46,7 +46,7 @@ export default class CssRenderer {
         const rotation = assetItem.rotation;
 
         const group = new THREE.Group();
-        const bodyEl = document.body;
+        const bodyEl = me.webglRenderer.domElement.parentNode || document.body;
         const fieldEl = Utils.createDivElement();
         const contentEl = Utils.createDivElement();
 

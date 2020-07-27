@@ -44,7 +44,7 @@
                 </div>
             </nav>
 
-            <div ref="viewField"></div>
+            <div ref="viewField" class="font-neuemachina"></div>
 
             <div class="control-field">
                 <control-panel @control="onControl" v-bind:editor="showroomEditor"></control-panel>
@@ -462,23 +462,6 @@
 </style>
 
 <style lang="scss">
-    /* 화면에 표시되는 asset-text-item 스타일 통일 */
-        .asset-text-item {
-            padding-left: 0.25rem !important;
-
-            padding-right: 0.25rem !important;
-
-            & > * {
-                margin-bottom: 0px !important;
-            }
-        }
-
-        .note-editable {
-            -webkit-user-select: initial;
-            user-select: initial;
-
-            & > * {
-                margin-bottom: 0px !important;
-            }
-        }
+    // 화면에 표시되는 텍스트 아이템의 공통 스타일.
+    @import "./assetItemText.scss";
 </style>

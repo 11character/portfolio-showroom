@@ -1,5 +1,5 @@
 <template>
-    <div class="field">
+    <div class="field font-neuemachina">
         <loading :hidden="!disabled"></loading>
         
         <div ref="viewField" class="view-field">
@@ -95,7 +95,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .field {
     position: relative;
 
@@ -134,4 +134,9 @@
         cursor: pointer;
     }
 }
+</style>
+
+<style lang="scss">
+    // 화면에 표시되는 텍스트 아이템의 공통 스타일.
+    @import "./assetItemText.scss";
 </style>
