@@ -30,6 +30,9 @@
                     height: 100,
                     onSelect: function (assetItem) {
                         console.log(assetItem.name);
+                    },
+                    onLoadProgress: function (count, total, assetItem) {
+                        console.log(count, total, count / total * 100);
                     }
                 })
             };

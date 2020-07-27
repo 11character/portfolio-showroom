@@ -86,7 +86,7 @@ export default class AssetItem {
         return (me.object3D) ? (me.object3D.visible) : false;
     }
 
-    // 외부로 출력되는 JSON 값.
+    // 저장되는 JSON 값.
     toJSON() {
         const me = this;
 

@@ -5,5 +5,6 @@ export default class Options {
         this.height = obj.height || 600;
 
         this.onSelect = (typeof obj.onSelect == 'function') ? obj.onSelect : function () {};
+        this.onLoadProgress = (typeof obj.onLoadProgress == 'function') ? obj.onLoadProgress : function () {};
     }
 }

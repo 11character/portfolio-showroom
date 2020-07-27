@@ -183,13 +183,23 @@ export default class NemoShowroomEditor {
 
         if (arr.length) {
             const promiseArr = [];
+            const totalCount = arr.length;
 
-            let assetItem;
+            let count = 0;
+            let assetItem = null;
+
+            // 시작값.
+            me.options.onLoadProgress(count, totalCount, assetItem);
 
             for (let i = 0; i < arr.length; i++) {
                 assetItem = new AssetItem(arr[i]);
 
-                promiseArr.push(me.itemLoader.load(assetItem));
+                promiseArr.push(me.itemLoader.load(assetItem).then(function (assetItem) {
+                    count++
+                    me.options.onLoadProgress(count, totalCount, assetItem);
+
+                    return Promise.resolve(assetItem);
+                }));
             }
 
             promise = Promise.all(promiseArr).then(function (itemArr) {
