@@ -203,22 +203,15 @@ export default class NemoShowroomEditor {
             }
 
             promise = Promise.all(promiseArr).then(function (itemArr) {
-                me.checkBoxArr = [];
-                me.checkItemArr = [];
+                let assetItem;
 
-                let assetItem, box;
-
+                // 배치.
                 for (let i = 0; i < itemArr.length; i++) {
                     assetItem = itemArr[i];
 
-                    if (assetItem.type == StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
+                    // 조명숨김.
+                    if (assetItem.type === StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
                         assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_CONE));
-
-                    } else {
-                        box = assetItem.getBox3();
-                        // 두 배열의 순서 일치.
-                        me.checkBoxArr.push(box);
-                        me.checkItemArr.push(assetItem);
                     }
 
                     me.objectField.add(assetItem.object3D);
@@ -227,6 +220,23 @@ export default class NemoShowroomEditor {
 
                     assetItem.animationPlay();
                 }
+
+                // cssRenderer에 배치되어 크기를 구할 수 있도록 대기.
+                setTimeout(function () {
+                    me.checkBoxArr = [];
+                    me.checkItemArr = [];
+
+                    for (let i = 0; i < itemArr.length; i++) {
+                        assetItem = itemArr[i];
+
+                        // 충돌박스 생성.
+                        if (assetItem.type !== StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
+                            // 두 배열의 순서 일치.
+                            me.checkBoxArr.push(assetItem.getBox3());
+                            me.checkItemArr.push(assetItem);
+                        }
+                    }
+                }, 500);
             });
         }
 
