@@ -1,21 +1,10 @@
 <template>
-    <div :hidden="hidden" class="loading-field">
+    <div class="loading-field">
         <div class="box">
             <div class="loader"></div>
         </div>
     </div>
 </template>
-
-<script>
-    export default {
-        props: {
-            hidden: {
-                type: Boolean,
-                default: false
-            }
-        }
-    }
-</script>
 
 <style lang="scss" scoped>
     .loading-field {

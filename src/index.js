@@ -40,7 +40,9 @@ import {
     faArrowsAlt,
     faExpand,
     faCompress,
-    faEye
+    faEye,
+    faPlusSquare,
+    faMinusSquare
 
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -55,6 +57,8 @@ FaLibrary.add(faArrowsAlt);
 FaLibrary.add(faExpand);
 FaLibrary.add(faCompress);
 FaLibrary.add(faEye);
+FaLibrary.add(faPlusSquare);
+FaLibrary.add(faMinusSquare);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
