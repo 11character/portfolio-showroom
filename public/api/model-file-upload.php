@@ -69,7 +69,6 @@
                         $dir_url = $FILE_ROOT . '/' . $dir_name;
 
                         $value = [
-                            TYPE_CODE => isset($_POST['type']) ? (int)$_POST['type'] : 1,
                             EXT => $ext,
                             NAME => $name,
                             FULL_NAME => $full_name,
@@ -81,7 +80,7 @@
                             MEMO => isset($_POST['memo']) ? $_POST['memo'] : ''
                         ];
 
-                        $pdo->prepare($sql_insert_tb_upload_file)->execute($value);
+                        $pdo->prepare($sql_insert_tb_model_file)->execute($value);
                         $data['message'] = 'success';
 
                     } else {

@@ -14,14 +14,7 @@
                         </div>
 
                         <div class="row my-3">
-                            <div class="col-3">
-                                <select v-model.number="modelFileInfo.typeCode" :disabled="disabled" class="form-control form-control-sm">
-                                    <option value="1">물건</option>
-                                    <option value="0">벽</option>
-                                </select>
-                            </div>
-
-                            <div class="col-9">
+                            <div class="col-12">
                                 <input :disabled="disabled" @change="onChangefile" ref="uploadFile" type="file" class="w-100 border rounded">
                             </div>
                         </div>
@@ -122,19 +115,17 @@
                     if (file && memeType.indexOf(file.type) > -1) {
                         me.disabled = true;
 
-                        const type = me.modelFileInfo.typeCode;
                         const name = me.modelFileInfo.name || file.name;
                         const memo = me.modelFileInfo.memo;
                         const formData = new FormData();
 
                         formData.append('file', file);
-                        formData.append('type', type);
                         formData.append('name', name);
                         formData.append('memo', memo);
 
                         $.ajax({
                             method: 'post',
-                            url: ApiUrl.FILE_UPLOAD,
+                            url: ApiUrl.MODEL_FILE_UPLOAD,
                             processData: false,
                             contentType: false,
                             data: formData,

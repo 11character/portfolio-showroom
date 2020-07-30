@@ -72,19 +72,18 @@ WHERE
 EOD;
 
 // 파일 목록 조회.
-$sql_select_tb_upload_file = <<<EOD
+$sql_select_tb_model_file = <<<EOD
 SELECT
     *
 FROM
-    TB_UPLOAD_FILE
+    TB_MODEL_FILE
 ORDER BY C_DATE DESC
 EOD;
 
 // 파일정보 생성.
-$sql_insert_tb_upload_file = <<<EOD
-INSERT INTO TB_UPLOAD_FILE
+$sql_insert_tb_model_file = <<<EOD
+INSERT INTO TB_MODEL_FILE
 (
-    TYPE_CODE,
     EXT,
     NAME,
     FULL_NAME,
@@ -95,7 +94,6 @@ INSERT INTO TB_UPLOAD_FILE
     SIZE,
     MEMO
 ) VALUES (
-    :TYPE_CODE,
     :EXT,
     :NAME,
     :FULL_NAME,

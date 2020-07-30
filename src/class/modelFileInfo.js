@@ -1,7 +1,6 @@
 export default class ModelFileInfo {
     constructor (obj = {}) {
         this.seqId = obj.seqId || 0;
-        this.typeCode = obj.typeCode || 1;
         this.ext = obj.ext || '';
         this.name = obj.name || '';
         this.fullName = obj.fullName || '';

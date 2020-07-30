@@ -30,7 +30,7 @@
 
             me.dataTable = $('.file-table').DataTable({
                 ajax: {
-                    url: ApiUrl.FILE_LIST,
+                    url: ApiUrl.MODEL_FILE_LIST,
                     dataSrc: 'data'
                 },
                 order: [],
@@ -38,9 +38,7 @@
                 pagingType: 'numbers',
                 columns: [
                     {width: '5%', data: 'SEQ_ID', className:'text-center'},
-                    {width: '8%', data: 'TYPE_CODE', className:'text-center', render: function (data) {
-                        return data == 0 ? '벽' : '물건';
-                    }},
+                    {width: '8%', data: 'EXT', className:'text-center'},
                     {width: '30%', data: 'NAME', className:'text-center'},
                     {width: '37%', data: 'MEMO', className:'text-center'},
                     {width: '20%', data: 'C_DATE', className:'text-center'}

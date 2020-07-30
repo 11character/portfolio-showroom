@@ -62,7 +62,7 @@
 
             me.dataTable = $('.model-file-table').DataTable({
                 ajax: {
-                    url: ApiUrl.FILE_LIST,
+                    url: ApiUrl.MODEL_FILE_LIST,
                     dataSrc: 'data'
                 },
                 order: [],

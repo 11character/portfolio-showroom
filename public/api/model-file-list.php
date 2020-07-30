@@ -12,7 +12,7 @@
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $stmt = $pdo->prepare($sql_select_tb_upload_file);
+        $stmt = $pdo->prepare($sql_select_tb_model_file);
 
         if ($stmt->execute()) {
             $arr = [];
