@@ -14,7 +14,7 @@
                 <div class="row mt-3">
                     <label class="col-12 form-label">설명</label>
                     <div class="col-12">
-                        <input v-model.trim="showroom.memo" :disabled="disabled" type="text" class="w-100 form-control form-control-sm">
+                        <input v-model.trim="showroom.description" :disabled="disabled" type="text" class="w-100 form-control form-control-sm">
                     </div>
                 </div>
             </template>

@@ -42,12 +42,12 @@ $sql_insert_tb_showroom = <<<EOD
 INSERT INTO TB_SHOWROOM
 (
     NAME,
-    MEMO
+    DESCRIPTION
 )
 VALUES
 (
     :NAME,
-    :MEMO
+    :DESCRIPTION
 )
 EOD;
 
@@ -57,7 +57,7 @@ UPDATE
     TB_SHOWROOM
 SET
     NAME = :NAME,
-    MEMO = :MEMO,
+    DESCRIPTION = :DESCRIPTION,
     DATA = :DATA
 WHERE
     SEQ_ID = :SEQ_ID
@@ -92,7 +92,7 @@ INSERT INTO TB_MODEL_FILE
     PATH,
     URL,
     SIZE,
-    MEMO
+    DESCRIPTION
 ) VALUES (
     :EXT,
     :NAME,
@@ -102,7 +102,7 @@ INSERT INTO TB_MODEL_FILE
     :PATH,
     :URL,
     :SIZE,
-    :MEMO
+    :DESCRIPTION
 )
 EOD;
 ?>

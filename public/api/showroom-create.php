@@ -15,7 +15,7 @@
 
             $value = [
                 NAME => $_POST['name'],
-                MEMO => $_POST['memo']
+                DESCRIPTION => $_POST['description']
             ];
 
             $pdo->prepare($sql_insert_tb_showroom)->execute($value);

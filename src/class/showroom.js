@@ -2,7 +2,7 @@ export default class Showroom {
     constructor (obj = {}) {
         this.seqId = obj.seqId || 0;
         this.name = obj.name || '';
-        this.memo = obj.memo || '';
+        this.description = obj.description || '';
         this.data = obj.data || '';
         this.cDate = obj.cDate || '';
         this.uDate = obj.uDate || '';

@@ -29,7 +29,7 @@
                         <div class="row my-3">
                             <div class="col-12">
                                 <label>설명</label>
-                                <input v-model.trim="modelFileInfo.memo" :disabled="disabled" type="text" class="form-control form-control-sm">
+                                <input v-model.trim="modelFileInfo.description" :disabled="disabled" type="text" class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>
@@ -116,12 +116,12 @@
                         me.disabled = true;
 
                         const name = me.modelFileInfo.name || file.name;
-                        const memo = me.modelFileInfo.memo;
+                        const description = me.modelFileInfo.description;
                         const formData = new FormData();
 
                         formData.append('file', file);
                         formData.append('name', name);
-                        formData.append('memo', memo);
+                        formData.append('description', description);
 
                         $.ajax({
                             method: 'post',

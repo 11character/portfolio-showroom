@@ -76,7 +76,7 @@
                 },
                 columns: [
                     {className: 'column-text column-text-name', width: '35%', data: 'NAME'},
-                    {className: 'column-text column-text-name', width: '45%', data: 'MEMO'},
+                    {className: 'column-text column-text-name', width: '45%', data: 'DESCRIPTION'},
                     {className: 'column-text column-text-type', width: '20%', data: 'EXT'}
                 ]
             });

@@ -9,7 +9,7 @@ export default class ModelFileInfo {
         this.dirUrl = obj.dirUrl || '';
         this.url = obj.url || '';
         this.size = obj.size || 0;
-        this.memo = obj.memo || '';
+        this.description = obj.description || '';
         this.cDate = obj.cDate || '';
         this.uDate = obj.uDate || '';
         this.dDate = obj.dDate || '';

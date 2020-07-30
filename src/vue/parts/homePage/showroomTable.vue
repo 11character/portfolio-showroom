@@ -80,7 +80,7 @@
                 columns: [
                     {width: '5%', data: 'SEQ_ID', className:'text-center'},
                     {width: '20%', data: 'NAME', className:'text-center'},
-                    {width: '40%', data: 'MEMO', className:'text-center'},
+                    {width: '40%', data: 'DESCRIPTION', className:'text-center'},
                     {width: '20%', data: 'C_DATE', className:'text-center'},
                     {width: '15%', data: null, className:'text-center', orderable:false, defaultContent: buttonsHtml}
                 ]

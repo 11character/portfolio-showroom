@@ -16,7 +16,7 @@
             $value = [
                 SEQ_ID => $_POST['seqId'],
                 NAME => $_POST['name'],
-                MEMO => $_POST['memo'],
+                DESCRIPTION => $_POST['description'],
                 DATA => $_POST['data']
             ];
 
