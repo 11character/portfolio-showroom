@@ -17,7 +17,7 @@
 
             if (strpos($zip_mime, $mimetype) !== false) {
                 $dir_name = time() . '_' . rand();
-                $dir_path = $UPLOAD_DIR . '/' . $dir_name;
+                $dir_path = $MODEL_FILE_DIR_PATH . '/' . $dir_name;
                 $file_name = $file['name'];
                 $file_path = $dir_path . '/' . $file_name;
                 $temp_path = $file['tmp_name'];
@@ -66,7 +66,7 @@
                         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                        $dir_url = $FILE_ROOT . '/' . $dir_name;
+                        $dir_url = $MODEL_FILE_DIR . '/' . $dir_name;
 
                         $value = [
                             EXT => $ext,

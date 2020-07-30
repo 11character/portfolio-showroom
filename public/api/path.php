@@ -8,6 +8,9 @@
     // 파일 루트 이름
     $FILE_ROOT = 'data';
 
-    // 업로드 디렉토리 절대경로.
-    $UPLOAD_DIR = $ROOT_DIR . '/' . $FILE_ROOT;
+    // 모델 파일 디렉토리
+    $MODEL_FILE_DIR = $FILE_ROOT . '/model';
+
+    // 모델 파일 디렉토리 절대경로.
+    $MODEL_FILE_DIR_PATH = $ROOT_DIR . '/' . $MODEL_FILE_DIR;
 ?>
