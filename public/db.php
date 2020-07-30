@@ -37,17 +37,36 @@ WHERE
     SEQ_ID = :SEQ_ID
 EOD;
 
+$sql_select_tb_showroom_from_name = <<<EOD
+SELECT
+    *
+FROM
+    TB_SHOWROOM
+WHERE
+    NAME = :NAME
+EOD;
+
 // 전시장 생성.
 $sql_insert_tb_showroom = <<<EOD
 INSERT INTO TB_SHOWROOM
 (
     NAME,
-    DESCRIPTION
+    IMG_URL,
+    BGM_URL,
+    CONTENT_KO,
+    CONTENT_EN,
+    DESCRIPTION,
+    DATA
 )
 VALUES
 (
     :NAME,
-    :DESCRIPTION
+    :IMG_URL,
+    :BGM_URL,
+    :CONTENT_KO,
+    :CONTENT_EN,
+    :DESCRIPTION,
+    :DATA
 )
 EOD;
 
@@ -57,6 +76,10 @@ UPDATE
     TB_SHOWROOM
 SET
     NAME = :NAME,
+    IMG_URL = :IMG_URL,
+    BGM_URL = :BGM_URL,
+    CONTENT_KO = :CONTENT_KO,
+    CONTENT_EN = :CONTENT_EN,
     DESCRIPTION = :DESCRIPTION,
     DATA = :DATA
 WHERE

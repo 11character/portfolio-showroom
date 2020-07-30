@@ -3,22 +3,7 @@
         <top-nav page-name="home"></top-nav>
 
         <!-- 생성 모달 -->
-        <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmCreate" class="create-modal">
-            <template v-slot:message>
-                <div class="row">
-                    <label class="col-12 form-label">이름</label>
-                    <div class="col-12">
-                        <input v-model.trim="showroom.name" :disabled="disabled" type="text" class="w-100 form-control form-control-sm">
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <label class="col-12 form-label">설명</label>
-                    <div class="col-12">
-                        <input v-model.trim="showroom.description" :disabled="disabled" type="text" class="w-100 form-control form-control-sm">
-                    </div>
-                </div>
-            </template>
-        </confirm-modal>
+        <showroom-modal @create="onCreate" ref="showroomModal"></showroom-modal>
         <!-- END-생성 모달 -->
 
         <div class="container mt-5">
@@ -38,12 +23,8 @@
 </template>
 
 <script>
-    import * as ApiUrl from '../../class/apiUrl';
-    import Utils from '../../class/utils';
-    import Showroom from '../../class/showroom';
-
     import topNavVue from '../parts/topNav.vue';
-    import confirmModalVue from '../parts/confirmModal.vue';
+    import showroomModalVue from '../parts/homePage/showroomModal.vue';
     import showroomTableVue from '../parts/homePage/showroomTable.vue';
 
     const Promise = window.Promise;
@@ -51,58 +32,20 @@
     export default {
         components: {
             'top-nav': topNavVue,
-            'confirm-modal': confirmModalVue,
+            'showroom-modal': showroomModalVue,
             'showroom-table': showroomTableVue
-        },
-        data: function () {
-            return {
-                disabled: false,
-                showroom: new Showroom(),
-                showroomArr: [],
-                search: ''
-            };
         },
         methods: {
             onClickCreate: function () {
                 const me = this;
-
-                me.showroom = new Showroom();
-
-                $('.create-modal').modal('show');
+                
+                me.$refs.showroomModal.showModal();
             },
-            onConfirmCreate: function (bool) {
+            onCreate: function () {
                 const me = this;
 
-                if (bool) {
-                    const message = me.showroom.validate();
-
-                    if (message) {
-                        alert(message);
-
-                    } else {
-                        me.disabled = true;
-
-                        Utils.apiRequest(ApiUrl.SHOWROOM_CREATE, me.showroom, 'post').catch(function () {
-                            return Promise.resolve();
-
-                        }).then(function () {
-                            me.disabled = false;
-
-                            me.$refs.showroomTable.tableReload();
-
-                            $('.create-modal').modal('hide');
-                        });
-                    }
-                }
-            },
-            onClickDelete: function (showroom) {
-                const me = this;
-
-                me.showroom = showroom;
-
-                $('.delete-modal').modal('show');
-            },
-            
+                me.$refs.showroomTable.tableReload();
+            }
         }
     }
 </script>

@@ -3,7 +3,7 @@
         <top-nav page-name="file"></top-nav>
 
         <!-- 업로드 모달 -->
-        <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmUpload" class="upload-modal">
+        <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmUpload" ref="uploadModal">
             <template v-slot:message>
                 <div class="row">
                    <div class="col-12">
@@ -85,15 +85,18 @@
             return {
                 disabled: false,
                 modelFileInfo: new ModelFileInfo(),
-                uploadType: 1,
-                uploadFile: null,
-                uploadName: '',
-                uploadMemo: '',
                 fileArr: [],
                 search: ''
             };
         },
         methods: {
+            clear: function () {
+                const me = this;
+
+                me.modelFileInfo = new ModelFileInfo();
+
+                me.$refs.uploadFile.value = '';
+            },
             onChangefile: function (evt) {
                 const me = this;
 
@@ -102,7 +105,7 @@
             onClickUpload: function () {
                 const me = this;
 
-                $('.upload-modal').modal('show');
+                $(me.$refs.uploadModal.$el).modal('show');
             },
             onConfirmUpload: function (bool) {
                 const me = this;
@@ -136,11 +139,11 @@
 
                         }).done(function (data) {
                             if (data.code == 0) {
-                                el.value = '';
-
                                 me.$refs.fileTable.tableReload();
 
-                                $('.upload-modal').modal('hide');
+                                $(me.$refs.uploadModal.$el).modal('hide');
+
+                                me.clear();
 
                             } else {
                                 alert('저장에 실패했습니다.');
@@ -154,8 +157,7 @@
                     }
 
                 } else {
-                    me.$refs.uploadFile.value = '';
-                    me.modelFileInfo = new ModelFileInfo();
+                    me.clear();
                 }
             }
         }
