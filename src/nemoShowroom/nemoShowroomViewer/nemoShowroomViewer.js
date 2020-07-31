@@ -175,13 +175,16 @@ export default class NemoShowroomEditor {
         const me = this;
 
         const data = JSON.parse(json);
-        const arr = data.itemArray;
 
         let promise = Promise.resolve();
 
+        // 전역 조명.
         me.light.intensity = (typeof data.lightIntensity == 'number') ? data.lightIntensity : 1;
 
-        if (arr.length) {
+        // 모델 정보.
+        const arr = data.itemArray;
+
+        if (arr && arr.length) {
             const promiseArr = [];
             const totalCount = arr.length;
 
@@ -236,8 +239,13 @@ export default class NemoShowroomEditor {
                             me.checkItemArr.push(assetItem);
                         }
                     }
+
+                    me.options.onLoad(me);
                 }, 500);
             });
+
+        } else {
+            me.options.onLoad(me);
         }
 
         return promise;

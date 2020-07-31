@@ -81,6 +81,9 @@
                     },
                     onLoadProgress: function (count, total, assetItem) {
                         me.loadingPercent = parseInt(count / total * 100, 10);
+                    },
+                    onLoad: function () {
+                        me.loadingPercent = 100;
                     }
                 }),
                 centerStyle: {
@@ -145,7 +148,7 @@
                     if (data.data.length > 0) {
                         me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
 
-                        me.showroomViewer.openJson(me.showroom.data || '[]');
+                        me.showroomViewer.openJson(me.showroom.data || '{}');
                     } else {
                         alert('해당 정보가 없습니다.');
                     }

@@ -6,5 +6,6 @@ export default class Options {
 
         this.onSelect = (typeof obj.onSelect == 'function') ? obj.onSelect : function () {};
         this.onLoadProgress = (typeof obj.onLoadProgress == 'function') ? obj.onLoadProgress : function () {};
+        this.onLoad = (typeof obj.onLoad == 'function') ? obj.onLoad : function () {};
     }
 }
