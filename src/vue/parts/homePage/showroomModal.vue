@@ -105,7 +105,18 @@
                 const me = this;
 
                 if (bool) {
+                    const imgFile = me.$refs.imgFile.files[0];
+                    const bgmFile = me.$refs.bgmFile.files[0];
+
                     let message = me.showroom.validate();
+
+                    if (bgmFile && bgmFile.type.indexOf('audio/mpeg') != 0) {
+                        message = "오디오에는 MP3 파일만 들어갈 수 있습니다.";
+                    }
+
+                    if (imgFile && imgFile.type.indexOf('image/') != 0) {
+                        message = "이미지에는 이미지 파일만 들어갈 수 있습니다.";
+                    }
 
                     if (message) {
                         alert(message);
@@ -113,8 +124,6 @@
                     } else {
                         me.disabled = true;
 
-                        const imgFile = me.$refs.imgFile.files[0];
-                        const bgmFile = me.$refs.bgmFile.files[0];
                         const formData = new FormData();
 
                         for (let key in me.showroom) {

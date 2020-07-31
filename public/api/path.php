@@ -14,9 +14,9 @@
     // 모델 파일 디렉토리 절대경로.
     $MODEL_FILE_DIR_PATH = $ROOT_DIR . '/' . $MODEL_FILE_DIR;
 
-    // 전지상 파일 디렉토리.
+    // 전시장 파일 디렉토리.
     $SHOWROOM_FILE_DIR = $FILE_ROOT . '/showroom';
 
-    // 전지상 파일 디렉토리 절대경로.
+    // 전시장 파일 디렉토리 절대경로.
     $SHOWROOM_FILE_DIR_PATH = $ROOT_DIR . '/' . $SHOWROOM_FILE_DIR;
 ?>

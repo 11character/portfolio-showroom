@@ -116,9 +116,12 @@
                 const me = this;
 
                 if (bool) {
-                    Utils.apiRequest(ApiUrl.SHOWROOM_DELETE, me.showroom, 'post');
+                    Utils.apiRequest(ApiUrl.SHOWROOM_DELETE, me.showroom, 'post').catch(function () {
+                        return Promise.resolve();
 
-                    me.tableReload();
+                    }).then(function () {
+                        me.tableReload();
+                    });
                 }
             }
         }
