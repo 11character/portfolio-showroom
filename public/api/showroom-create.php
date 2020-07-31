@@ -59,7 +59,7 @@
 
                             move_uploaded_file($img_file['tmp_name'], $dir_path . '/img.' . $ext);
 
-                            $row['IMG_URL'] = $SHOWROOM_FILE_DIR . '/showroom.' . $ext;
+                            $row['IMG_URL'] = $SHOWROOM_FILE_DIR . '/' . $row['SEQ_ID'] . '/img.' . $ext;
                         }
 
                         // 배경음 파일 저장.
@@ -69,7 +69,7 @@
 
                             move_uploaded_file($bgm_file['tmp_name'], $dir_path . '/bgm.' . $ext);
 
-                            $row['BGM_URL'] = $SHOWROOM_FILE_DIR . '/showroom.' . $ext;
+                            $row['BGM_URL'] = $SHOWROOM_FILE_DIR . '/' . $row['SEQ_ID'] . '/bgm.' . $ext;
                         }
 
                         $updateValue = [

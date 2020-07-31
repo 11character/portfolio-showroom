@@ -5,7 +5,7 @@
         </div>
 
         <div :class="centerStyle" ref="center">
-            <cover :hidden="hiddenCover" :percent="loadingPercent" @enter="onClickCover" class="cover"></cover>
+            <cover :hidden="hiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
             <div ref="viewField" class="view-field">
                 <div class="cross-hair"></div>
@@ -70,6 +70,7 @@
             const me = this;
 
             return {
+                showroom: new Showroom(),
                 isShowText: false,
                 hiddenCover: false,
                 loadingPercent: 0,
@@ -149,6 +150,7 @@
                         me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
 
                         me.showroomViewer.openJson(me.showroom.data || '{}');
+
                     } else {
                         alert('해당 정보가 없습니다.');
                     }

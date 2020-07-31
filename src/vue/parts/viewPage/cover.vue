@@ -1,5 +1,5 @@
 <template>
-    <div class="cover-field font-neuemachina">
+    <div ref="coverField" class="cover-field font-neuemachina">
         <div class="left"></div>
 
         <div class="center">
@@ -35,9 +35,9 @@
                 type: Number,
                 default: 0
             },
-            imgUrl: {
+            img: {
                 type: String,
-                default: null
+                default: ''
             }
         },
         data: function () {
@@ -46,6 +46,13 @@
             }
         },
         watch: {
+            img: function (val) {
+                const me = this;
+
+                if (val) {
+                    $(me.$refs.coverField).css('backgroundImage', 'url(./' + val + ')');
+                }
+            },
             percent: function (val) {
                 const me = this;
 
@@ -72,7 +79,9 @@
     .cover-field {
         width: 100%;
         height: 100%;
-        background-color: #ffffff;
+        background-position: center;
+        background-size: 100%;
+        background-color: #bdbdbd;
         display: flex;
         justify-content: center;
 
