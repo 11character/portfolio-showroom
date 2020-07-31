@@ -3,7 +3,7 @@
         <div class="logo"></div>
 
         <div class="top-buttons font-neuemachina">
-            <div :hidden="!isShowText" ref="textField" class="text-field">동해물과 백두산이</div>
+            <div :hidden="!isShowText" ref="textField" class="text-field">{{ showroom.contentKo }}</div>
 
             <template v-if="isShowSmallButton">
                 <div class="top-button-sm">
@@ -55,8 +55,15 @@
 </template>
 
 <script>
+    import Showroom from '../../../class/showroom';
+
     export default {
-        props: ['buttonSm'],
+        props: {
+            showroom: {
+                type: Showroom,
+                default: new Showroom()
+            }
+        },
         data: function () {
             const me = this;
 

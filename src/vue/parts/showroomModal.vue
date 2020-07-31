@@ -63,11 +63,11 @@
 </template>
 
 <script>
-    import * as ApiUrl from '../../../class/apiUrl';
-    import Utils from '../../../class/utils';
-    import Showroom from '../../../class/showroom';
+    import * as ApiUrl from '../../class/apiUrl';
+    import Utils from '../../class/utils';
+    import Showroom from '../../class/showroom';
 
-    import confirmModalVue from '../confirmModal.vue';
+    import confirmModalVue from './confirmModal.vue';
 
     /**
      * template event : create
@@ -86,12 +86,17 @@
             'confirm-modal': confirmModalVue
         },
         methods: {
-            showModal: function (showroom) {
+            open: function (showroom) {
                 const me = this;
 
                 me.showroom = new Showroom(showroom);
 
-                $(me.$refs.createModal.$el).modal('show');
+                me.$refs.createModal.open();
+            },
+            close: function () {
+                const me = this;
+
+                me.$refs.createModal.close();
             },
             clear: function () {
                 const me = this;
@@ -140,9 +145,15 @@
                             formData.append('bgmFile', bgmFile);
                         }
 
+                        let apiUrl = ApiUrl.SHOWROOM_CREATE;
+
+                        if (me.showroom.seqId != 0) {
+                            apiUrl = ApiUrl.SHOWROOM_UPDATE;
+                        }
+
                         $.ajax({
                             method: 'post',
-                            url: ApiUrl.SHOWROOM_CREATE,
+                            url: apiUrl,
                             processData: false,
                             contentType: false,
                             data: formData,
@@ -157,7 +168,7 @@
                                     alert('전시장을 만들었지만 파일을 저장하지 못했습니다.\n전시장을 열어 수정해 주세요.');
                                 }
 
-                                $(me.$refs.createModal.$el).modal('hide');
+                                me.close();
 
                                 me.$emit('create', me.showroom);
 

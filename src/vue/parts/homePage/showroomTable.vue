@@ -1,7 +1,7 @@
 <template>
     <div class="table-filed">
         <!-- 제거 모달 -->
-        <confirm-modal @confirm="onConfirmDelete" class="delete-modal">
+        <confirm-modal @confirm="onConfirmDelete" ref="deleteModal">
             <template v-slot:message>
                 <div class="h4 my-5 text-center">
                     <span>해당 전시장을 삭제하나요?</span>
@@ -103,7 +103,7 @@
 
                 me.showroom = new Showroom(Utils.snakeObjToCamelObj(data));
 
-                $('.delete-modal').modal('show');
+                me.$refs.deleteModal.open();
             });
         },
         methods: {

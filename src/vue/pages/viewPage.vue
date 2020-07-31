@@ -1,7 +1,7 @@
 <template>
     <div class="root-field font-neuemachina">
         <div ref="top" class="top">
-            <top-menu ref="topMenu"></top-menu>
+            <top-menu :showroom="showroom" ref="topMenu"></top-menu>
         </div>
 
         <div :class="centerStyle" ref="center">
@@ -122,16 +122,23 @@
                 me.showroomViewer.resize(w, h);
             });
 
-            // 뷰어의 위치가 변경되기를 기다렸다가 처리.
-            setTimeout(function () {
-                $(window).trigger('resize.view.page');
-
-                // 크기가 변경된 이후에 처리.
+            Utils.apiRequest(ApiUrl.SHOWROOM_DATA, {seqId: me.id}).then(function (data) {
+                // 뷰어의 위치가 변경되기를 기다렸다가 처리.
                 setTimeout(function () {
-                    me.openData();
-                }, 100);
-            }, 100);
+                    $(window).trigger('resize.view.page');
 
+                    if (data.data.length > 0) {
+                        me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
+
+                        // 크기가 변경된 이후에 처리.
+                        setTimeout(function () {
+                            me.showroomViewer.openJson(me.showroom.data || '{}');
+                        }, 50);
+                    } else {
+                        alert('해당 정보가 없습니다.');
+                    }
+                }, 50);
+            });
         },
         beforeDestroy: function () {
             const me = this;
@@ -142,20 +149,6 @@
             $(window).off('resize.view.page');
         },
         methods: {
-            openData: function () {
-                const me = this;
-
-                Utils.apiRequest(ApiUrl.SHOWROOM_DATA, {seqId: me.id}).then(function (data) {
-                    if (data.data.length > 0) {
-                        me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
-
-                        me.showroomViewer.openJson(me.showroom.data || '{}');
-
-                    } else {
-                        alert('해당 정보가 없습니다.');
-                    }
-                });
-            },
             showText: function () {
                 const me = this;
 

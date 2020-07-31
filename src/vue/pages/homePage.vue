@@ -24,7 +24,7 @@
 
 <script>
     import topNavVue from '../parts/topNav.vue';
-    import showroomModalVue from '../parts/homePage/showroomModal.vue';
+    import showroomModalVue from '../parts/showroomModal.vue';
     import showroomTableVue from '../parts/homePage/showroomTable.vue';
 
     const Promise = window.Promise;
@@ -39,7 +39,7 @@
             onClickCreate: function () {
                 const me = this;
                 
-                me.$refs.showroomModal.showModal();
+                me.$refs.showroomModal.open();
             },
             onCreate: function () {
                 const me = this;

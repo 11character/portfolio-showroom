@@ -4,41 +4,47 @@
 
         <top-nav separate-page="Edit"></top-nav>
 
-        <model-modal @apply="onApplyModel" class="model-modal"></model-modal>
+        <showroom-modal ref="showroomModal"></showroom-modal>
 
-        <text-modal @apply="onApplyText" class="text-modal"></text-modal>
+        <model-modal @apply="onApplyModel" ref="modelModal"></model-modal>
 
-        <web-modal @apply="onApplyWeb" class="web-modal"></web-modal>
+        <text-modal @apply="onApplyText" ref="textModal"></text-modal>
 
-        <youtube-modal @apply="onApplyYouTube" class="youtube-modal"></youtube-modal>
+        <web-modal @apply="onApplyWeb" ref="webModal"></web-modal>
+
+        <youtube-modal @apply="onApplyYouTube" ref="youtubeModal"></youtube-modal>
 
         <div ref="editorField" class="editor-field">
             <nav class="nav-field">
+                <div @click="onClickInfo" class="nav-btn nav-btn-sm">
+                    <div class="nav-btn-font">INFO</div>
+                </div>
+
                 <div @click="onClickSave" class="nav-btn nav-btn-sm">
                     <div class="nav-btn-font">SAVE</div>
                 </div>
 
-                <div @click="onClickModelModalOpen" class="nav-btn" data-toggle="modal">
+                <div @click="onClickModelModalOpen" class="nav-btn">
                     <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
                     <div class="nav-btn-font">Model</div>
                 </div>
 
-                <div @click="onClickTextModalOpen" class="nav-btn" data-toggle="modal">
+                <div @click="onClickTextModalOpen" class="nav-btn">
                     <img :src="'./img/icon-text.png'" class="nav-btn-img nav-btn-img-text">
                     <div class="nav-btn-font">Text</div>
                 </div>
 
-                <div @click="onClickWebModalOpen" class="nav-btn" data-toggle="modal">
+                <div @click="onClickWebModalOpen" class="nav-btn">
                     <img :src="'./img/icon-web.png'" class="nav-btn-img nav-btn-img-webpage">
                     <div class="nav-btn-font">Web Page</div>
                 </div>
 
-                <div  @click="onClickYoutubeModalOpen" class="nav-btn" data-toggle="modal">
+                <div  @click="onClickYoutubeModalOpen" class="nav-btn">
                     <img :src="'./img/icon-youtube.png'" class="nav-btn-img nav-btn-img-youtube">
                     <div class="nav-btn-font">YouTube</div>
                 </div>
 
-                <div @click="onApplyLight" class="nav-btn" data-toggle="modal">
+                <div @click="onApplyLight" class="nav-btn">
                     <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
                     <div class="nav-btn-font">Light</div>
                 </div>
@@ -60,6 +66,7 @@
 
     import topNavVue from '../parts/topNav.vue';
     import loadingVue from '../parts/loading.vue';
+    import showroomModalVue from '../parts/showroomModal.vue';
     import controlPanelVue from '../parts/editPage/controlPanel.vue';
     import modelModalVue from '../parts/editPage/modelModal.vue';
     import textModalVue from '../parts/editPage/textModal.vue';
@@ -73,11 +80,12 @@
         components: {
             'top-nav': topNavVue,
             'loading': loadingVue,
+            'showroom-modal': showroomModalVue,
             'control-panel': controlPanelVue,
             'model-modal': modelModalVue,
             'text-modal': textModalVue,
             'web-modal': webModalVue,
-            'youtube-modal': youtubeModalVue
+            'youtube-modal': youtubeModalVue,
         },
         data: function () {
             return {
@@ -164,16 +172,24 @@
                 });
             },
             onClickModelModalOpen: function () {
-                $('.model-modal').modal('show');
+                const me = this;
+
+                me.$refs.modelModal.open();
             },
             onClickTextModalOpen: function () {
-                $('.text-modal').modal('show');
+                const me = this;
+
+                me.$refs.textModal.open();
             },
             onClickWebModalOpen: function () {
-                $('.web-modal').modal('show');
+                const me = this;
+
+                me.$refs.webModal.open();
             },
             onClickYoutubeModalOpen: function () {
-                $('.youtube-modal').modal('show');
+                const me = this;
+
+                me.$refs.youtubeModal.open();
             },
             onControl: function (type) {
                 const me = this;
@@ -358,6 +374,11 @@
                 }).catch(function () {
                     alert('오류!')
                 });
+            },
+            onClickInfo: function () {
+                const me = this;
+
+                me.$refs.showroomModal.open(me.showroom);
             }
         }
     }

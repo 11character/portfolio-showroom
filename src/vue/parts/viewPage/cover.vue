@@ -50,7 +50,7 @@
                 const me = this;
 
                 if (val) {
-                    $(me.$refs.coverField).css('backgroundImage', 'url(./' + val + ')');
+                    $(me.$refs.coverField).css('backgroundImage', 'url(./' + val + '?t=' + Date.now() + ')');
                 }
             },
             percent: function (val) {
@@ -145,6 +145,7 @@
             }
 
             .loading-text:nth-child(even) {
+                background-color: #ffffff;
                 border: 1px solid #000000;
             }
         }

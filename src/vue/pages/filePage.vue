@@ -38,16 +38,6 @@
         </confirm-modal>
         <!-- END-업로드 모달 -->
 
-        <!-- 제거 모달 -->
-        <confirm-modal @confirm="onConfirmDelete" class="delete-modal">
-            <template v-slot:message>
-                <div class="h4 my-5 text-center">
-                    <span>파일을 삭제합니까?</span>
-                </div>
-            </template>
-        </confirm-modal>
-        <!-- END-제거 모달 -->
-
         <div class="container mt-5">
             <div class="row">
                 <div class="offset-lg-3 col-lg-6">
@@ -105,7 +95,7 @@
             onClickUpload: function () {
                 const me = this;
 
-                $(me.$refs.uploadModal.$el).modal('show');
+                me.$refs.uploadModal.open();
             },
             onConfirmUpload: function (bool) {
                 const me = this;

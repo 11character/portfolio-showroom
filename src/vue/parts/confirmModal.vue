@@ -1,5 +1,5 @@
 <template>
-    <div :class="className" tabindex="-1" data-backdrop="static">
+    <div class="modal fade" tabindex="-1" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
@@ -36,16 +36,25 @@
             const me = this;
 
             return {
-                className: 'modal fade confirm-modal-' + me._uid,
                 disableOkHide: false
             };
         },
         methods: {
+            open: function () {
+                const me = this;
+
+                $(me.$el).modal('show');
+            },
+            close: function () {
+                const me = this;
+
+                $(me.$el).modal('hide');
+            },
             onClickOk: function() {
                 const me = this;
 
                 if (!me.disableOkHide) {
-                    $('.confirm-modal-' + me._uid).modal('hide');
+                    me.close();
                 }
 
                 me.$emit('confirm', true);
@@ -53,7 +62,7 @@
             onClickClose: function() {
                 const me = this;
 
-                $('.confirm-modal-' + me._uid).modal('hide');
+                me.close();
 
                 me.$emit('confirm', false);
             }

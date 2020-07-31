@@ -110,10 +110,20 @@
             $(me.$el).off('hidden.bs.modal');
         },
         methods: {
-            onClickClose: function () {
+            open: function () {
+                const me = this;
+
+                $(me.$el).modal('show');
+            },
+            close: function () {
                 const me = this;
 
                 $(me.$el).modal('hide');
+            },
+            onClickClose: function () {
+                const me = this;
+
+                me.close();
             },
             onClickOk: function () {
                 const me = this;
@@ -127,7 +137,7 @@
 
                 me.$emit('apply', arr);
 
-                $(me.$el).modal('hide');
+                me.close();
             }
         }
     }
