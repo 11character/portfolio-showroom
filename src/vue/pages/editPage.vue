@@ -149,7 +149,7 @@
         beforeDestroy: function () {
             const me = this;
 
-            me.showroomEditor.stop();
+            me.showroomEditor.destroy();
             me.showroomEditor = null;
 
             $(window).off('resize.edit.page').off('beforeunload.edit.page');

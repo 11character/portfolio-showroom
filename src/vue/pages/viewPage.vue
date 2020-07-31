@@ -143,7 +143,7 @@
         beforeDestroy: function () {
             const me = this;
 
-            me.showroomViewer.stop();
+            me.showroomViewer.destroy();
             me.showroomViewer = null;
 
             $(window).off('resize.view.page');

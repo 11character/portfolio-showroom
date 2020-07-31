@@ -199,49 +199,56 @@ export default class NemoShowroomEditor {
 
                 promiseArr.push(me.itemLoader.load(assetItem).then(function (assetItem) {
                     count++
-                    me.options.onLoadProgress(count, totalCount, assetItem);
+
+                    // 불러오는 중에 destroy() 호출시 오류 방지.
+                    if (me.options) {
+                        me.options.onLoadProgress(count, totalCount, assetItem);
+                    }
 
                     return Promise.resolve(assetItem);
                 }));
             }
 
             promise = Promise.all(promiseArr).then(function (itemArr) {
-                let assetItem;
-
-                // 배치.
-                for (let i = 0; i < itemArr.length; i++) {
-                    assetItem = itemArr[i];
-
-                    // 조명숨김.
-                    if (assetItem.type === StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
-                        assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_CONE));
-                    }
-
-                    me.objectField.add(assetItem.object3D);
-                    me.cssRenderer.add(assetItem);
-                    me.assetItemManager.add(assetItem);
-
-                    assetItem.animationPlay();
-                }
-
-                // cssRenderer에 배치되어 크기를 구할 수 있도록 대기.
-                setTimeout(function () {
-                    me.checkBoxArr = [];
-                    me.checkItemArr = [];
-
+                // 불러오는 중에 destroy() 호출시 오류 방지.
+                if (me.options) {
+                    let assetItem;
+    
+                    // 배치.
                     for (let i = 0; i < itemArr.length; i++) {
                         assetItem = itemArr[i];
-
-                        // 충돌박스 생성.
-                        if (assetItem.type !== StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
-                            // 두 배열의 순서 일치.
-                            me.checkBoxArr.push(assetItem.getBox3());
-                            me.checkItemArr.push(assetItem);
+    
+                        // 조명숨김.
+                        if (assetItem.type === StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
+                            assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_CONE));
                         }
+    
+                        me.objectField.add(assetItem.object3D);
+                        me.cssRenderer.add(assetItem);
+                        me.assetItemManager.add(assetItem);
+    
+                        assetItem.animationPlay();
                     }
-
-                    me.options.onLoad(me);
-                }, 500);
+    
+                    // cssRenderer에 배치되어 크기를 구할 수 있도록 대기.
+                    setTimeout(function () {
+                        me.checkBoxArr = [];
+                        me.checkItemArr = [];
+    
+                        for (let i = 0; i < itemArr.length; i++) {
+                            assetItem = itemArr[i];
+    
+                            // 충돌박스 생성.
+                            if (assetItem.type !== StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
+                                // 두 배열의 순서 일치.
+                                me.checkBoxArr.push(assetItem.getBox3());
+                                me.checkItemArr.push(assetItem);
+                            }
+                        }
+    
+                        me.options.onLoad(me);
+                    }, 500);
+                }
             });
 
         } else {
@@ -271,6 +278,27 @@ export default class NemoShowroomEditor {
 
         me.camera.aspect = width / height;
         me.camera.updateProjectionMatrix();
+    }
+
+    destroy() {
+        const me = this;
+
+        if (me.rootEl.parentElement) {
+            me.rootEl.parentElement.removeChild(me.rootEl);
+        }
+
+        me.stop();
+
+        me.scene.remove.apply(me.scene, me.scene.children);
+
+        setTimeout(function () {
+
+            for (let key in me) {
+                if (me.hasOwnProperty(key)) {
+                    delete me[key];
+                }
+            }
+        }, 1);
     }
 
     __detectItem() {

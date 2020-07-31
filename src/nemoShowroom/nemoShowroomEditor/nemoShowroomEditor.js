@@ -374,32 +374,35 @@ export default class NemoShowroomEditor {
             }
 
             promise = Promise.all(promiseArr).then(function (itemArr) {
-                let assetItem;
-
-                for (let i = 0; i < itemArr.length; i++) {
-                    assetItem = itemArr[i];
-
-                    me.objectField.add(assetItem.object3D);
-                    me.cssRenderer.add(assetItem);
-                    me.assetItemManager.add(assetItem);
-
-                    assetItem.animationPlay();
-                }
-
-                me.historyManager.push({
-                    name: 'open',
-                    redo: function () {
-                        me.recoverArray(itemArr);
-                    },
-                    undo: function () {
-                        me.removeArray(itemArr);
-                    },
-                    onUndo: function () {
-                        if (hasPrveOpen) {
-                            me.historyManager.undo();
-                        }
+                // 불러오는 중에 destroy() 호출시 오류 방지.
+                if (me.options) {
+                    let assetItem;
+    
+                    for (let i = 0; i < itemArr.length; i++) {
+                        assetItem = itemArr[i];
+    
+                        me.objectField.add(assetItem.object3D);
+                        me.cssRenderer.add(assetItem);
+                        me.assetItemManager.add(assetItem);
+    
+                        assetItem.animationPlay();
                     }
-                });
+    
+                    me.historyManager.push({
+                        name: 'open',
+                        redo: function () {
+                            me.recoverArray(itemArr);
+                        },
+                        undo: function () {
+                            me.removeArray(itemArr);
+                        },
+                        onUndo: function () {
+                            if (hasPrveOpen) {
+                                me.historyManager.undo();
+                            }
+                        }
+                    });
+                }
             });
         }
 
@@ -842,6 +845,27 @@ export default class NemoShowroomEditor {
 
         me.camera.aspect = width / height;
         me.camera.updateProjectionMatrix();
+    }
+
+    destroy() {
+        const me = this;
+
+        if (me.rootEl.parentElement) {
+            me.rootEl.parentElement.removeChild(me.rootEl);
+        }
+
+        me.stop();
+
+        me.scene.remove.apply(me.scene, me.scene.children);
+
+        setTimeout(function () {
+
+            for (let key in me) {
+                if (me.hasOwnProperty(key)) {
+                    delete me[key];
+                }
+            }
+        }, 1);
     }
 
     __pushTransformHistory(arr) {
