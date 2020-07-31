@@ -308,7 +308,7 @@ export default class NemoShowroomEditor {
         me.detectedItem = bool ? me.checkItemArr[index] : null;
 
         // 테두리 표시.
-        me.outlinePass.selectedObjects = (bool && !me.checkItemArr[index].disableOutline) ? [me.detectedItem.object3D] : [];
+        me.outlinePass.selectedObjects = (bool && me.checkItemArr[index].enableOutline) ? [me.detectedItem.object3D] : [];
     }
 
     __detectPlayerCollision() {

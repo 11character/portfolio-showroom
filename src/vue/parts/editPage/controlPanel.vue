@@ -181,9 +181,9 @@
             </div>
 
             <div class="item-check item-row">
-                <div class="item-label">테두리 막기</div>
+                <div class="item-label">테두리 표시</div>
                 <div class="item-control">
-                    <input v-model="disableOutline" @change="onChangeOutline" type="checkbox" class="item-value">
+                    <input v-model="enableOutline" @change="onChangeOutline" type="checkbox" class="item-value">
                 </div>
             </div>
 
@@ -231,7 +231,7 @@
                 mtlRoughness: 1,
                 lightIntensity: 1,
                 link: '',
-                disableOutline: false
+                enableOutline: true
             };
         },
         mounted: function () {
@@ -270,7 +270,7 @@
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
-                me.disableOutline = assetItem.disableOutline;
+                me.enableOutline = assetItem.enableOutline;
                 me.mtlMetalness = assetItem.mtlSetting.metalness;
                 me.mtlRoughness = assetItem.mtlSetting.roughness;
                 me.lightIntensity = assetItem.lightSetting.intensity;
@@ -358,10 +358,10 @@
                 const assetItem = me.editor.selectedItem;
 
                 if (assetItem) {
-                    assetItem.disableOutline = me.disableOutline;
+                    assetItem.enableOutline = me.enableOutline;
                 }
 
-                me.$emit('control', 'disableOutline');
+                me.$emit('control', 'enableOutline');
             },
             onClickRemove: function () {
                 const me = this;
