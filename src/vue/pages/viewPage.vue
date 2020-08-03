@@ -10,9 +10,11 @@
             <div ref="viewField" class="view-field">
                 <div class="cross-hair"></div>
 
-                <div class="view-button music-button">
+                <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button">
                     <div class="content">
-                        <span>Music Off</span>
+                        <span v-if="isPlayMusic">Music Off</span>
+                        <span v-else>Music On</span>
+                        <audio ref="bgm"></audio>
                     </div>
                 </div>
 
@@ -71,6 +73,7 @@
 
             return {
                 showroom: new Showroom(),
+                isPlayMusic: false,
                 isShowText: false,
                 hiddenCover: false,
                 loadingPercent: 0,
@@ -179,6 +182,23 @@
                 me.$refs.topMenu.smallMode();
 
                 me.hiddenCover = true;
+            },
+            onClickMusic: function () {
+                const me = this;
+
+                const bgnEl = me.$refs.bgm;
+
+                if (!me.isPlayMusic && me.showroom.bgmUrl) {
+                    me.isPlayMusic = !me.isPlayMusic;
+
+                    bgnEl.src = me.showroom.bgmUrl;
+                    bgnEl.play();
+
+                } else {
+                    me.isPlayMusic = !me.isPlayMusic;
+                    bgnEl.pause();
+                    bgnEl.currentTime = 0;
+                }
             }
         }
     }
@@ -243,6 +263,10 @@
                 left: 18px;
                 top: 100%;
                 margin-top: -42px;
+
+                audio {
+                    display: none;
+                }
             }
 
             .music-button:hover {
