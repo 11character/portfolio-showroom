@@ -847,6 +847,9 @@ export default class NemoShowroomEditor {
         me.camera.updateProjectionMatrix();
     }
 
+    /**
+     * 객체를 비운다.
+     */
     destroy() {
         const me = this;
 

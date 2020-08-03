@@ -5,4 +5,6 @@ export const SHOWROOM_UPDATE = './api/showroom-update.php';
 export const SHOWROOM_DELETE = './api/showroom-delete.php';
 export const MODEL_FILE_UPLOAD = './api/model-file-upload.php';
 export const MODEL_FILE_LIST = './api/model-file-list.php';
+export const MODEL_FILE_DATA = './api/model-file-data.php';
+export const MODEL_FILE_UPDATE = './api/model-file-update.php';
 export const FILE_DELETE = './api/file-delete.php';

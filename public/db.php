@@ -106,7 +106,17 @@ FROM
 ORDER BY C_DATE DESC
 EOD;
 
-// 파일정보 생성.
+// 파일 정보 조회.
+$sql_select_tb_model_file_from_id = <<<EOD
+SELECT
+    *
+FROM
+    TB_MODEL_FILE
+WHERE
+    SEQ_ID = :SEQ_ID
+EOD;
+
+// 파일 정보 생성.
 $sql_insert_tb_model_file = <<<EOD
 INSERT INTO TB_MODEL_FILE
 (

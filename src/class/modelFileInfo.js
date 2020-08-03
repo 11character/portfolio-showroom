@@ -10,6 +10,7 @@ export default class ModelFileInfo {
         this.url = obj.url || '';
         this.size = obj.size || 0;
         this.description = obj.description || '';
+        this.data = obj.data || '';
         this.cDate = obj.cDate || '';
         this.uDate = obj.uDate || '';
         this.dDate = obj.dDate || '';
