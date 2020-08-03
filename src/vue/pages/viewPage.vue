@@ -12,8 +12,8 @@
 
                 <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button">
                     <div class="content">
-                        <span v-if="isPlayMusic">Music Off</span>
-                        <span v-else>Music On</span>
+                        <span v-if="isPlayMusic">Music On</span>
+                        <span v-else>Music Off</span>
                         <audio ref="bgm"></audio>
                     </div>
                 </div>
