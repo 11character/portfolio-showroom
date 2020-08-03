@@ -3,6 +3,7 @@ export default class Showroom {
         this.seqId = obj.seqId || 0;
         this.name = obj.name || '';
         this.description = obj.description || '';
+        this.link = obj.link || '';
         this.imgUrl = obj.imgUrl || '';
         this.bgmUrl = obj.bgmUrl || '';
         this.contentKo = obj.contentKo || '';

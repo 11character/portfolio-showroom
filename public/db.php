@@ -51,21 +51,23 @@ $sql_insert_tb_showroom = <<<EOD
 INSERT INTO TB_SHOWROOM
 (
     NAME,
+    DESCRIPTION,
+    LINK,
     IMG_URL,
     BGM_URL,
     CONTENT_KO,
     CONTENT_EN,
-    DESCRIPTION,
     DATA
 )
 VALUES
 (
     :NAME,
+    :DESCRIPTION,
+    :LINK,
     :IMG_URL,
     :BGM_URL,
     :CONTENT_KO,
     :CONTENT_EN,
-    :DESCRIPTION,
     :DATA
 )
 EOD;
@@ -76,11 +78,12 @@ UPDATE
     TB_SHOWROOM
 SET
     NAME = :NAME,
+    DESCRIPTION = :DESCRIPTION,
+    LINK = :LINK,
     IMG_URL = :IMG_URL,
     BGM_URL = :BGM_URL,
     CONTENT_KO = :CONTENT_KO,
     CONTENT_EN = :CONTENT_EN,
-    DESCRIPTION = :DESCRIPTION,
     DATA = :DATA
 WHERE
     SEQ_ID = :SEQ_ID

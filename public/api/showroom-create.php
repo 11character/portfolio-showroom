@@ -18,6 +18,7 @@
             $insertValue = [
                 NAME => $_POST['name'],
                 DESCRIPTION => $_POST['description'],
+                LINK => $_POST['link'],
                 IMG_URL => '',
                 BGM_URL => '',
                 CONTENT_KO => $_POST['contentKo'],

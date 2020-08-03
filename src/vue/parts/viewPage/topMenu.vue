@@ -6,7 +6,7 @@
             <div :hidden="!isShowText" ref="textField" class="text-field">{{ showroom.contentKo }}</div>
 
             <template v-if="isShowSmallButton">
-                <div class="top-button-sm">
+                <div @click="onClickLink" class="top-button-sm">
                     <div class="content">
                         <span>Enter to Art Shop</span>
                     </div>
@@ -28,7 +28,7 @@
             </template>
 
             <template v-else>
-                <div class="top-button">
+                <div @click="onClickLink" class="top-button">
                     <div class="content">
                         <span>Enter to Art Shop</span>
                     </div>
@@ -131,6 +131,13 @@
 
                 } else {
                     me.showText();
+                }
+            },
+            onClickLink: function () {
+                const me = this;
+
+                if (me.showroom.link) {
+                    window.open(me.showroom.link);
                 }
             }
         }

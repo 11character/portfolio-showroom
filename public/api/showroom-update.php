@@ -19,6 +19,7 @@
                 SEQ_ID => $_POST['seqId'],
                 NAME => $_POST['name'],
                 DESCRIPTION => $_POST['description'],
+                LINK => $_POST['link'],
                 IMG_URL => $_POST['imgUrl'],
                 BGM_URL => $_POST['bgmUrl'],
                 CONTENT_KO => $_POST['contentKo'],
