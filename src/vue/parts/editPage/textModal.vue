@@ -77,7 +77,6 @@
                 useAsButton: true,
                 theme: 'monolith',
                 default: '#ffffff',
-
                 components: {
                     preview: true,
                     opacity: true,

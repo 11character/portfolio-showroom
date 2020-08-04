@@ -208,10 +208,10 @@
      * template event : control
      */
     export default {
-        props: ['editor'],
         components: {
-            'slider': sliderVue
+            'input-slider': inputSliderVue
         },
+        props: ['editor'],
         data: function () {
             const me = this;
 

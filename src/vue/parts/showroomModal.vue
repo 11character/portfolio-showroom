@@ -80,6 +80,9 @@
      * template event : create
      */
     export default {
+        components: {
+            'confirm-modal': confirmModalVue
+        },
         data: function () {
             return {
                 disabled: false,
@@ -88,9 +91,6 @@
                 bgmFile: null,
                 contentLang: 'ko'
             };
-        },
-        components: {
-            'confirm-modal': confirmModalVue
         },
         methods: {
             open: function (showroom) {

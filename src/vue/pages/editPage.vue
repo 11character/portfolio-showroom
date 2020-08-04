@@ -76,7 +76,6 @@
     import NemoShowroomEditor from '../../nemoShowroom/nemoShowroomEditor/nemoShowroomEditor';
 
     export default {
-        props: ['id'],
         components: {
             'top-nav': topNavVue,
             'loading': loadingVue,
@@ -87,6 +86,7 @@
             'web-modal': webModalVue,
             'youtube-modal': youtubeModalVue,
         },
+        props: ['id'],
         data: function () {
             return {
                 disabled: true,
