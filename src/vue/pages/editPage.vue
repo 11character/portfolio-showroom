@@ -469,7 +469,7 @@
 
 
         /* control ==================================================================================================== */
-        $control-field-w: 220;
+        $control-field-w: 300;
 
         .control-field {
             min-width: $control-field-w + px;

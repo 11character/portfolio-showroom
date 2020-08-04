@@ -14,7 +14,7 @@
             <div ref="viewField" class="font-neuemachina"></div>
 
             <div class="control-field">
-                <control-panel @control="onControl" v-bind:editor="assetEditor"></control-panel>
+                <asset-panel :asset-item="assetItem"></asset-panel>
             </div>
         </div>
     </div>
@@ -27,21 +27,24 @@
 
     import topNavVue from '../parts/topNav.vue';
     import loadingVue from '../parts/loading.vue';
-    import controlPanelVue from '../parts/editPage/controlPanel.vue';
+    import assetPanelVue from '../parts/assetEditPage/assetPanel.vue';
 
     import NemoAssetEditor from '../../nemoShowroom/nemoAssetEditor/nemoAssetEditor';
+    import AssetItem from '../../nemoShowroom/common/assetItem';
 
     export default {
-        props: ['id'],
         components: {
             'top-nav': topNavVue,
-            'loading': loadingVue
+            'loading': loadingVue,
+            'asset-panel': assetPanelVue
         },
+        props: ['id'],
         data: function () {
             return {
                 disabled: true,
                 isConfigEdited: false,
                 modelFileInfo: new ModelFileInfo(),
+                assetItem: new AssetItem(),
                 // 이벤트는 controlPanel 에서 처리.
                 assetEditor: new NemoAssetEditor({
                     width: 100,
@@ -72,7 +75,6 @@
                     const h = $(window).height() - $('.navbar').outerHeight();
 
                     $(me.$refs.editorField).css('width', w + 'px').css('height', h + 'px');
-
                     me.assetEditor.resize(w, h);
                 }, 100);
             });
@@ -113,6 +115,7 @@
 
                         if (me.modelFileInfo.data) {
                             me.assetEditor.openJson(me.modelFileInfo.data || '{}').then(function () {
+                                me.assetItem = me.assetEditor.assetItem;
                                 me.disabled = false;
                             });
 
@@ -143,6 +146,7 @@
                 assetItem.object3D.scale.set(scale, scale, scale);
                 assetItem.syncMembers();
 
+                me.assetItem = me.assetEditor.assetItem;
                 me.disabled = false;
             },
             load2d: function (data) {
@@ -188,14 +192,16 @@
 
                 me.modelFileInfo.data = me.assetEditor.exportJson();
 
-                Utils.apiRequest(ApiUrl.MODEL_FILE_UPDATE, me.modelFileInfo, 'post').then(function () {
-                    me.isConfigEdited = false;
+                console.log(me.modelFileInfo.data);
 
-                    alert('저장 완료.');
+                // Utils.apiRequest(ApiUrl.MODEL_FILE_UPDATE, me.modelFileInfo, 'post').then(function () {
+                //     me.isConfigEdited = false;
 
-                }).catch(function () {
-                    alert('오류!')
-                });
+                //     alert('저장 완료.');
+
+                // }).catch(function () {
+                //     alert('오류!')
+                // });
             }
         }
     }
@@ -255,10 +261,11 @@
 
 
         /* control ==================================================================================================== */
-        $control-field-w: 220;
+        $control-field-w: 300;
 
         .control-field {
             min-width: $control-field-w + px;
+            max-width: $control-field-w + px;
             height: 100%;
             background-color: #343a40 ;
             overflow-x: hidden;

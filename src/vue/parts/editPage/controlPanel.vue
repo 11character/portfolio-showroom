@@ -35,9 +35,7 @@
                 <div class="item-label">World light</div>
 
                 <div class="item-control">
-                    <div class="item-label">Intensity</div>
-                    <div class="item-value">{{ light.intensity }}</div>
-                    <slider v-model.number="light.intensity" @slide="onSlideWorldLightIntensity" :min="0" :max="2" :step="0.1" class="w-75 my-2"></slider>
+                    <input-slider v-model.number="light.intensity" :label="'Intensity'" @slide="onSlideWorldLightIntensity" :min="0" :max="2" :step="0.1" class="w-75 my-2"></input-slider>
                 </div>
             </div>
         </div>
@@ -158,15 +156,11 @@
                 <div class="item-label">Material</div>
 
                 <div class="item-control">
-                    <div class="item-label">Metalness</div>
-                    <div class="item-value">{{ mtlMetalness }}</div>
-                    <slider v-model.number="mtlMetalness" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
+                    <input-slider v-model.number="mtlMetalness" :label="'Metalness'" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></input-slider>
                 </div>
 
                 <div class="item-control">
-                    <div class="item-label">Roughness</div>
-                    <div class="item-value">{{ mtlRoughness }}</div>
-                    <slider v-model.number="mtlRoughness" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></slider>
+                    <input-slider v-model.number="mtlRoughness" :label="'Roughness'" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></input-slider>
                 </div>
             </div>
 
@@ -174,9 +168,7 @@
                 <div class="item-label">Light</div>
 
                 <div class="item-control">
-                    <div class="item-label">Intensity</div>
-                    <div class="item-value">{{ lightIntensity }}</div>
-                    <slider v-model.number="lightIntensity" @slide="onSlideLightIntensity" :min="0" :max="2" :step="0.1" class="w-75 my-2"></slider>
+                    <input-slider v-model.number="lightIntensity" :label="'Intensity'" @slide="onSlideLightIntensity" :min="0" :max="2" :step="0.1" class="w-75 my-2"></input-slider>
                 </div>
             </div>
 
@@ -202,7 +194,7 @@
     import AssetItem from '../../../nemoShowroom/common/assetItem';
     import Utils from '../../../class/utils';
 
-    import sliderVue from '../slider.vue';
+    import inputSliderVue from '../inputItem/inputSlider.vue';
 
     /**
      * template event : control
@@ -308,7 +300,7 @@
             onSlideWorldLightIntensity: function () {
                 const me = this;
 
-                me.editor.light.intensity = me.light.intensity;
+                //me.editor.light.intensity = me.light.intensity;
             },
             onClickCopy: function () {
                 const me = this;
