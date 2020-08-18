@@ -1,4 +1,5 @@
 <?php
+    include './api-login-check.php';
     include '../db.php';
 
     $data = [
@@ -12,10 +13,10 @@
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $value = [
-            SEQ_ID => $_GET['seqId']
+            URL => $_GET['url']
         ];
 
-        $stmt = $pdo->prepare($sql_select_tb_model_file_from_id);
+        $stmt = $pdo->prepare($sql_select_tb_model_file_from_url);
 
         if ($stmt->execute($value)) {
             $arr = [];

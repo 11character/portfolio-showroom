@@ -7,5 +7,6 @@ export default class Options {
         this.onSelect = (typeof obj.onSelect == 'function') ? obj.onSelect : function () {};
         this.onDeselect = (typeof obj.onDeselect == 'function') ? obj.onDeselect : function () {};
         this.onMove = (typeof obj.onMove == 'function') ? obj.onMove : function () {};
+        this.onLoad = (typeof obj.onLoad == 'function') ? obj.onLoad : function () {};
     }
 }

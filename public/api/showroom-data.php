@@ -1,5 +1,4 @@
 <?php
-    include './api-login-check.php';
     include '../db.php';
 
     $data = [

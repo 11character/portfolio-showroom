@@ -72,6 +72,7 @@ const filePageVue = () => import('./vue/pages/filePage.vue');
 const editPageVue = () => import('./vue/pages/editPage.vue');
 const viewPageVue = () => import('./vue/pages/viewPage.vue');
 const assetEditPageVue = () => import('./vue/pages/assetEditPage.vue');
+const assetViewPageVue = () => import('./vue/pages/assetViewPage.vue');
 
 const router = new VueRouter({
     routes: [
@@ -79,7 +80,8 @@ const router = new VueRouter({
         {path: '/file', name: 'file', component: filePageVue, props: false},
         {path: '/edit/:id', name: 'edit', component: editPageVue, props: true},
         {path: '/view/:id', name: 'view', component: viewPageVue, props: true},
-        {path: '/asset-edit/:id', name: 'asset-edit', component: assetEditPageVue, props: true}
+        {path: '/asset-edit/:id', name: 'asset-edit', component: assetEditPageVue, props: true},
+        {path: '/asset-view/:id', name: 'asset-view', component: assetViewPageVue, props: true}
     ]
 });
 

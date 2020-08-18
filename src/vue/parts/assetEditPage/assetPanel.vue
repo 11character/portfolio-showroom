@@ -1,33 +1,53 @@
 <template>
-    <div class="field">
+    <div class="asset-panel-field">
         <div class="item-row">
-            <input-text v-model="assetItem.name" label="Name"></input-text>
+            <input-light :editor="editor" @control="onControl" label="World light"></input-light>
         </div>
 
         <div class="item-row">
-            <mesh-panel :asset-item="assetItem"></mesh-panel>
+            <input-text v-model="assetItem.name" label="Asset name" @input="onControl"></input-text>
+        </div>
+
+        <div class="item-row">
+            <mesh-panel :asset-item="assetItem" @control="onControl"></mesh-panel>
         </div>
     </div>
 </template>
 
 <script>
+    import AssetItem from '../../../nemoShowroom/common/assetItem';
+
+    import inputLightVue from '../inputItem/inputLight.vue';
     import inputTextVue from '../inputItem/inputText.vue';
     import meshPanelVue from './meshPanel.vue';
 
-    import AssetItem from '../../../nemoShowroom/common/assetItem';
+    import EditorInterface from '../../../nemoShowroom/common/editorInterface';
 
+    /**
+     * template event : control
+     */
     export default {
         components: {
+            'input-light': inputLightVue,
             'input-text': inputTextVue,
-            'mesh-panel': meshPanelVue
+            'mesh-panel': meshPanelVue,
         },
-        props: {assetItem: {type: AssetItem, default: new AssetItem()}
+        props: {
+            editor: {type: EditorInterface},
+            assetItem: {type: AssetItem}
+        },
+        methods: {
+            onControl: function (type) {
+                const me = this;
+
+                me.$emit('control', type);
+            }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    .field {
+    .asset-panel-field {
         width: 100%;
         height: 100%;
         overflow-y: auto;

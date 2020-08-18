@@ -1,6 +1,7 @@
 <template>
-    <div class="field">
-        <div class="label">{{ label }}</div>
+    <div class="input-color-field">
+        <div v-if="label" class="label">{{ label }}</div>
+
         <div ref="colorBox" class="color-box"></div>
     </div>
 </template>
@@ -11,6 +12,9 @@
     import Pickr from '@simonwep/pickr';
     import '@simonwep/pickr/dist/themes/monolith.min.css';
 
+    /**
+     * template event : input
+     */
     export default {
         props: {
             label: {type: String, default: ''},
@@ -25,32 +29,35 @@
             value: function (val) {
                 const me = this;
 
-                const rgba = val.getStyle(0);
-                $(me.$refs.colorBox).css('backgroundColor', rgba);
+                $(me.$refs.colorBox).css('backgroundColor', me.value);
             }
         },
         mounted: function () {
             const me = this;
 
-            me.colorPickr = Pickr.create({
+            window.pickr = me.colorPickr = Pickr.create({
                 el: me.$refs.colorBox,
                 useAsButton: true,
                 theme: 'monolith',
-                default: me.value.getStyle(),
                 components: {
                     preview: false,
                     opacity: false,
                     hue: true
                 }
-            }).on('change', function (color) {
-                const rgba = new THREE.Color(color.toRGBA().toString(0));
+            });
+
+            me.colorPickr.on('change', function (color) {
+                const rgba = color.toRGBA().toString(0);
 
                 me.value = rgba;
                 $(me.$refs.colorBox).css('backgroundColor', rgba);
                 me.$emit('input', rgba);
             });
 
-            $(me.$refs.colorBox).css('backgroundColor', me.value.getStyle(0));
+            setTimeout(function () {
+                me.colorPickr.setColor(me.value);
+                $(me.$refs.colorBox).css('backgroundColor', me.value);
+            }, 100);
         },
         beforeDestroy: function () {
             const me = this;
@@ -61,22 +68,24 @@
 </script>
 
 <style lang="scss" scoped>
-    .field {
+    .input-color-field {
         width: 100%;
 
         .label {
             width: 100%;
+            margin-bottom: 0px;
             font-size: 15px;
             font-weight: 600;
             text-align: left;
             color: #ffffff;
+            margin-bottom: 0.5rem;
         }
 
         .color-box {
             width: 100%;
-            height: 1rem;
-            margin-top: 5px;
+            height: 25px;
             border: 1px solid #ffffff;
+            border-radius: 0.25rem;
         }
     }
 </style>

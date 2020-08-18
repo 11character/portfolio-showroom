@@ -116,6 +116,16 @@ WHERE
     SEQ_ID = :SEQ_ID
 EOD;
 
+// 파일 정보 조회.
+$sql_select_tb_model_file_from_url = <<<EOD
+SELECT
+    *
+FROM
+    TB_MODEL_FILE
+WHERE
+    URL = :URL
+EOD;
+
 // 파일 정보 생성.
 $sql_insert_tb_model_file = <<<EOD
 INSERT INTO TB_MODEL_FILE
@@ -128,7 +138,8 @@ INSERT INTO TB_MODEL_FILE
     PATH,
     URL,
     SIZE,
-    DESCRIPTION
+    DESCRIPTION,
+    DATA
 ) VALUES (
     :EXT,
     :NAME,
@@ -138,7 +149,35 @@ INSERT INTO TB_MODEL_FILE
     :PATH,
     :URL,
     :SIZE,
-    :DESCRIPTION
+    :DESCRIPTION,
+    :DATA
 )
+EOD;
+
+// 파일 정보 업데이트.
+$sql_update_tb_model_file = <<<EOD
+UPDATE
+    TB_MODEL_FILE
+SET
+    EXT = :EXT,
+    NAME = :NAME,
+    FULL_NAME = :FULL_NAME,
+    DIR_PATH = :DIR_PATH,
+    DIR_URL = :DIR_URL,
+    PATH = :PATH,
+    URL = :URL,
+    SIZE = :SIZE,
+    DESCRIPTION = :DESCRIPTION,
+    DATA = :DATA
+WHERE
+    SEQ_ID = :SEQ_ID
+EOD;
+
+// 파일 정보 삭제.
+$sql_delete_tb_model_file = <<<EOD
+DELETE FROM
+    TB_MODEL_FILE
+WHERE
+    SEQ_ID = :SEQ_ID
 EOD;
 ?>

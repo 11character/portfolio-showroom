@@ -61,7 +61,7 @@
 
     import topNavVue from '../parts/topNav.vue';
     import confirmModalVue from '../parts/confirmModal.vue';
-    import fileTable from '../parts/filePage/fileTable.vue';
+    import fileTableVue from '../parts/filePage/fileTable.vue';
 
     const Promise = window.Promise;
 
@@ -69,7 +69,7 @@
         components: {
             'top-nav': topNavVue,
             'confirm-modal': confirmModalVue,
-            'file-table': fileTable
+            'file-table': fileTableVue
         },
         data: function () {
             return {

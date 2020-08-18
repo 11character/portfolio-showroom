@@ -67,11 +67,11 @@
     import topNavVue from '../parts/topNav.vue';
     import loadingVue from '../parts/loading.vue';
     import showroomModalVue from '../parts/showroomModal.vue';
-    import controlPanelVue from '../parts/editPage/controlPanel.vue';
     import modelModalVue from '../parts/editPage/modelModal.vue';
     import textModalVue from '../parts/editPage/textModal.vue';
     import webModalVue from '../parts/editPage/webModal.vue';
     import youtubeModalVue from '../parts/editPage/youtubeModal.vue';
+    import controlPanelVue from '../parts/editPage/controlPanel.vue';
 
     import NemoShowroomEditor from '../../nemoShowroom/nemoShowroomEditor/nemoShowroomEditor';
 
@@ -80,11 +80,11 @@
             'top-nav': topNavVue,
             'loading': loadingVue,
             'showroom-modal': showroomModalVue,
-            'control-panel': controlPanelVue,
             'model-modal': modelModalVue,
             'text-modal': textModalVue,
             'web-modal': webModalVue,
             'youtube-modal': youtubeModalVue,
+            'control-panel': controlPanelVue
         },
         props: ['id'],
         data: function () {
@@ -93,7 +93,6 @@
                 isConfigEdited: false,
                 isTextEdit: false,
                 showroom: new Showroom(),
-                // 이벤트는 controlPanel 에서 처리.
                 showroomEditor: new NemoShowroomEditor({
                     width: 100,
                     height: 100
@@ -103,7 +102,7 @@
         beforeRouteLeave: function (to, from, next) {
             const me = this;
 
-            if (me.isConfigEdited && !confirm('변경사항이 저장되지 않을 수 있습니다.\n나가시겠습니까?')) {
+            if (me.isConfigEdited && !confirm('보고있는 페이지를 나가시겠습니까?')) {
                 next(false);
 
             } else {
@@ -204,7 +203,7 @@
             load2d: function (data) {
                 const me = this;
 
-                Utils.sizeFromImageUrl('./' + data.url).then(function (info) {
+                Utils.sizeFromImageUrl(data.url).then(function (info) {
                     const item = {
                         name: data.name,
                         type: 'image',
@@ -227,6 +226,12 @@
 
                 me.showroomEditor.import(item).then(me.onModelItemLoad);
             },
+            onModelItemDataLoad: function (assetItem) {
+                const me = this;
+
+                me.isConfigEdited = true;
+                me.showroomEditor.attach(assetItem);
+            },
             onModelItemLoad: function (assetItem) {
                 const me = this;
 
@@ -234,10 +239,9 @@
                 const scale = 1 / (box3.max.y - box3.min.y);
 
                 assetItem.object3D.scale.set(scale, scale, scale);
-                assetItem.syncMembers();
+                assetItem.syncTransformMembers();
 
-                me.isConfigEdited = true;
-                me.showroomEditor.attach(assetItem);
+                me.onModelItemDataLoad(assetItem);
             },
             onApplyModel: function (dataArr) {
                 const me = this;
@@ -251,6 +255,11 @@
 
                     if (typesStr.indexOf(data.ext) > -1) {
                         me.load2d(data);
+
+                    } else if (data.data) {
+                        const assetEditorData = JSON.parse(data.data);
+
+                        me.showroomEditor.import(assetEditorData.itemArray[0]).then(me.onModelItemDataLoad);
 
                     } else {
                         me.load3d(data);
@@ -296,7 +305,7 @@
                         assetItem.object3D.scale.copy(prevScale);
                         assetItem.object3D.position.copy(prevPostion);
                         assetItem.object3D.rotation.copy(prevRotation);
-                        assetItem.syncMembers();
+                        assetItem.syncTransformMembers();
 
                         const historyManager = me.showroomEditor.historyManager;
                         const undoHistory = historyManager.getHistory();
@@ -340,7 +349,7 @@
 
                 if (url) {
                     const item = {
-                        nwme: 'YouTube',
+                        name: 'YouTube',
                         type: 'youtube',
                         content: url,
                         scale: {x: scale, y: scale, z: scale},
@@ -474,7 +483,7 @@
         .control-field {
             min-width: $control-field-w + px;
             height: 100%;
-            background-color: #343a40 ;
+            background-color: #343a40;
             overflow-x: hidden;
             overflow-y: auto;
         }

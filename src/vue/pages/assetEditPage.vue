@@ -5,16 +5,21 @@
         <top-nav separate-page="Asset Edit"></top-nav>
 
         <div ref="editorField" class="editor-field">
+
             <nav class="nav-field">
                 <div @click="onClickSave" class="nav-btn nav-btn-sm">
                     <div class="nav-btn-font">SAVE</div>
+                </div>
+
+                <div @click="onClickMtlClear" class="nav-btn nav-btn-sm">
+                    <div class="nav-btn-font">MTL CLEAR</div>
                 </div>
             </nav>
 
             <div ref="viewField" class="font-neuemachina"></div>
 
             <div class="control-field">
-                <asset-panel :asset-item="assetItem"></asset-panel>
+                <asset-panel :editor="assetEditor" :asset-item="assetItem" @control="onControl"></asset-panel>
             </div>
         </div>
     </div>
@@ -24,13 +29,13 @@
     import * as ApiUrl from '../../class/apiUrl';
     import Utils from '../../class/utils';
     import ModelFileInfo from '../../class/modelFileInfo';
+    import AssetItem from '../../nemoShowroom/common/assetItem';
 
     import topNavVue from '../parts/topNav.vue';
     import loadingVue from '../parts/loading.vue';
     import assetPanelVue from '../parts/assetEditPage/assetPanel.vue';
 
     import NemoAssetEditor from '../../nemoShowroom/nemoAssetEditor/nemoAssetEditor';
-    import AssetItem from '../../nemoShowroom/common/assetItem';
 
     export default {
         components: {
@@ -45,7 +50,6 @@
                 isConfigEdited: false,
                 modelFileInfo: new ModelFileInfo(),
                 assetItem: new AssetItem(),
-                // 이벤트는 controlPanel 에서 처리.
                 assetEditor: new NemoAssetEditor({
                     width: 100,
                     height: 100
@@ -55,7 +59,7 @@
         beforeRouteLeave: function (to, from, next) {
             const me = this;
 
-            if (me.isConfigEdited && !confirm('변경사항이 저장되지 않을 수 있습니다.\n나가시겠습니까?')) {
+            if (me.isConfigEdited && !confirm('보고있는 페이지를 나가시겠습니까?')) {
                 next(false);
 
             } else {
@@ -71,8 +75,9 @@
 
             $(window).on('resize.assetedit.page', function () {
                 setTimeout(function () {
-                    const w = $(window).width() - $('.nav-field').outerWidth() - $('.control-field').outerWidth();
-                    const h = $(window).height() - $('.navbar').outerHeight();
+                    const jWin = $(window);
+                    const w = jWin.width() - $('.nav-field').outerWidth() - $('.control-field').outerWidth();
+                    const h = jWin.height() - $('.navbar').outerHeight();
 
                     $(me.$refs.editorField).css('width', w + 'px').css('height', h + 'px');
                     me.assetEditor.resize(w, h);
@@ -92,7 +97,7 @@
 
                 // 크기가 변경된 이후에 처리.
                 setTimeout(function () {
-                    me.openData();
+                    me.loadFileData();
                 }, 100);
             }, 100);
 
@@ -106,45 +111,14 @@
             $(window).off('resize.assetedit.page').off('beforeunload.assetedit.page');
         },
         methods: {
-            openData: function () {
-                const me = this;
-
-                Utils.apiRequest(ApiUrl.MODEL_FILE_DATA, {seqId: me.id}).then(function (data) {
-                    if (data.data.length > 0) {
-                        me.modelFileInfo = new ModelFileInfo(Utils.snakeObjToCamelObj(data.data[0]));
-
-                        if (me.modelFileInfo.data) {
-                            me.assetEditor.openJson(me.modelFileInfo.data || '{}').then(function () {
-                                me.assetItem = me.assetEditor.assetItem;
-                                me.disabled = false;
-                            });
-
-                        } else {
-                            me.loadModel();
-                        }
-                    } else {
-                        alert('해당 정보가 없습니다.');
-                    }
-                });
-            },
-            onControl: function (type) {
-                const me = this;
-
-                if (type == 'textEdit') {
-                    me.isTextEdit = true;
-                    me.onClickTextModalOpen();
-                }
-
-                me.isConfigEdited = true;
-            },
-            modelItemLoad: function (assetItem) {
+            onModelItemLoad: function (assetItem) {
                 const me = this;
 
                 const box3 = assetItem.getBox3();
                 const scale = 1 / (box3.max.y - box3.min.y);
 
                 assetItem.object3D.scale.set(scale, scale, scale);
-                assetItem.syncMembers();
+                assetItem.syncTransformMembers();
 
                 me.assetItem = me.assetEditor.assetItem;
                 me.disabled = false;
@@ -152,7 +126,7 @@
             load2d: function (data) {
                 const me = this;
 
-                Utils.sizeFromImageUrl('./' + data.url).then(function (info) {
+                Utils.sizeFromImageUrl(data.url).then(function (info) {
                     const item = {
                         name: data.name,
                         type: 'image',
@@ -161,7 +135,7 @@
                         height: info.height / 500
                     };
 
-                    me.assetEditor.import(item).then(me.modelItemLoad);
+                    me.assetEditor.openItem(item).then(me.onModelItemLoad);
                 });
             },
             load3d: function (data) {
@@ -173,35 +147,78 @@
                     itemUrl: data.url
                 };
 
-                me.assetEditor.import(item).then(me.modelItemLoad);
+                me.assetEditor.openItem(item).then(me.onModelItemLoad);
             },
-            loadModel: function () {
+            loadModel: function (modelFileInfo) {
                 const me = this;
 
                 const typesStr = 'jpeg, jpg, png, gif';
 
-                if (typesStr.indexOf(me.modelFileInfo.ext) > -1) {
-                    me.load2d(me.modelFileInfo);
+                if (typesStr.indexOf(modelFileInfo.ext) > -1) {
+                    me.load2d(modelFileInfo);
 
                 } else {
-                    me.load3d(me.modelFileInfo);
+                    me.load3d(modelFileInfo);
                 }
+            },
+            openData: function (modelFileInfo) {
+                const me = this;
+
+                if (modelFileInfo.data) {
+                    me.assetEditor.openJson(modelFileInfo.data).then(function (assetItem) {
+                        me.assetItem = assetItem;
+                        me.disabled = false;
+                    });
+
+                } else {
+                    me.loadModel(modelFileInfo);
+                }
+            },
+            loadFileData: function () {
+                const me = this;
+
+                Utils.apiRequest(ApiUrl.MODEL_FILE_DATA, {seqId: me.id}).then(function (data) {
+                    if (data.data.length > 0) {
+                        me.modelFileInfo = new ModelFileInfo(Utils.snakeObjToCamelObj(data.data[0]));
+
+                        me.openData(me.modelFileInfo);
+
+                    } else {
+                        alert('해당 정보가 없습니다.');
+                    }
+                });
+            },
+            onControl: function (type) {
+                const me = this;
+
+                me.isConfigEdited = true;
+
             },
             onClickSave: function () {
                 const me = this;
 
                 me.modelFileInfo.data = me.assetEditor.exportJson();
 
-                console.log(me.modelFileInfo.data);
+                Utils.apiRequest(ApiUrl.MODEL_FILE_UPDATE, me.modelFileInfo, 'post').then(function () {
+                    me.isConfigEdited = false;
 
-                // Utils.apiRequest(ApiUrl.MODEL_FILE_UPDATE, me.modelFileInfo, 'post').then(function () {
-                //     me.isConfigEdited = false;
+                    alert('저장 완료.');
 
-                //     alert('저장 완료.');
+                }).catch(function () {
+                    alert('오류!')
+                });
+            },
+            onClickMtlClear: function () {
+                const me = this;
 
-                // }).catch(function () {
-                //     alert('오류!')
-                // });
+                if (confirm('Material 설정을 초기화 합니다.')) {
+                    me.disabled = true;
+
+                    setTimeout(function () {
+                        me.modelFileInfo.data = '';
+                        me.openData(me.modelFileInfo);
+                    }, 1000);
+                }
             }
         }
     }

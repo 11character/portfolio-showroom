@@ -21,10 +21,10 @@
                 SEQ_ID => $seq_id
             ];
 
-            $pdo->prepare($sql_delete_tb_showroom)->execute($value);
+            $pdo->prepare($sql_delete_tb_model_file)->execute($value);
 
             // 관련 디렉토리를 제거한다.
-            $dir_path = $SHOWROOM_FILE_DIR_PATH . '/' . $seq_id;
+            $dir_path = $_POST['dirPath'];
 
             if (is_dir($dir_path)) {
                 utils_delete_dir($dir_path);

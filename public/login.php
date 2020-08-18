@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="stylesheet" href="./dist/login.css">
+    <link rel="stylesheet" href="./dist/login/login.css">
 
     <title>admin</title>
 </head>
@@ -44,6 +44,6 @@
         </div>
     </div>
 
-    <script src="./dist/login.js"></script>
+    <script src="./dist/login/login.js"></script>
 </body>
 </html>

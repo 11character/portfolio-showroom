@@ -13,11 +13,11 @@
         <table class="file-table table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th style="width: 10%">ID</th>
-                    <th style="width: 20%">이름</th>
-                    <th style="width: 40%">설명</th>
-                    <th style="width: 15%">생성일</th>
-                    <th style="width: 15%"></th>
+                    <th>ID</th>
+                    <th>이름</th>
+                    <th>설명</th>
+                    <th>생성일</th>
+                    <th></th>
                 </tr>
             </thead>
         </table>
@@ -89,7 +89,10 @@
             me.dataTable.on('click', '.l-btn', function () {
                 const data = me.dataTable.row($(this).parents('tr')).data();
 
-                me.$router.push({name: 'view', params:{id: data['SEQ_ID']}});
+                const url = window.location.href.substring(0, window.location.href.lastIndexOf('#'));
+                const viewRoute = me.$router.resolve({name: 'view', params:{id: data['SEQ_ID']}}).route;
+
+                window.location.href = url + 'showroom.php#' + viewRoute.fullPath;
             });
 
             me.dataTable.on('click', '.e-btn', function () {

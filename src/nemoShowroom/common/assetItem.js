@@ -2,6 +2,10 @@ import * as THREE from 'three/build/three.module';
 
 import Utils from '../../class/utils';
 import * as StaticVariable from './staticVariable';
+import MaterialOption from '../common/materialOption';
+import LightOption from '../common/lightOption';
+
+const Promise = window.Promise;
 
 class Xyz {
     constructor (obj) {
@@ -12,19 +16,6 @@ class Xyz {
 
     equals(xyz) {
         return (xyz instanceof Xyz) && (this.x === xyz.x) && (this.y === xyz.y) && (this.z === xyz.z);
-    }
-}
-
-class MtlSetting {
-    constructor (obj = {}) {
-        this.metalness = (typeof obj.metalness == 'number') ? obj.metalness : 0.5;
-        this.roughness = (typeof obj.roughness == 'number') ? obj.roughness : 1;
-    }
-}
-
-class LightSetting {
-    constructor (obj = {}) {
-        this.intensity = (typeof obj.intensity == 'number') ? obj.intensity : 1;
     }
 }
 
@@ -65,13 +56,17 @@ export default class AssetItem {
         this.isSprite = !!obj.isSprite;
         this.enableOutline = !!obj.enableOutline;
 
-        this.isUsed = !!obj.isUsed;
         this.isLoaded = !!obj.isLoaded;
-        this.isPbrMtl = !!obj.isPbrMtl;
         this.isLight = !!obj.isLight;
 
-        this.mtlSetting = new MtlSetting(obj.mtlSetting);
-        this.lightSetting = new LightSetting(obj.lightSetting);
+        this.materialOptions = {};
+        if (obj.materialOptions) {
+            for (let index in obj.materialOptions) {
+                this.materialOptions[index] = new MaterialOption(obj.materialOptions[index]);
+            }
+        }
+
+        this.lightOption = new LightOption(obj.lightOption);
     }
 
     get isAnimation() {
@@ -114,37 +109,54 @@ export default class AssetItem {
             isSprite: me.isSprite,
             enableOutline: me.enableOutline,
 
-            mtlSetting: me.mtlSetting,
-            lightSetting: me.lightSetting
+            materialOptions: me.materialOptions,
+            lightOption: me.lightOption
         };
     }
 
-    setMtlOptions(obj = {}) {
+    setMaterialOption(obj = {}, index = 0) {
         const me = this;
 
-        if (me.isPbrMtl) {
-            me.mtlSetting = new MtlSetting(obj);
+        const materialOption = new MaterialOption(obj);
 
-            me.object3D.traverse(function (obj) {
-                if (obj.isMesh && obj.material) {
-                    for (let key in me.mtlSetting) {
-                        obj.material[key] = me.mtlSetting[key];
+        let i = 0;
+
+        // traverse 로 검색되는 순서를 인덱스로 사용한다.
+        me.object3D.traverse(function (obj) {
+            if (obj.isMesh && obj.material && i == index) {
+                const mtl = obj.material;
+
+                for (let key in materialOption) {
+                    if (mtl.hasOwnProperty(key)) {
+                        me.__setMtlValue(key, mtl, materialOption[key]);
                     }
                 }
-            });
+
+                i++;
+            }
+        });
+
+        me.materialOptions[index] = materialOption;
+    }
+
+    setMaterialOptions(options = {}) {
+        const me = this;
+
+        for (let index in options) {
+            me.setMaterialOption(options[index], index);
         }
     }
 
-    setLightOptions(obj = {}) {
+    setLightOption(obj = {}) {
         const me = this;
 
         if (me.isLight) {
-            me.lightSetting = new LightSetting(obj);
+            me.lightOption = new LightOption(obj);
 
             me.object3D.traverse(function (obj) {
                 if (obj instanceof THREE.SpotLight) {
-                    for (let key in me.lightSetting) {
-                        obj[key] = me.lightSetting[key];
+                    for (let key in me.lightOption) {
+                        obj[key] = me.lightOption[key];
                     }
                 }
             });
@@ -260,7 +272,7 @@ export default class AssetItem {
         }
     }
 
-    syncMembers() {
+    syncTransformMembers() {
         const me = this;
 
         const object3D = me.object3D;
@@ -281,9 +293,219 @@ export default class AssetItem {
         me.scale.z = scale.z;
     }
 
+    syncMaterialMembers() {
+        const me = this;
+
+        const options = {};
+
+        let i = 0;
+
+        // traverse 로 검색되는 순서를 인덱스로 사용한다.
+        me.object3D.traverse(function (obj) {
+            if (obj.isMesh && obj.material) {
+                const mtl = obj.material;
+                const mtlOption = new MaterialOption();
+
+                for (let key in mtl) {
+                    if (mtlOption.hasOwnProperty(key)) {
+                        me.__setMtlOptionValue(key, mtlOption, mtl[key]);
+                    }
+                }
+
+                options[i] = mtlOption;
+
+                i++;
+            }
+        });
+
+        me.materialOptions = options;
+    }
+
     clone() {
         const me = this;
 
         return new AssetItem(me);
+    }
+
+    __loadTexture(url) {
+        return new Promise(function (resolve, reject) {
+            const loader = new THREE.TextureLoader();
+
+            loader.load(url, function (texture) {
+                resolve(texture);
+            }, undefined, reject);
+        });
+    }
+
+    __loadCubeTexture(urlArr) {
+        return new Promise(function (resolve, reject) {
+            if (urlArr.length == 6) {
+                const loader = new THREE.CubeTextureLoader();
+
+                loader.setPath('./');
+
+                loader.load(urlArr, function (cubeTexture) {
+                    resolve(cubeTexture);
+                }, undefined, reject);
+
+            } else {
+                reject(new Error('need 6 url'));
+            }
+        });
+    }
+
+    __setMtlLiteral(name, mtl, value) {
+        mtl[name] = value;
+    }
+
+    __setMtlColor(name, mtl, value) {
+        if (value) {
+            mtl[name] = new THREE.Color(value);
+        }
+    }
+
+    __setMtlTexture(name, mtl, value) {
+        const me = this;
+
+        if (value) {
+            me.__loadTexture(value).catch(function () {
+                return Promise.resolve(null);
+
+            }).then(function (texture) {
+                mtl[name] = texture;
+                mtl.needsUpdate = true;
+            });
+        }
+    }
+
+    __setMtlCubeTexture(name, mtl, value) {
+        const me = this;
+
+        if (value) {
+            me.__loadCubeTexture(value).catch(function () {
+                return Promise.resolve(null);
+
+            }).then(function (cubeTexture) {
+                mtl[name] = cubeTexture;
+                mtl.needsUpdate = true;
+            });
+        }
+    }
+
+    __setMtlValue(name, mtl, value) {
+        const me = this;
+
+        switch (name) {
+            case 'roughness':
+            case 'metalness':
+            case 'reflectivity':
+                me.__setMtlLiteral(name, mtl, value);
+                break;
+
+            case 'color':
+            case 'emissive':
+                me.__setMtlColor(name, mtl, value);
+                break;
+
+            case 'map' :
+            case 'normalMap' :
+            case 'metalnessMap' :
+            case 'roughnessMap' :
+                me.__setMtlTexture(name, mtl, value);
+                break;
+
+            case 'envMap':
+                me.__setMtlCubeTexture(name, mtl, value);
+        }
+    }
+
+    __setMtlOptionLiteral(name, mtlOption, value) {
+        mtlOption[name] = value;
+    }
+
+    __setMtlOptionColor(name, mtlOption, value) {
+        if (value) {
+            mtlOption[name] = value.getStyle();
+        }
+    }
+
+    __getTextureImageUrl(img) {
+        let url = '';
+
+        // img 태그
+        if (img.tagName && img.tagName.toLowerCase() == 'img') {
+            const pathname = Utils.parseUrl(img.baseURI).pathname;
+            url = img.currentSrc.substring(img.currentSrc.indexOf(pathname) + pathname.length);
+
+        // ImageBitmap
+        } else if (img && img instanceof ImageBitmap) {
+            const canvas = document.createElement('canvas');
+
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            const ctx = canvas.getContext('2d');
+
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            url = canvas.toDataURL();
+        }
+
+        return url;
+    }
+
+    __setMtlOptionTexture(name, mtlOption, value) {
+        const me = this;
+
+        if (value && value.image) {
+            mtlOption[name] = me.__getTextureImageUrl(value.image);
+
+        } else {
+            mtlOption[name] = '';
+        }
+    }
+
+    __setMtlOptionCubeTexture(name, mtlOption, value) {
+        const me = this;
+
+        if (value && value.image && value.image.length == 6) {
+            const arr = [];
+
+            for (let i = 0; i < value.image.length; i++) {
+                arr.push(me.__getTextureImageUrl(value.image[i]));
+            }
+
+            mtlOption[name] = arr;
+
+        } else {
+            mtlOption[name] = [];
+        }
+    }
+
+    __setMtlOptionValue(name, mtlOption, value) {
+        const me = this;
+
+        switch (name) {
+            case 'roughness':
+            case 'metalness':
+            case 'reflectivity':
+                me.__setMtlOptionLiteral(name, mtlOption, value);
+                break;
+
+            case 'color':
+            case 'emissive':
+                me.__setMtlOptionColor(name, mtlOption, value);
+                break;
+
+            case 'map' :
+            case 'normalMap' :
+            case 'metalnessMap' :
+            case 'roughnessMap' :
+                me.__setMtlOptionTexture(name, mtlOption, value);
+                break;
+
+            case 'envMap':
+                me.__setMtlOptionCubeTexture(name, mtlOption, value);
+        }
     }
 }

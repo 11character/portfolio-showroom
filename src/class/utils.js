@@ -44,7 +44,7 @@ export default class Utils {
 
     static snakeToCamel(str = '') {
         str = str.toLowerCase();
-    
+
         return str.replace(/([-_].)/g, function (group) {
             return group.toUpperCase().replace(/-|_/g, '');
         });
@@ -52,11 +52,11 @@ export default class Utils {
 
     static snakeObjToCamelObj(sObj) {
         const cObj = {};
-    
+
         for (let key in sObj) {
             cObj[Utils.snakeToCamel(key)] = sObj[key];
         }
-    
+
         return cObj;
     }
 
@@ -70,7 +70,7 @@ export default class Utils {
             }).done(function (obj) {
                 if (obj.code == 0) {
                     resolve(obj);
-    
+
                 } else {
                     reject(new Error(obj.message));
                 }
@@ -122,11 +122,17 @@ export default class Utils {
         return (Math.PI / 180) * d;
     }
 
-    static urlToDirPath(url) {
+    static urlToParentPath(url) {
         return url.substring(0, url.lastIndexOf('/'));
     }
 
     static urlToFileName(url) {
         return url.substring(url.lastIndexOf('/') + 1);
+    }
+
+    static urlToParentName(url) {
+        const parentPath = Utils.urlToParentPath(url);
+
+        return parentPath.substring(parentPath.lastIndexOf('/') + 1);
     }
 }

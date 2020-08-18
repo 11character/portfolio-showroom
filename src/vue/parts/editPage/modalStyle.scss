@@ -11,7 +11,7 @@
         .modal-input {
             height: 36px;
             display: block;
-            border-radius: 3px;
+            border-radius: 0.25rem;
             background-color: #ffffff;
             border: solid 1px #d8e0eb;
             padding: 0px 1rem;
@@ -45,7 +45,7 @@
     }
 
     .modal-content-url {
-        border-radius: 3px;
+        border-radius: 0.25rem;
         background-color: rgba(60, 65, 80, 0.8);
         box-shadow: 0 2px 24px 0 rgba(74, 78, 90, 0.4);
         user-select: none;
@@ -69,7 +69,7 @@
     }
 
     .modal-content-text {
-        border-radius: 3px;
+        border-radius: 0.25rem;
         background-color: rgba(60, 65, 80, 0.8);
         box-shadow: 0 2px 24px 0 rgba(74, 78, 90, 0.4);
         user-select: none;
@@ -88,7 +88,7 @@
     }
 
     .modal-content-model-file {
-        border-radius: 3px;
+        border-radius: 0.25rem;
         background-color: rgba(60, 65, 80, 0.8);
         box-shadow: 0 2px 24px 0 rgba(74, 78, 90, 0.4);
         user-select: none;
@@ -106,7 +106,7 @@
         }
 
         .table-background {
-            border-radius: 3px;
+            border-radius: 0.25rem;
             background-color: #ffffff;
 
             table {

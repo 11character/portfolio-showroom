@@ -40,7 +40,6 @@ export default class AssetLoader {
         // 반대로 obj로더의 경우에는 로드를 연속으로 하면 오류가 발생한다.
 
         cloneItem.isLoaded = false;
-        cloneItem.isUsed = false;
 
         let promise;
 
@@ -86,10 +85,14 @@ export default class AssetLoader {
             removeChildArr[i].parent.remove(removeChildArr[i]);
         }
 
+        // material 설정값이 있으면 적용.
+        if (Object.keys(assetItem.materialOptions).length) {
+            assetItem.setMaterialOptions(assetItem.materialOptions);
+        }
+
         assetItem.isLoaded = true;
 
-        // PBR을 사용하는 객체를 셋팅한다.
-        return me.__setMtl(assetItem);
+        return Promise.resolve(assetItem);
     }
 
     __loadItem(assetItem) {
@@ -170,7 +173,7 @@ export default class AssetLoader {
                 spotLight.position.set(0, 0.5, 0);
                 spotLight.target.position.set(0, -4.5, 0);
                 spotLight.angle = Utils.d2r(45);
-                spotLight.intensity = assetItem.lightSetting.intensity;
+                spotLight.intensity = assetItem.lightOption.intensity;
 
                 group.add(spotLight);
                 group.add(spotLight.target);
@@ -336,7 +339,7 @@ export default class AssetLoader {
             const loader = new GLTFLoader();
             const glthUrl = me.baseUrl + '/' + assetItem.itemUrl;
 
-            loader.setPath(Utils.urlToDirPath(glthUrl) + '/');
+            loader.setPath(Utils.urlToParentPath(glthUrl) + '/');
 
             loader.load(Utils.urlToFileName(glthUrl), function (gltf) {
                 resolve(gltf.scene);
@@ -474,106 +477,6 @@ export default class AssetLoader {
                     console.error(error);
                     reject(error);
                 }
-            });
-        });
-    }
-
-    __setMtl(assetItem) {
-        const me = this;
-
-        const object3D = assetItem.object3D;
-        const pbrTypes = StaticVariable.PBR_TYPES;
-        const mapDir = Utils.urlToDirPath(assetItem.itemUrl) + '/map';
-        const promiseArr = [];
-
-        if (pbrTypes.indexOf(assetItem.type) > -1) {
-            object3D.traverse(function (obj) {
-                if (obj.isMesh && obj.material) {
-                    // PBR 사용 설정.
-                    let isMaterial = (
-                        obj.material instanceof THREE.MeshStandardMaterial
-                        || obj.material instanceof THREE.MeshPhysicalMaterial
-                    );
-    
-                    if (isMaterial) {
-                        assetItem.isPbrMtl = true;
-    
-                        obj.material.roughness = assetItem.mtlSetting.roughness;
-                        obj.material.metalness = assetItem.mtlSetting.metalness;
-    
-                        promiseArr.push(me.__loadTexture(mapDir + '/color.png').then(function (texture) {
-                            obj.material.map = texture;
-                        }));
-    
-                        promiseArr.push(me.__loadTexture(mapDir + '/normal.png').then(function (texture) {
-                            obj.material.normalMap = texture;
-                        }));
-    
-                        promiseArr.push(me.__loadTexture(mapDir + '/roughness.png').then(function (texture) {
-                            obj.material.roughnessMap = texture;
-                        }));
-    
-                        promiseArr.push(me.__loadTexture(mapDir + '/metallic.png').then(function (texture) {
-                            obj.material.metalnessMap = texture;
-                        }));
-                    }
-    
-                    // 환경맵 사용 설정.
-                    isMaterial = (obj.material instanceof THREE.MeshPhongMaterial);
-    
-                    if (isMaterial) {
-                        promiseArr.push(me.__loadTexture(mapDir + '/color.png').then(function (texture) {
-                            obj.material.map = texture;
-                        }));
-    
-                        promiseArr.push(me.__loadTexture(mapDir + '/normal.png').then(function (texture) {
-                            obj.material.normalMap = texture;
-                        }));
-    
-                        promiseArr.push(me.__loadCubeTexture(Utils.urlToDirPath(assetItem.itemUrl) + '/cube_texture').then(function (cubeTexture) {
-                            obj.material.emissive = new THREE.Color(0x808080);
-                            obj.material.envMap = cubeTexture;
-                        }));
-                    }
-                }
-            });
-        }
-
-        return Promise.all(promiseArr).catch(function () {
-            return Promise.resolve();
-
-        }).then(function () {
-            return Promise.resolve(assetItem);
-        });
-    }
-
-    __loadTexture(url) {
-        return new Promise(function (resolve, reject) {
-            const loader = new THREE.TextureLoader();
-
-            loader.load(url, function (texture) {
-                resolve(texture);
-            }, undefined, reject);
-        });
-    }
-
-    __loadCubeTexture(url) {
-        return new Promise(function (resolve) {
-            const loader = new THREE.CubeTextureLoader();
-
-            const cubeImgArr = [
-                'px.png', 'nx.png',
-                'py.png', 'ny.png',
-                'pz.png', 'nz.png'
-            ];
-
-            loader.setPath(url + '/');
-
-            loader.load(cubeImgArr, function (cubeTexture) {
-                resolve(cubeTexture);
-
-            }, undefined, function () {
-                resolve(null);
             });
         });
     }

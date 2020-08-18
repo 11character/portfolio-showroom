@@ -16,28 +16,13 @@
 </template>
 
 <script>
-    import $ from 'jquery';
-
     /**
      * template event : confirm
      */
     export default {
         props: {
-            disableOkHide: {
-                type: Boolean,
-                default: false
-            },
-            disabled: {
-                type: Boolean,
-                default: false
-            }
-        },
-        data: function () {
-            const me = this;
-
-            return {
-                disableOkHide: false
-            };
+            disableOkHide: {type: Boolean, default: false},
+            disabled: {type: Boolean, default: false}
         },
         methods: {
             open: function () {

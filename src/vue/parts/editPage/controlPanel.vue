@@ -1,213 +1,175 @@
 <template>
-    <div>
-        <div class="edit-btns">
-            <div class="edit-row">
-                <button @click="onClickUndo" class="edit-btn">
-                    <font-awesome-icon :icon="['fas', 'undo-alt']"></font-awesome-icon>&nbsp;Undo
-                </button>
+    <div class="control-panel-field">
+        <div class="item-row">
+            <div class="edit-btns">
+                <div class="edit-btn-row">
+                    <button @click="onClickUndo" class="edit-btn">
+                        <font-awesome-icon :icon="['fas', 'undo-alt']"></font-awesome-icon>&nbsp;Undo
+                    </button>
 
-                <button @click="onClickRedo" class="edit-btn">
-                    <font-awesome-icon :icon="['fas', 'redo-alt']"></font-awesome-icon>&nbsp;Redo
-                </button>
-            </div>
+                    <button @click="onClickRedo" class="edit-btn">
+                        <font-awesome-icon :icon="['fas', 'redo-alt']"></font-awesome-icon>&nbsp;Redo
+                    </button>
+                </div>
 
-            <div class="edit-row">
-                <button @click="onClickMode('translate')" class="edit-btn">
-                    <font-awesome-icon :icon="['fas', 'arrows-alt']"></font-awesome-icon>
-                </button>
+                <div class="edit-btn-row">
+                    <button @click="onClickMode('translate')" class="edit-btn">
+                        <font-awesome-icon :icon="['fas', 'arrows-alt']"></font-awesome-icon>
+                    </button>
 
-                <button @click="onClickMode('rotate')" class="edit-btn">
-                    <font-awesome-icon :icon="['fas', 'sync-alt']"></font-awesome-icon>
-                </button>
+                    <button @click="onClickMode('rotate')" class="edit-btn">
+                        <font-awesome-icon :icon="['fas', 'sync-alt']"></font-awesome-icon>
+                    </button>
 
-                <button @click="onClickAllScaleUp" class="edit-btn">
-                    <font-awesome-icon :icon="['fas', 'expand']"></font-awesome-icon>
-                </button>
+                    <button @click="onClickAllScaleUp" class="edit-btn">
+                        <font-awesome-icon :icon="['fas', 'expand']"></font-awesome-icon>
+                    </button>
 
-                <button @click="onClickAllScaleDown" class="edit-btn">
-                    <font-awesome-icon :icon="['fas', 'compress']"></font-awesome-icon>
-                </button>
-            </div>
-        </div>
-
-        <div class="item-menu">
-            <div class="item-slider item-row">
-                <div class="item-label">World light</div>
-
-                <div class="item-control">
-                    <input-slider v-model.number="light.intensity" :label="'Intensity'" @slide="onSlideWorldLightIntensity" :min="0" :max="2" :step="0.1" class="w-75 my-2"></input-slider>
+                    <button @click="onClickAllScaleDown" class="edit-btn">
+                        <font-awesome-icon :icon="['fas', 'compress']"></font-awesome-icon>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div v-if="editor.selectedItem != null" class="item-menu border-top">
+        <div class="item-row">
+            <input-light :editor="editor" label="World light"></input-light>
+        </div>
+
+        <template v-if="editor.selectedItem">
             <div class="item-row">
-                <div class="h5 m-0 text-white text-center text-truncate">{{ assetItem.name }}</div>
-            </div>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href=".tab-1">Control</a>
+                    </li>
 
-            <div class="item-row">
-                <div class="item-control">
-                    <button @click="onClickCopy" type="button" class="item-control-btn" tabindex="-1">
-                        <font-awesome-icon :icon="['fas', 'clone']"></font-awesome-icon>&nbsp;Copy
-                    </button>
+                    <li v-if="is3dModel" class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href=".tab-2">Material</a>
+                    </li>
+                </ul>
+
+                <div class="control-row">
+                    <div class="control-name">{{ assetItem.name }}</div>
                 </div>
-            </div>
 
-            <div v-if="(contentType == 'text')" class="item-row">
-                <div class="item-control">
-                    <button @click="onClickTextEdit" type="button" class="item-control-btn" tabindex="-1">
-                        <font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon>&nbsp;Edit
-                    </button>
+                <div v-if="is3dModel" class="control-row">
+                    <button @click="onClickReload" type="button" class="control-btn" tabindex="-1">Reload</button>
                 </div>
-            </div>
 
-            <template v-if="'html,image,youtube'.indexOf(assetItem.type) >= 0">
-                <div v-if="assetItem.isSprite" class="item-row item-display-type-change">
-                    <div class="item-control">
-                        <button @click="onClickSwitchingSprite" type="button" class="item-control-btn" tabindex="-1">
-                            <font-awesome-icon :icon="['fas', 'exchange-alt']"></font-awesome-icon>&nbsp;&nbsp;3D
-                        </button>
+                <div class="tab-content">
+                    <div class="tab-1 tab-pane fade show active">
+                        <div class="asset-control-field">
+                            <div class="control-row">
+                                <button @click="onClickCopy" type="button" class="control-btn" tabindex="-1">
+                                    <font-awesome-icon :icon="['fas', 'clone']"></font-awesome-icon>&nbsp;Copy
+                                </button>
+                            </div>
+
+                            <div v-if="!assetItem.isLight" class="control-row">
+                                <input-checkbox v-model="enableOutline" label="Focus"></input-checkbox>
+                            </div>
+
+                            <div v-if="(contentType == 'text')" class="control-row">
+                                <button @click="onClickTextEdit" type="button" class="control-btn" tabindex="-1">
+                                    <font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon>&nbsp;Edit
+                                </button>
+                            </div>
+
+                            <template v-if="'html,image,youtube'.indexOf(assetItem.type) >= 0">
+                                <div v-if="assetItem.isSprite" class="control-row">
+                                    <button @click="onClickSwitchingSprite" type="button" class="control-btn" tabindex="-1">
+                                        <font-awesome-icon :icon="['fas', 'exchange-alt']"></font-awesome-icon>&nbsp;&nbsp;3D
+                                    </button>
+                                </div>
+
+                                <div v-else class="control-row">
+                                    <button @click="onClickSwitchingSprite" type="button" class="control-btn" tabindex="-1">
+                                        <font-awesome-icon :icon="['fas', 'exchange-alt']"></font-awesome-icon>&nbsp;&nbsp;2D
+                                    </button>
+                                </div>
+                            </template>
+
+                            <div class="control-row">
+                                <input-number v-model.number="scalePercent" :step="0.1" label="Scale ( % )"></input-number>
+                            </div>
+
+                            <div class="control-row">
+                                <input-number v-model.number="positionX" :step="0.5" class="sub-control-row" subLabel="X" label="Position"></input-number>
+                                <input-number v-model.number="positionY" :step="0.5" class="sub-control-row" subLabel="Y"></input-number>
+                                <input-number v-model.number="positionZ" :step="0.5" class="sub-control-row" subLabel="Z"></input-number>
+                            </div>
+
+                            <div v-if="!assetItem.isSprite" class="control-row">
+                                <input-number v-model.number="rotationX" :step="1" class="sub-control-row" subLabel="X" label="Rotation ( ° )"></input-number>
+                                <input-number v-model.number="rotationY" :step="1" class="sub-control-row" subLabel="Y"></input-number>
+                                <input-number v-model.number="rotationZ" :step="1" class="sub-control-row" subLabel="Z"></input-number>
+                            </div>
+
+                            <div v-if="assetItem.isAnimation" class="control-row">
+                                <input-number v-model.number="animationEndTime" :step="1000" label="Animation time ( ms )"></input-number>
+                            </div>
+
+                            <div v-if="assetItem.type != 'youtube' && assetItem.type != 'spotLight'" class="control-row">
+                                <input-text v-model.trim="link" label="Link"></input-text>
+                            </div>
+
+                            <div v-if="assetItem.isLight" class="control-row">
+                                <input-slider v-model.number="lightIntensity" :min="0" :max="2" :step="0.1" :label="'Light intensity'"></input-slider>
+                            </div>
+
+                            <div class="control-row">
+                                <button @click="onClickRemove" type="button" class="control-btn" tabindex="-1">
+                                    <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>&nbsp;Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-2 tab-pane fade">
+                        <div class="asset-material-field">
+                            <mesh-panel :asset-item="assetItem" @control="onControlMesh"></mesh-panel>
+                        </div>
                     </div>
                 </div>
 
-                <div v-else class="item-row item-display-type-change">
-                    <div class="item-control">
-                        <button @click="onClickSwitchingSprite" type="button" class="item-control-btn" tabindex="-1">
-                            <font-awesome-icon :icon="['fas', 'exchange-alt']"></font-awesome-icon>&nbsp;&nbsp;2D
-                        </button>
-                    </div>
-                </div>
-            </template>
 
-            <div class="item-x item-row">
-                <div class="item-label">Scale ( &percnt; )</div>
-                <div class="item-control">
-                    <button @click="onScale(-1)" type="button" class="incr-decr-btn decr-btn" tabindex="-1">-</button>
-                    <input v-model.number="scalePercent" @change="onScale(0)" type="number" class="item-value" value="100.000">
-                    <button @click="onScale(1)" type="button" class="incr-decr-btn incr-btn" tabindex="-1">＋</button>
-                </div>
             </div>
-
-            <div class="item-xyz item-row">
-                <div class="item-label">Position</div>
-
-                <div class="item-control">
-                    <div class="item-label">X</div>
-                    <button @click="onPosition(-1, 0, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="x">-</button>
-                    <input v-model.number="positionX" @change="onPosition(0, 0, 0)" type="number" class="item-value" value="0.000">
-                    <button @click="onPosition(1, 0, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="x">＋</button>
-                </div>
-
-                <div class="item-control">
-                    <div class="item-label">Y</div>
-                    <button @click="onPosition(0, -1, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="y">-</button>
-                    <input v-model.number="positionY" @change="onPosition(0, 0, 0)" type="number" class="item-value" value="0.000">
-                    <button @click="onPosition(0, 1, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="y">＋</button>
-                </div>
-
-                <div class="item-control">
-                    <div class=" item-label">Z</div>
-                    <button @click="onPosition(0, 0, -1)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="z">-</button>
-                    <input v-model.number="positionZ" @change="onPosition(0, 0, 0)" type="number" class="item-value" value="0.000">
-                    <button @click="onPosition(0, 0, 1)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="z">＋</button>
-                </div>
-            </div>
-
-            <div v-if="!assetItem.isSprite" class="item-xyz item-row">
-                <div class="item-label">Rotation ( &deg; )</div>
-
-                <div class="item-control">
-                    <div class="item-label">X</div>
-                    <button @click="onRotation(-1, 0, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="x">-</button>
-                    <input v-model.number="rotationX" @change="onRotation(0, 0, 0)" type="number" class="item-value" value="0.000">
-                    <button @click="onRotation(1, 0, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="x">＋</button>
-                </div>
-
-                <div class="item-control">
-                    <div class="item-label">Y</div>
-                    <button @click="onRotation(0, -1, 0)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="y">-</button>
-                    <input v-model.number="rotationY" @change="onRotation(0, 0, 0)" type="number" class="item-value" value="0.000">
-                    <button @click="onRotation(0, 1, 0)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="y">＋</button>
-                </div>
-
-                <div class="item-control">
-                    <div class=" item-label">Z</div>
-                    <button @click="onRotation(0, 0, -1)" type="button" class="incr-decr-btn decr-btn" tabindex="-1" data-name="z">-</button>
-                    <input v-model.number="rotationZ" @change="onRotation(0, 0, 0)" type="number" class="item-value" value="0.000">
-                    <button @click="onRotation(0, 0, 1)" type="button" class="incr-decr-btn incr-btn" tabindex="-1" data-name="z">＋</button>
-                </div>
-            </div>
-
-            <div v-if="assetItem.isAnimation" class="item-row">
-                <div class="item-label">Animation time ( ms )</div>
-                <div class="item-control">
-                    <input v-model.number="animationEndTime" @change="onChangeAnimationTime" type="number" class="item-value">
-                </div>
-            </div>
-
-            <div v-if="assetItem.type != 'youtube' && assetItem.type != 'spotLight'" class="item-row">
-                <div class="item-label">Link</div>
-                <div class="item-control">
-                    <input v-model.trim="link" @change="onChangeLink" type="text" class="item-value">
-                </div>
-            </div>
-
-            <div  v-if="assetItem.isPbrMtl" class="item-slider item-row">
-                <div class="item-label">Material</div>
-
-                <div class="item-control">
-                    <input-slider v-model.number="mtlMetalness" :label="'Metalness'" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></input-slider>
-                </div>
-
-                <div class="item-control">
-                    <input-slider v-model.number="mtlRoughness" :label="'Roughness'" @slide="onSlideMtl" :min="0" :max="1" :step="0.1" class="w-75 my-2"></input-slider>
-                </div>
-            </div>
-
-            <div v-if="assetItem.isLight" class="item-slider item-row">
-                <div class="item-label">Light</div>
-
-                <div class="item-control">
-                    <input-slider v-model.number="lightIntensity" :label="'Intensity'" @slide="onSlideLightIntensity" :min="0" :max="2" :step="0.1" class="w-75 my-2"></input-slider>
-                </div>
-            </div>
-
-            <div class="item-check item-row">
-                <div class="item-label">테두리 표시</div>
-                <div class="item-control">
-                    <input v-model="enableOutline" @change="onChangeOutline" type="checkbox" class="item-value">
-                </div>
-            </div>
-
-            <div class="item-row">
-                <div class="item-control">
-                    <button @click="onClickRemove" type="button" class="item-control-btn" tabindex="-1">
-                        <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>&nbsp;Remove
-                    </button>
-                </div>
-            </div>
-        </div>
+        </template>
     </div>
 </template>
 
 <script>
+    import * as StaticVariable from '../../../nemoShowroom/common/staticVariable';
     import AssetItem from '../../../nemoShowroom/common/assetItem';
+    import ModelFileInfo from '../../../class/modelFileInfo';
     import Utils from '../../../class/utils';
+    import * as ApiUrl from '../../../class/apiUrl';
 
+    import meshPanelVue from '../assetEditPage/meshPanel.vue';
+    import inputLightVue from '../inputItem/inputLight.vue';
+    import inputNumberVue from '../inputItem/inputNumber.vue';
+    import inputTextVue from '../inputItem/inputText.vue';
     import inputSliderVue from '../inputItem/inputSlider.vue';
+    import inputCheckboxVue from '../inputItem/inputCheckbox.vue';
 
     /**
      * template event : control
      */
     export default {
         components: {
-            'input-slider': inputSliderVue
+            'mesh-panel': meshPanelVue,
+            'input-light': inputLightVue,
+            'input-number': inputNumberVue,
+            'input-text': inputTextVue,
+            'input-slider': inputSliderVue,
+            'input-checkbox': inputCheckboxVue
         },
         props: ['editor'],
         data: function () {
             const me = this;
 
             return {
+                is3dModel: false,
                 contentType: '',
                 assetItem: new AssetItem(),
                 light: me.editor.light,
@@ -219,28 +181,125 @@
                 rotationY: 0,
                 rotationZ: 0,
                 animationEndTime: 0,
-                mtlMetalness: 0.5,
-                mtlRoughness: 1,
                 lightIntensity: 1,
                 link: '',
                 enableOutline: true
             };
         },
+        watch: {
+            scalePercent: function (percent) {
+                const me = this;
+
+                this.scale(percent);
+            },
+            positionX: function (x) {
+                const me = this;
+
+                me.position(x, 0, 0);
+            },
+            positionY: function (y) {
+                const me = this;
+
+                me.position(0, y, 0);
+            },
+            positionZ: function (z) {
+                const me = this;
+
+                me.position(0, 0, z);
+            },
+            rotationX: function (x) {
+                const me = this;
+
+                me.rotation(x, 0, 0);
+            },
+            rotationY: function (y) {
+                const me = this;
+
+                me.rotation(0, y, 0);
+            },
+            rotationZ: function (z) {
+                const me = this;
+
+                me.rotation(0, 0, z);
+            },
+            animationEndTime: function (ms) {
+                const me = this;
+
+                me.editor.setAnimationTime(0, ms, true);
+
+                me.$emit('control', 'animationTime');
+            },
+            link: function (str) {
+                const me = this;
+
+                me.editor.setLink(str);
+
+                me.$emit('control', 'link');
+            },
+            lightIntensity: function (intensity) {
+                const me = this;
+
+                const assetItem = me.editor.selectedItem;
+
+                if (assetItem) {
+                    assetItem.setLightOption({
+                        intensity: me.lightIntensity
+                    });
+                }
+            },
+            enableOutline: function (bool) {
+                const me = this;
+
+                const assetItem = me.editor.selectedItem;
+
+                if (assetItem) {
+                    assetItem.enableOutline = bool;
+                }
+
+                me.$emit('control', 'enableOutline');
+            }
+        },
         mounted: function () {
             const me = this;
 
-            me.editor.options.onSelect = function (assetItem) {
+            //==========
+            const evt1 = me.editor.options.onSelect;
+
+            me.editor.options.onSelect = function (assetItem, editor) {
+                evt1(assetItem, editor);
+
+                // 대상 선택시 수치가 갱신되는 과정에서 대상의 이동 이벤트가 처리되기 때문에 작업 기록을 막는다.
+                me.editor.historyManager.lock();
+
+                me.is3dModel = StaticVariable.ITEM_3D_TYPES.indexOf(assetItem.type) > -1;
                 me.assetItem = assetItem;
+
                 me.setItemData(me.assetItem);
+
+                // 대상의 이벤트가 끝나기를 기다린다.
+                setTimeout(function () {
+                    me.editor.historyManager.unlock();
+                }, 100);
             };
 
-            me.editor.options.onDeselect = function () {
+            //==========
+            const evt2 = me.editor.options.onDeselect;
+
+            me.editor.options.onDeselect = function (editor) {
+                evt2(editor);
+
                 me.assetItem = new AssetItem();
             };
 
-            me.editor.options.onMove = function () {
+            //==========
+            const evt3 = me.editor.options.onMove;
+
+            me.editor.options.onMove = function (itemArr, editor) {
+                evt3(itemArr, editor);
+
                 me.setItemData(me.assetItem);
-                me.$emit('control', 'move')
+
+                me.$emit('control', 'move');
             };
         },
         methods: {
@@ -263,9 +322,57 @@
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
                 me.enableOutline = assetItem.enableOutline;
-                me.mtlMetalness = assetItem.mtlSetting.metalness;
-                me.mtlRoughness = assetItem.mtlSetting.roughness;
-                me.lightIntensity = assetItem.lightSetting.intensity;
+                me.lightIntensity = assetItem.lightOption.intensity;
+            },
+            scale: function (percent) {
+                const me = this;
+
+                const assetItem = me.editor.selectedItem;
+
+                if (assetItem) {
+                    if (percent <= 0) {
+                        alert('0 이하의 값은 가질 수 없습니다.');
+
+                        me.scalePercent = 0.1;
+
+                    } else {
+                        const scale = assetItem.zeroScale.x * (percent / 100);
+
+                        me.editor.setScale(scale, scale, scale);
+
+                        me.$emit('control', 'scale');
+                    }
+                }
+            },
+            position: function (x, y, z) {
+                const me = this;
+
+                const assetItem = me.editor.selectedItem;
+
+                if (assetItem) {
+                    x = x || me.positionX;
+                    y = y || me.positionY;
+                    z = z || me.positionZ;
+
+                    me.editor.setPosition(x, y, z);
+
+                    me.$emit('control', 'position');
+                }
+            },
+            rotation: function (x, y, z) {
+                const me = this;
+
+                const assetItem = me.editor.selectedItem;
+
+                if (assetItem) {
+                    x = x || me.rotationX;
+                    y = y || me.rotationY;
+                    z = z || me.rotationZ;
+
+                    me.editor.setRotation(Utils.d2r(x), Utils.d2r(y), Utils.d2r(z));
+
+                    me.$emit('control', 'rotation');
+                }
             },
             onClickUndo: function () {
                 const me = this;
@@ -297,11 +404,6 @@
                 me.editor.multiplyScaleAll(0.9, 0.9, 0.9);
                 me.$emit('control', 'scaleDown');
             },
-            onSlideWorldLightIntensity: function () {
-                const me = this;
-
-                //me.editor.light.intensity = me.light.intensity;
-            },
             onClickCopy: function () {
                 const me = this;
 
@@ -309,13 +411,64 @@
 
                 if (assetItem) {
                     assetItem = assetItem.clone();
-                    assetItem.position.y += 1;
+                    assetItem.position.z += 1;
 
                     me.editor.detach();
 
                     me.editor.import(assetItem).then(function (item) {
                         me.editor.attach(item);
                         me.$emit('control', 'copy');
+                    });
+                }
+            },
+            onClickReload: function () {
+                const me = this;
+
+                const prevItem = me.editor.selectedItem;
+
+                if (prevItem) {
+                    Utils.apiRequest(ApiUrl.MODEL_FILE_URL_DATA, {url: prevItem.itemUrl}).then(function (data) {
+                        if (data.data.length > 0) {
+                            const modelFileInfo = new ModelFileInfo(Utils.snakeObjToCamelObj(data.data[0]));
+                            const fileSettingData = modelFileInfo.data ? JSON.parse(modelFileInfo.data) : null;
+
+                            if (fileSettingData && fileSettingData.itemArray.length) {
+                                const orgAssetItem = new AssetItem(fileSettingData.itemArray[0]);
+
+                                prevItem.syncTransformMembers();
+
+                                const prevScale = prevItem.scale;
+                                const prevPostion = prevItem.position;
+                                const prevRotation = prevItem.rotation;
+
+                                orgAssetItem.scale = prevScale;
+                                orgAssetItem.position = prevPostion;
+                                orgAssetItem.rotation = prevRotation;
+
+                                me.editor.import(orgAssetItem).then(function (item) {
+                                    me.editor.remove();
+
+                                    me.editor.attach(item);
+
+                                    const historyManager = me.editor.historyManager;
+                                    const undoHistory = historyManager.getHistory();
+                                    const redoHistory = historyManager.getHistory(historyManager.cursor - 1);
+
+                                    undoHistory.onUndo = function () {
+                                        historyManager.undo();
+                                    };
+
+                                    redoHistory.onRedo = function () {
+                                        historyManager.redo();
+                                    };
+
+                                    me.$emit('control', 'reloadMaterial');
+                                });
+
+                            } else {
+                                alert('파일에 설정값이 없습니다.');
+                            }
+                        }
                     });
                 }
             },
@@ -330,297 +483,124 @@
                 me.editor.switchingSpriteMode();
                 me.$emit('control', 'switchingSprite');
             },
-            onChangeAnimationTime: function () {
-                const me = this;
-
-                me.editor.setAnimationTime(0, me.animationEndTime || 0, true);
-
-                me.$emit('control', 'animationTime');
-            },
-            onChangeLink: function () {
-                const me = this;
-
-                me.editor.setLink(me.link);
-
-                me.$emit('control', 'link');
-            },
-            onChangeOutline: function () {
-                const me = this;
-
-                const assetItem = me.editor.selectedItem;
-
-                if (assetItem) {
-                    assetItem.enableOutline = me.enableOutline;
-                }
-
-                me.$emit('control', 'enableOutline');
-            },
             onClickRemove: function () {
                 const me = this;
 
                 me.editor.remove();
                 me.$emit('control', 'remove');
             },
-            onScale: function (gap) {
+            onControlMesh: function (type) {
                 const me = this;
 
-                const assetItem = me.editor.selectedItem;
-
-                if (assetItem) {
-                    let percent = me.scalePercent || 1;
-
-                    if (gap) {
-                        const absGap = Math.abs(gap);
-
-                        percent = (Math.floor(percent / absGap) * absGap) + gap;
-                    }
-
-                    if (percent <= 0) {
-                        alert('0 이하의 값은 가질 수 없습니다.');
-
-                    } else {
-                        const scale = assetItem.zeroScale.x * (percent / 100);
-
-                        me.editor.setScale(scale, scale, scale);
-
-                        me.$emit('control', 'scale');
-                    }
-                }
-            },
-            onPosition: function (gapX, gapY, gapZ) {
-                const me = this;
-
-                const assetItem = me.editor.selectedItem;
-
-                if (assetItem) {
-                    let x = me.positionX || 0;
-                    let y = me.positionY || 0;
-                    let z = me.positionZ || 0;
-
-                    let absGap;
-
-                    if (gapX) {
-                        absGap = Math.abs(gapX);
-                        x = (Math.floor(x / absGap) * absGap) + gapX;
-                    }
-
-                    if (gapY) {
-                        absGap = Math.abs(gapY);
-                        y = (Math.floor(y / absGap) * absGap) + gapY;
-                    }
-
-                    if (gapZ) {
-                        absGap = Math.abs(gapZ);
-                        z = (Math.floor(z / absGap) * absGap) + gapZ;
-                    }
-
-                    me.editor.setPosition(x, y, z);
-
-                    me.$emit('control', 'position');
-                }
-            },
-            onRotation: function (gapX, gapY, gapZ) {
-                const me = this;
-
-                const assetItem = me.editor.selectedItem;
-
-                if (assetItem) {
-                    let x = me.rotationX || 0;
-                    let y = me.rotationY || 0;
-                    let z = me.rotationZ || 0;
-
-                    let absGap;
-
-                    if (gapX) {
-                        absGap = Math.abs(gapX);
-                        x = (Math.floor(x / absGap) * absGap) + gapX;
-                    }
-
-                    if (gapY) {
-                        absGap = Math.abs(gapY);
-                        y = (Math.floor(y / absGap) * absGap) + gapY;
-                    }
-
-                    if (gapZ) {
-                        absGap = Math.abs(gapZ);
-                        z = (Math.floor(z / absGap) * absGap) + gapZ;
-                    }
-
-                    me.editor.setRotation(Utils.d2r(x), Utils.d2r(y), Utils.d2r(z));
-
-                    me.$emit('control', 'rotation');
-                }
-            },
-            onSlideMtl: function () {
-                const me = this;
-
-                const assetItem = me.editor.selectedItem;
-
-                if (assetItem) {
-                    assetItem.setMtlOptions({
-                        metalness: me.mtlMetalness,
-                        roughness: me.mtlRoughness
-                    });
-                }
-            },
-            onSlideLightIntensity: function () {
-                const me = this;
-
-                const assetItem = me.editor.selectedItem;
-
-                if (assetItem) {
-                    assetItem.setLightOptions({
-                        intensity: me.lightIntensity
-                    });
-                }
+                me.$emit('control', type);
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    /* edit btn ==================================================================================================== */
-    .edit-btns {
+    .control-panel-field {
         width: 100%;
+        height: 100%;
+        overflow-y: auto;
 
-        .edit-row {
+        .nav-tabs {
+            margin-bottom: 0.5rem;
+
+            .nav-link {
+                color: #ffffff;
+            }
+
+            .nav-link.active {
+                color: #000000;
+            }
+        }
+
+        .item-row {
             width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding: 0px 1rem;
+            margin-top: 1rem;
+        }
 
-            .edit-btn {
+        .item-row:first-child {
+            margin-top: 0px;
+        }
+
+        .edit-btns {
+            width: 100%;
+
+            .edit-btn-row {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .edit-btn {
+                    width: 100%;
+                    height: 36px;
+                    border: 1px solid #5d5d5d;
+                    background-color: #5d5d5d;
+                    color: #bdbdbd;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #eaeaea;
+                }
+
+                .edit-btn:hover {
+                    background-color: #8c8c8c;
+                    color: #eaeaea;
+                }
+            }
+        }
+
+        .asset-control-field {
+            width: 100%;
+            border: 1px solid #8c8c8c;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            padding: 1.25rem;
+        }
+
+        .asset-material-field {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .control-row {
+            width: 100%;
+            margin-top: 1rem;
+
+            .control-name {
+                width: 100%;
+                font-size: 1.2rem;
+                color: #ffffff;
+                text-align: center;
+                overflow:hidden;
+                margin-bottom: 1rem;
+            }
+
+            .control-btn {
                 width: 100%;
                 height: 36px;
                 border: 1px solid #5d5d5d;
                 background-color: #5d5d5d;
                 color: #bdbdbd;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 1px solid #eaeaea;
+                border-radius: 0.25rem;
             }
 
-            .edit-btn:hover {
+            .control-btn:hover {
                 background-color: #8c8c8c;
                 color: #eaeaea;
             }
         }
-    }
-    /* END-edit btn ==================================================================================================== */
 
-    /* item menu ==================================================================================================== */
-    .item-menu {
-        width: 100%;
-
-        .item-row {
-            padding: 10px 15px;
+        .sub-control-row {
+            margin-top: 5px;
         }
 
-        .item-label {
-            font-size: 15px;
-            font-weight: 600;
-            font-style: normal;
-            font-stretch: normal;
-            line-height: normal;
-            letter-spacing: 0.2px;
-            text-align: left;
-            color: #ffffff;
-        }
-
-        .item-control {
-            display:flex;
-            justify-content: center;
-            align-items: center;
-            padding-top: 5px;
-        }
-
-        .item-value {
-            width: 176px;
-            height: 28px;
-            border-radius: 2px;
-            background-color: #f6f6f6;
-            border: solid 1px #e9e9e9;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .incr-decr-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 2px;
-            border: 1px solid #5d5d5d;
-            background-color: #5d5d5d;
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .incr-decr-btn:hover {
-            background-color: #8c8c8c;
-        }
-
-        .item-control-btn {
-            width: 174px;
-            height: 36px;
-            border: 1px solid #5d5d5d;
-            background-color: #5d5d5d;
-            color: #bdbdbd;
-            border-radius: 3px;
-        }
-
-        .item-control-btn:hover {
-            background-color: #8c8c8c;
-            color: #eaeaea;
-        }
-
-        .item-x {
-            .item-control {
-                .item-value {
-                    width: 120px;
-                    text-align: right;
-                }
-            }
-        }
-
-        .item-xyz {
-            .item-control {
-                .item-label {
-                    width: 10px;
-                    margin-right: 10px;
-                }
-
-                .item-value {
-                    width: 80px;
-                }
-            }
-        }
-
-        .item-check {
-            .item-control {
-                .item-value {
-                    height: 20px;
-                }
-            }
-        }
-
-        .item-slider {
-            .item-control {
-                flex-wrap: wrap;
-
-                .item-label {
-                    width: 90px;
-                    margin-right: 10px;
-                }
-
-                .item-value {
-                    width: 50px;
-                    background-color: #5d5d5d;
-                    border: solid 1px #5d5d5d;
-                    color: #bdbdbd;
-                    text-align: center;
-                }
-            }
+        .control-row:first-child {
+            margin-top: 0px;
         }
     }
-    /* END-item menu ==================================================================================================== */
 </style>

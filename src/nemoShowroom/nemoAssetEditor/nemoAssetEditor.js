@@ -10,10 +10,14 @@ import AssetItemManager from '../common/assetItemManager';
 import Options from './options';
 import Utils from '../../class/utils';
 
+import EditorInterface from '../common/editorInterface';
+
 const Promise = window.Promise;
 
-export default class NemoShowroomEditor {
+export default class NemoShowroomEditor extends EditorInterface {
     constructor (obj = {}) {
+        super();
+
         const me  = this;
 
         me.options = new Options(obj);
@@ -26,18 +30,28 @@ export default class NemoShowroomEditor {
 
         // ---
         me.rootEl = Utils.createDivElement();
-        me.rootEl.style.backgroundColor = StaticVariable.STYLE_BACKGROUND_COLOR;
+        me.rootEl.style.backgroundColor = StaticVariable.STYLE_ASSET_EDIT_BACKGROUND_COLOR;
 
         // ---
         me.scene = new THREE.Scene();
 
         // ---
+        me.lightField = new THREE.Group();
+
+        // ---
         me.light = new THREE.DirectionalLight();
-        me.light.position.set(1, 1, 1);
+        me.light.position.copy(StaticVariable.LIGHT_ZERO_POSITION);
+        me.lightField.add(me.light);
+
+        // ---
+        me.subLight = new THREE.DirectionalLight();
+        me.subLight.position.copy(StaticVariable.SUB_LIGHT_ZERO_POSITION);
+        me.subLight.intensity = me.light.intensity / 2;
+        me.lightField.add(me.subLight);
 
         // ---
         me.camera = new THREE.PerspectiveCamera(45, winW / winH, StaticVariable.CAMERA_NEAR, StaticVariable.CAMERA_FAR);
-        me.camera.position.copy(StaticVariable.CAMERA_ZERO_POSITION);
+        me.camera.position.copy(StaticVariable.ASSET_CAMERA_ZERO_POSITION);
         me.camera.lookAt(StaticVariable.CAMERA_ZERO_LOOK_AT);
 
         // ---
@@ -75,7 +89,7 @@ export default class NemoShowroomEditor {
 
         // ---
         me.scene.add(me.camera);
-        me.scene.add(me.light);
+        me.scene.add(me.lightField);
         me.scene.add(me.objectField);
 
         // ---
@@ -153,7 +167,7 @@ export default class NemoShowroomEditor {
         const me = this;
 
         me.obControls.target0.copy(StaticVariable.CAMERA_ZERO_LOOK_AT);
-        me.obControls.position0.copy(StaticVariable.CAMERA_ZERO_POSITION);
+        me.obControls.position0.copy(StaticVariable.ASSET_CAMERA_ZERO_POSITION);
         me.obControls.zoom0 = StaticVariable.CAMERA_ZERO_ZOOM;
 
         me.obControls.reset();
@@ -197,31 +211,48 @@ export default class NemoShowroomEditor {
     openJson(json) {
         const me = this;
 
+        me.removeAll();
+
         const data = JSON.parse(json);
-        const assetItem = new AssetItem(data);
+        const arr = data.itemArray;
 
-        return me.itemLoader.load(assetItem).then(function (currentItem) {
-            // 불러오는 중에 destroy() 호출시 오류 방지.
-            if (me.options) {
-                me.objectField.add(currentItem.object3D);
-                me.cssRenderer.add(currentItem);
-                me.assetItemManager.add(currentItem);
+        let promise = Promise.resolve();
 
-                currentItem.animationPlay();
+        if (arr && arr.length) {
+            me.setLightIntensity(data.lightIntensity);
+            me.setLightHorizontalAngle(data.lightHorizontalAngle);
 
-                me.assetItem = currentItem;
-            }
+            const assetItem = new AssetItem(arr[0]);
 
-            return Promise.resolve(currentItem);
-        });
+            promise = me.itemLoader.load(assetItem).then(function (currentItem) {
+                // 불러오는 중에 destroy() 호출시 오류 방지.
+                if (me.options) {
+                    me.objectField.add(currentItem.object3D);
+                    me.cssRenderer.add(currentItem);
+                    me.assetItemManager.add(currentItem);
+
+                    currentItem.animationPlay();
+
+                    me.assetItem = currentItem;
+                }
+
+                me.options.onLoad(currentItem);
+
+                return Promise.resolve(currentItem);
+            });
+        }
+
+        return promise;
     }
 
     /**
-     * 화면에 3D객체를 추가한다.
+     * 화면에 3D객체를 보인다.
      * @param {AssetItem || object} obj 화면에 표시할 3D객체 정보.
      */
-    import(obj) {
+    openItem(obj) {
         const me = this;
+
+        me.removeAll();
 
         const assetItem = new AssetItem(obj);
 
@@ -234,6 +265,8 @@ export default class NemoShowroomEditor {
 
             me.assetItem = currentItem;
 
+            me.options.onLoad(currentItem);
+
             return Promise.resolve(currentItem);
         });
     }
@@ -244,7 +277,26 @@ export default class NemoShowroomEditor {
     exportJson() {
         const me = this;
 
-        return JSON.stringify(me.assetItem || {});
+        const obj = {
+            lightIntensity: me.getLightIntensity(),
+            lightHorizontalAngle: me.getLightHorizontalAngle(),
+            itemArray: []
+        };
+
+        if (me.assetItem) {
+            obj.itemArray = [me.assetItem];
+        }
+
+        return JSON.stringify(obj);
+    }
+
+    /**
+     * 화면의 모든 대상을 지운다.
+     */
+    removeAll() {
+        const me = this;
+
+        me.objectField.remove.apply(me.objectField, me.objectField.children);
     }
 
     /**
@@ -304,6 +356,47 @@ export default class NemoShowroomEditor {
     }
 
     /**
+     * 전역 조명 밝기 설정.
+     * @param {float} intensity 밝기.
+     */
+    setLightIntensity(intensity) {
+        const me = this;
+
+        me.light.intensity = intensity;
+        me.subLight.intensity = intensity / 2;
+    }
+
+    /**
+     * 전역 조명 위치 설정.
+     * @param {float} rad Y축 라디안 각도.
+     */
+    setLightHorizontalAngle(rad) {
+        const me = this;
+
+        // 그룹 안의 조명의 위치가 배로 회전하기 때문에 반으로 줄인다. (이유 모름)
+        me.lightField.rotation.set(0, rad / 2, 0);
+    }
+
+    /**
+     * 전역 조명 밝기.
+     */
+    getLightIntensity() {
+        const me = this;
+
+        return me.light.intensity;
+    }
+
+    /**
+     * 전역 조명 위치 각도.
+     */
+    getLightHorizontalAngle() {
+        const me = this;
+
+        // 그룹 안의 조명의 위치가 배로 회전하기 때문에 배로 반환. (이유 모름)
+        return me.lightField.rotation.y * 2;
+    }
+
+    /**
      * 객체를 비운다.
      */
     destroy() {
@@ -314,6 +407,22 @@ export default class NemoShowroomEditor {
         }
 
         me.stop();
+
+        me.scene.traverse(function (object3D) {
+            if (object3D.geometry) {
+                object3D.geometry.dispose();
+            }
+
+            if (object3D.material && Array.isArray(object3D.material)) {
+                for (let i = 0; i < object3D.material.length; i++) {
+                    object3D.material[i].dispose();
+                }
+            } else if (object3D.material) {
+                object3D.material.dispose();
+            }
+        });
+
+        me.scene.dispose();
 
         me.scene.remove.apply(me.scene, me.scene.children);
 

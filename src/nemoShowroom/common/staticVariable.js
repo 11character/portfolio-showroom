@@ -31,9 +31,24 @@ export const TRANSPARENT_OBJECT_NAME = 'transparentObject3D';
 export const ELEMENT_FIELD_ID = 'nemo-web-showroom';
 
 /**
+ * 전역 조명 초기 위치.
+ */
+export const LIGHT_ZERO_POSITION = new THREE.Vector3(0, 1, 1);
+
+/**
+ * 전역 보조조명 초기 위치.
+ */
+export const SUB_LIGHT_ZERO_POSITION = new THREE.Vector3(0, -1, -1);
+
+/**
  * 에디터 카메라의 초기 위치.
  */
 export const CAMERA_ZERO_POSITION = new THREE.Vector3(0, 4, 10);
+
+/**
+ * 에셋 에디터 카메라의 초기 위치.
+ */
+export const ASSET_CAMERA_ZERO_POSITION = new THREE.Vector3(0, 0, 3);
 
 /**
  * 에디터 카메라가 바라보는 지점.
@@ -89,6 +104,11 @@ export const ITEM_TYPE_YOUTUBE = 'youtube';
 export const ITEM_TYPE_IMAGE = 'image';
 export const ITEM_TYPE_TEXT = 'text';
 export const ITEM_TYPE_SPOT_LIGHT = 'spotLight';
+
+/**
+ * 3D 타입.
+ */
+export const ITEM_3D_TYPES = [ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_STL, ITEM_TYPE_3D_FBX].join(' ');
 
 /**
  * 대상 복제시 리로드 할 타입.
@@ -163,11 +183,7 @@ export const CONTROLS_TF_SPACE_W = 'world';
  * 바탕색.
  */
 export const STYLE_BACKGROUND_COLOR = '#000000';
-
-/**
- * PBR 대상이 되는 타입.
- */
-export const PBR_TYPES = [ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB].join(' ');
+export const STYLE_ASSET_EDIT_BACKGROUND_COLOR = '#DFDFDF';
 
 /**
  * 컨트롤 충돌 체크 길이.
