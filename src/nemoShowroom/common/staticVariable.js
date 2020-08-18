@@ -99,6 +99,7 @@ export const ITEM_TYPE_3D_GLB = 'glb';
 export const ITEM_TYPE_3D_OBJ = 'obj';
 export const ITEM_TYPE_3D_STL = 'stl';
 export const ITEM_TYPE_3D_FBX = 'fbx';
+export const ITEM_TYPE_3D_DAE = 'dae';
 export const ITEM_TYPE_HTML = 'html';
 export const ITEM_TYPE_YOUTUBE = 'youtube';
 export const ITEM_TYPE_IMAGE = 'image';
@@ -108,7 +109,7 @@ export const ITEM_TYPE_SPOT_LIGHT = 'spotLight';
 /**
  * 3D 타입.
  */
-export const ITEM_3D_TYPES = [ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_STL, ITEM_TYPE_3D_FBX].join(' ');
+export const ITEM_3D_TYPES = [ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_STL, ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_DAE].join(' ');
 
 /**
  * 대상 복제시 리로드 할 타입.

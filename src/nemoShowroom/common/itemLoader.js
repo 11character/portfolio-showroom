@@ -5,6 +5,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import { OBJLoader2 } from 'three/examples/jsm/loaders/OBJLoader2';
 import { MtlObjBridge } from 'three/examples/jsm/loaders/obj2/bridge/MtlObjBridge';
+import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader';
 
 import html2canvas from 'html2canvas';
 
@@ -132,6 +133,9 @@ export default class AssetLoader {
 
             case StaticVariable.ITEM_TYPE_3D_FBX:
                 return me.__loadFbx(assetItem).then(onLoadComplete).catch(onLoadError);
+
+            case StaticVariable.ITEM_TYPE_3D_DAE:
+                return me.__loadCollada(assetItem).then(onLoadComplete).catch(onLoadError);
 
             case StaticVariable.ITEM_TYPE_IMAGE:
                 return me.__loadImage(assetItem).then(onLoadComplete).catch(onLoadError);
@@ -478,6 +482,19 @@ export default class AssetLoader {
                     reject(error);
                 }
             });
+        });
+    }
+
+    __loadCollada(assetItem) {
+        const me = this;
+
+        return new Promise(function (resolve, reject) {
+            const loader = new ColladaLoader();
+            const daeUrl = me.baseUrl + '/' + assetItem.itemUrl;
+
+            loader.load(daeUrl, function (collada) {
+                resolve(collada.scene);
+            }, null, reject);
         });
     }
 }
