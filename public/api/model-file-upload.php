@@ -49,11 +49,17 @@
                     $full_name = '';
 
                     // 압축파일 하나에 하나의 파일.
+                    // 이미지와 3D파일이 같이 있는 경우 3D파일을 선택한다.
                     foreach ($file_list as $path) {
                         $path_info = pathinfo($path);
                         $file_extension = strtolower($path_info['extension']);
 
-                        if (strpos('jpg jpeg png gif fbx stl obj gltf glb', $file_extension) !== false) {
+                        if (strpos('jpg jpeg png gif', $file_extension) !== false) {
+                            $has_file = true;
+                            $ext = $file_extension;
+                            $full_name = $path_info['basename'];
+
+                        } else if (strpos('fbx stl obj gltf glb dae', $file_extension) !== false) {
                             $has_file = true;
                             $ext = $file_extension;
                             $full_name = $path_info['basename'];
