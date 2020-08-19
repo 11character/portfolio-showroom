@@ -75,12 +75,6 @@
             onModelItemLoad: function (assetItem) {
                 const me = this;
 
-                const box3 = assetItem.getBox3();
-                const scale = 1 / (box3.max.y - box3.min.y);
-
-                assetItem.object3D.scale.set(scale, scale, scale);
-                assetItem.syncTransformMembers();
-
                 me.disabled = false;
             },
             load2d: function (data) {

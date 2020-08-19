@@ -51,7 +51,7 @@ export default class NemoShowroomEditor extends EditorInterface {
 
         // ---
         me.camera = new THREE.PerspectiveCamera(45, winW / winH, StaticVariable.CAMERA_NEAR, StaticVariable.CAMERA_FAR);
-        me.camera.position.copy(StaticVariable.ASSET_CAMERA_ZERO_POSITION);
+        me.camera.position.copy(StaticVariable.CAMERA_ZERO_POSITION);
         me.camera.lookAt(StaticVariable.CAMERA_ZERO_LOOK_AT);
 
         // ---
@@ -167,7 +167,7 @@ export default class NemoShowroomEditor extends EditorInterface {
         const me = this;
 
         me.obControls.target0.copy(StaticVariable.CAMERA_ZERO_LOOK_AT);
-        me.obControls.position0.copy(StaticVariable.ASSET_CAMERA_ZERO_POSITION);
+        me.obControls.position0.copy(StaticVariable.CAMERA_ZERO_POSITION);
         me.obControls.zoom0 = StaticVariable.CAMERA_ZERO_ZOOM;
 
         me.obControls.reset();
@@ -236,6 +236,8 @@ export default class NemoShowroomEditor extends EditorInterface {
                     me.assetItem = currentItem;
                 }
 
+                me.viewTarget(currentItem);
+
                 me.options.onLoad(currentItem);
 
                 return Promise.resolve(currentItem);
@@ -264,6 +266,8 @@ export default class NemoShowroomEditor extends EditorInterface {
             currentItem.animationPlay();
 
             me.assetItem = currentItem;
+
+            me.viewTarget(currentItem);
 
             me.options.onLoad(currentItem);
 
@@ -394,6 +398,51 @@ export default class NemoShowroomEditor extends EditorInterface {
 
         // 그룹 안의 조명의 위치가 배로 회전하기 때문에 배로 반환. (이유 모름)
         return me.lightField.rotation.y * 2;
+    }
+
+    /**
+     * 선택된 대상을 화면의 기준점으로 잡는다.
+     * @param {AssetItem} assetItem 보여줄 아이템 객체.
+     */
+    viewTarget(assetItem) {
+        const me = this;
+
+        if (assetItem) {
+            const object3D = assetItem.object3D;
+
+            let box = new THREE.Box3();
+            box.setFromObject(object3D);
+
+            const boxSize = new THREE.Vector3();
+            box.getSize(boxSize);
+
+            const halfBoxSize = boxSize.clone().divide(new THREE.Vector3(2, 2, 2));
+            const target = box.max.clone().sub(halfBoxSize);
+
+            // 카메라의 기본 위치를 기준으로 한 화면에 표시되 치수. (3D공간 내부의 수치 기준)
+            const vRad = (Math.PI / 180) * (me.camera.getEffectiveFOV()) / 2; // 화면의 수직각도.
+            const defaultHeight = StaticVariable.CAMERA_ZERO_POSITION.z * Math.tan(vRad); // 화면의 높이.
+            const defaultWidth = me.camera.aspect * defaultHeight; // 화면의 넓이.
+            const defaultDepth = (defaultHeight / 2) / Math.tan(vRad); // 화면의 깊이.
+            const hRad = Math.atan2(defaultWidth / 2, defaultDepth); // 화면의 수평각도.
+
+            let z = boxSize.y / Math.tan(vRad); // 수직 기준 깊이. 주변 여백을 위해 y값을 2로 나누지 않고 사용한다.
+
+            if (defaultWidth - boxSize.x < defaultHeight - boxSize.y) {
+                z = boxSize.x / Math.tan(hRad); // 수평 기준 깊이. 주변 여백을 위해 x값을 2로 나누지 않고 사용한다.
+            }
+
+            z += halfBoxSize.z; // 깊이는 대상의 중심이 아니라 전면을 기준으로 한다.
+
+            const position = new THREE.Vector3(0, 0, z);
+            position.add(target);
+
+            me.obControls.target0.copy(target);
+            me.obControls.position0.copy(position);
+            me.obControls.zoom0 = StaticVariable.CAMERA_ZERO_ZOOM;
+
+            me.obControls.reset();
+        }
     }
 
     /**

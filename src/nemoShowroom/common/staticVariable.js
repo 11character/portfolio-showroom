@@ -46,11 +46,6 @@ export const SUB_LIGHT_ZERO_POSITION = new THREE.Vector3(0, -1, -1);
 export const CAMERA_ZERO_POSITION = new THREE.Vector3(0, 4, 10);
 
 /**
- * 에셋 에디터 카메라의 초기 위치.
- */
-export const ASSET_CAMERA_ZERO_POSITION = new THREE.Vector3(0, 0, 3);
-
-/**
  * 에디터 카메라가 바라보는 지점.
  */
 export const CAMERA_ZERO_LOOK_AT = new THREE.Vector3(0, 0, 0);
