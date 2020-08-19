@@ -48,6 +48,11 @@
                     <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
                     <div class="nav-btn-font">Light</div>
                 </div>
+
+                <div @click="onApplyStartPoint" class="nav-btn">
+                    <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
+                    <div class="nav-btn-font">Start point</div>
+                </div>
             </nav>
 
             <div ref="viewField" class="font-neuemachina"></div>
@@ -366,6 +371,14 @@
                 const me = this;
 
                 me.showroomEditor.addSpotLight().then(function (assetItem) {
+                    me.isConfigEdited = true;
+                    me.showroomEditor.attach(assetItem);
+                });
+            },
+            onApplyStartPoint: function () {
+                const me = this;
+
+                me.showroomEditor.addStartPoint().then(function (assetItem) {
                     me.isConfigEdited = true;
                     me.showroomEditor.attach(assetItem);
                 });

@@ -228,9 +228,16 @@ export default class NemoShowroomEditor {
                     for (let i = 0; i < itemArr.length; i++) {
                         assetItem = itemArr[i];
     
-                        // 조명숨김.
+                        // 조명 도형 숨김.
                         if (assetItem.type === StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
-                            assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_CONE));
+                            assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_LIGHT_CONE));
+                        }
+
+                        // 시작위치 지정, 도형 숨김.
+                        if (assetItem.type === StaticVariable.ITEM_TYPE_START_POINT) {
+                            assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_START_POINT_CONE));
+                            me.camera.position.copy(assetItem.object3D.position);
+                            me.camera.rotation.set(0, assetItem.object3D.rotation.y, 0);
                         }
     
                         me.objectField.add(assetItem.object3D);

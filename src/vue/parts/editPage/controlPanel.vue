@@ -99,10 +99,14 @@
                                 <input-number v-model.number="positionZ" :step="0.5" class="sub-control-row" subLabel="Z"></input-number>
                             </div>
 
-                            <div v-if="!assetItem.isSprite" class="control-row">
+                            <div v-if="!assetItem.isSprite && assetItem.type != StaticVariable.ITEM_TYPE_START_POINT" class="control-row">
                                 <input-number v-model.number="rotationX" :step="1" class="sub-control-row" subLabel="X" label="Rotation ( ° )"></input-number>
                                 <input-number v-model.number="rotationY" :step="1" class="sub-control-row" subLabel="Y"></input-number>
                                 <input-number v-model.number="rotationZ" :step="1" class="sub-control-row" subLabel="Z"></input-number>
+                            </div>
+
+                            <div v-if="assetItem.type == StaticVariable.ITEM_TYPE_START_POINT" class="control-row">
+                                <input-number v-model.number="rotationY" :step="1" class="sub-control-row" subLabel="Y" label="Rotation ( ° )"></input-number>
                             </div>
 
                             <div v-if="assetItem.isAnimation" class="control-row">
@@ -169,6 +173,7 @@
             const me = this;
 
             return {
+                StaticVariable: StaticVariable,
                 is3dModel: false,
                 contentType: '',
                 assetItem: new AssetItem(),

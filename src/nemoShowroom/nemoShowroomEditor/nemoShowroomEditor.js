@@ -86,6 +86,7 @@ export default class NemoShowroomEditor extends EditorInterface {
 
         // ---
         me.tfControls = new TransformControls(me.camera, me.renderer.domElement);
+        me.tfControls.setRotationSnap(Math.PI / 180);
         // material 에 transparent 속성이 true인 경우 선택한 객체 뒤로 컨트롤러가 가려진다. 이를 해결하기 위해 renderOrder값을 1로 올려준다. (기본값은 0)
         me.tfControls.traverse(function (object3D) {
             object3D.renderOrder = 1;
@@ -143,13 +144,58 @@ export default class NemoShowroomEditor extends EditorInterface {
     }
 
     /**
+     * 시작지점을 추가한다.
+     */
+    addStartPoint() {
+        const me = this;
+
+        const name = '-Start point-';
+
+        let assetItem = me.assetItemManager.getItemByName(name);
+        let promise;
+
+        if (assetItem) {
+            me.viewTarget(assetItem);
+
+            promise = Promise.resolve(assetItem);
+
+        } else {
+            let assetItem = new AssetItem({
+                name: name,
+                type: StaticVariable.ITEM_TYPE_START_POINT
+            });
+
+            promise = me.itemLoader.load(assetItem).then(function (currentItem) {
+                me.objectField.add(currentItem.object3D);
+                me.assetItemManager.add(currentItem);
+
+                me.historyManager.push({
+                    name: 'addStartPoint',
+                    redo: function () {
+                        me.recoverArray([currentItem]);
+                    },
+                    undo: function () {
+                        me.removeArray([currentItem]);
+                    }
+                });
+
+                return Promise.resolve(currentItem);
+            });
+        }
+
+        return promise;
+    }
+
+    /**
      * 스포트 라이트를 추가한다.
      */
     addSpotLight() {
         const me = this;
 
+        const name = '-Light-';
+
         const assetItem = new AssetItem({
-            name: 'Light',
+            name: name,
             type: StaticVariable.ITEM_TYPE_SPOT_LIGHT
         });
 
@@ -263,6 +309,8 @@ export default class NemoShowroomEditor extends EditorInterface {
             me.tfControls.attach(assetItem.object3D);
             me.tfControls.visible = true;
             me.selectedItem = assetItem;
+
+            me.__tfcRotateOnlyY(assetItem);
 
             me.options.onSelect(assetItem, me);
         }
@@ -1013,6 +1061,16 @@ export default class NemoShowroomEditor extends EditorInterface {
         return me.assetItemManager.getItemByObject3D(group);
     }
 
+    __tfcRotateOnlyY(assetItem) {
+        const me = this;
+
+        if (assetItem) {
+            const isStartPointRotate = (me.tfControls.mode == 'rotate') && (assetItem.type == StaticVariable.ITEM_TYPE_START_POINT);
+            me.tfControls.showX = !isStartPointRotate;
+            me.tfControls.showZ = !isStartPointRotate;
+        }
+    }
+
     __initEvent() {
         const me = this;
 
@@ -1044,6 +1102,10 @@ export default class NemoShowroomEditor extends EditorInterface {
             let isUsingTfControl = false;
 
             me.obControls.saveState();
+
+            me.tfControls.addEventListener('change', function () {
+                me.__tfcRotateOnlyY(me.selectedItem);
+            });
 
             me.tfControls.addEventListener('mouseDown', function () {
                 prevItem = new AssetItem(me.selectedItem);

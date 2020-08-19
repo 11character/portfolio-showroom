@@ -68,6 +68,12 @@ export default class AssetLoader {
         const removeChildArr = [];
 
         group.traverse(function (object3D) {
+            // 객체를 회전했을 때 Y축 180도 이상 회전값에 의해 XZ축이 반전되는 것을 막기위한 처리.
+            // 다만 이로 인해 X축이 180도 이상 회전시 YZ가 반전된다.
+            if (object3D.rotation) {
+                object3D.rotation.order = 'YXZ';
+            }
+
             if (assetItem.type != StaticVariable.ITEM_TYPE_SPOT_LIGHT && object3D.isLight) {
                 removeChildArr.push(object3D);
             }
@@ -152,6 +158,9 @@ export default class AssetLoader {
             case StaticVariable.ITEM_TYPE_SPOT_LIGHT:
                 return me.__loadSpotLight(assetItem).then(onLoadComplete).catch(onLoadError);
 
+            case StaticVariable.ITEM_TYPE_START_POINT:
+                return me.__loadStartPoint(assetItem).then(onLoadComplete).catch(onLoadError);
+
             default:
                 console.error('type not found');
                 return onLoadError();
@@ -164,37 +173,57 @@ export default class AssetLoader {
         }
     }
 
+    __loadStartPoint(assetItem) {
+        const me = this;
+
+        return new Promise(function (resolve) {
+            const geometry = new THREE.ConeGeometry(1, 0.5, 4);
+            const meshMaterial = new THREE.MeshPhongMaterial({color: 0x0000ff, emissive: 0x888888, transparent: true, opacity: 0.8});
+            const lineMaterial = new THREE.LineBasicMaterial({color: 0xffffff});
+            const cone = new THREE.Group();
+
+            cone.add(new THREE.Mesh(geometry, meshMaterial));
+            cone.add(new THREE.LineSegments(geometry, lineMaterial));
+
+            cone.name = StaticVariable.MESH_NAME_START_POINT_CONE;
+            cone.scale.setX(0.5);
+            cone.position.set(0, 1, -0.25);
+            cone.rotation.set(Math.PI / 2, 0, Math.PI);
+
+            const group = new THREE.Group();
+
+            group.add(cone);
+
+            resolve(group);
+        });
+    }
+
     __loadSpotLight(assetItem) {
         const me = this;
 
-        return new Promise(function (resolve, reject) {
-            try {
-                const spotLight = new THREE.SpotLight( 0xffffff );
-                const group = new THREE.Group();
+        return new Promise(function (resolve) {
+            const spotLight = new THREE.SpotLight( 0xffffff );
+            const group = new THREE.Group();
 
-                assetItem.isLight = true;
+            assetItem.isLight = true;
 
-                spotLight.position.set(0, 0.5, 0);
-                spotLight.target.position.set(0, -4.5, 0);
-                spotLight.angle = Utils.d2r(45);
-                spotLight.intensity = assetItem.lightOption.intensity;
+            spotLight.position.set(0, 0.5, 0);
+            spotLight.target.position.set(0, -4.5, 0);
+            spotLight.angle = Utils.d2r(45);
+            spotLight.intensity = assetItem.lightOption.intensity;
 
-                group.add(spotLight);
-                group.add(spotLight.target);
+            group.add(spotLight);
+            group.add(spotLight.target);
 
-                const geometry = new THREE.ConeGeometry(1, 1, 32);
-                const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
-                const cone = new THREE.Mesh(geometry, material);
+            const geometry = new THREE.ConeGeometry(1, 1, 32);
+            const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
+            const cone = new THREE.Mesh(geometry, material);
 
-                cone.name = StaticVariable.MESH_NAME_CONE;
+            cone.name = StaticVariable.MESH_NAME_LIGHT_CONE;
 
-                group.add(cone);
+            group.add(cone);
 
-                resolve(group);
-
-            } catch (error) {
-                reject(error);
-            }
+            resolve(group);
         });
     }
 

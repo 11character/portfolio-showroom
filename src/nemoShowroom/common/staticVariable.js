@@ -105,6 +105,7 @@ export const ITEM_TYPE_YOUTUBE = 'youtube';
 export const ITEM_TYPE_IMAGE = 'image';
 export const ITEM_TYPE_TEXT = 'text';
 export const ITEM_TYPE_SPOT_LIGHT = 'spotLight';
+export const ITEM_TYPE_START_POINT = 'startPoint';
 
 /**
  * 3D 타입.
@@ -192,6 +193,12 @@ export const STYLE_ASSET_EDIT_BACKGROUND_COLOR = '#DFDFDF';
 export const CONTROLS_RAY_FAR = 1;
 
 /**
- * cone 메쉬 이름.
+ * light cone 메쉬 이름.
  */
-export const MESH_NAME_CONE = 'cone';
+export const MESH_NAME_LIGHT_CONE = 'lightCone';
+
+/**
+ * start point cone 메쉬 이름.
+ */
+
+export const MESH_NAME_START_POINT_CONE = 'startPointCone';
