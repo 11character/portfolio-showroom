@@ -1065,7 +1065,7 @@ export default class NemoShowroomEditor extends EditorInterface {
         const me = this;
 
         if (assetItem) {
-            const isStartPointRotate = (me.tfControls.mode == 'rotate') && (assetItem.type == StaticVariable.ITEM_TYPE_START_POINT);
+            const isStartPointRotate = (me.tfControls.mode == 'rotate') && assetItem.isStartPoint;
             me.tfControls.showX = !isStartPointRotate;
             me.tfControls.showZ = !isStartPointRotate;
         }

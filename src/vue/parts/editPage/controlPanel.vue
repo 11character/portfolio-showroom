@@ -59,13 +59,13 @@
                 <div class="tab-content">
                     <div class="tab-1 tab-pane fade show active">
                         <div class="asset-control-field">
-                            <div class="control-row">
+                            <div v-if="!assetItem.isStartPoint" class="control-row">
                                 <button @click="onClickCopy" type="button" class="control-btn" tabindex="-1">
                                     <font-awesome-icon :icon="['fas', 'clone']"></font-awesome-icon>&nbsp;Copy
                                 </button>
                             </div>
 
-                            <div v-if="!assetItem.isLight" class="control-row">
+                            <div v-if="!assetItem.isLight && !assetItem.isStartPoint" class="control-row">
                                 <input-checkbox v-model="enableOutline" label="Focus"></input-checkbox>
                             </div>
 
@@ -89,7 +89,7 @@
                                 </div>
                             </template>
 
-                            <div class="control-row">
+                            <div v-if="!assetItem.isStartPoint" class="control-row">
                                 <input-number v-model.number="scalePercent" :step="0.1" label="Scale ( % )"></input-number>
                             </div>
 
@@ -99,13 +99,13 @@
                                 <input-number v-model.number="positionZ" :step="0.5" class="sub-control-row" subLabel="Z"></input-number>
                             </div>
 
-                            <div v-if="!assetItem.isSprite && assetItem.type != StaticVariable.ITEM_TYPE_START_POINT" class="control-row">
+                            <div v-if="!assetItem.isSprite && !assetItem.isStartPoint" class="control-row">
                                 <input-number v-model.number="rotationX" :step="1" class="sub-control-row" subLabel="X" label="Rotation ( ° )"></input-number>
                                 <input-number v-model.number="rotationY" :step="1" class="sub-control-row" subLabel="Y"></input-number>
                                 <input-number v-model.number="rotationZ" :step="1" class="sub-control-row" subLabel="Z"></input-number>
                             </div>
 
-                            <div v-if="assetItem.type == StaticVariable.ITEM_TYPE_START_POINT" class="control-row">
+                            <div v-if="assetItem.isStartPoint" class="control-row">
                                 <input-number v-model.number="rotationY" :step="1" class="sub-control-row" subLabel="Y" label="Rotation ( ° )"></input-number>
                             </div>
 
@@ -113,7 +113,7 @@
                                 <input-number v-model.number="animationEndTime" :step="1000" label="Animation time ( ms )"></input-number>
                             </div>
 
-                            <div v-if="assetItem.type != 'youtube' && assetItem.type != 'spotLight'" class="control-row">
+                            <div v-if="assetItem.type != 'youtube' && !assetItem.isLight && !assetItem.isStartPoint" class="control-row">
                                 <input-text v-model.trim="link" label="Link"></input-text>
                             </div>
 
@@ -284,7 +284,7 @@
                 // 대상의 이벤트가 끝나기를 기다린다.
                 setTimeout(function () {
                     me.editor.historyManager.unlock();
-                }, 100);
+                }, 250);
             };
 
             //==========

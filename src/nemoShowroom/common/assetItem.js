@@ -54,10 +54,12 @@ export default class AssetItem {
         this.onAnimationEnd = (typeof obj.onAnimationEnd === 'function') ? obj.onAnimationEnd : function () {};
 
         this.isSprite = !!obj.isSprite;
+        this.isLight = !!obj.isLight;
+        this.isStartPoint = !!obj.isStartPoint;
+
         this.enableOutline = !!obj.enableOutline;
 
         this.isLoaded = !!obj.isLoaded;
-        this.isLight = !!obj.isLight;
 
         this.materialOptions = {};
         if (obj.materialOptions) {
@@ -107,6 +109,9 @@ export default class AssetItem {
             animationLoop: me.animationLoop,
 
             isSprite: me.isSprite,
+            isLight: me.isLight,
+            isStartPoint: me.isStartPoint,
+
             enableOutline: me.enableOutline,
 
             materialOptions: me.materialOptions,

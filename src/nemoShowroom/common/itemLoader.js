@@ -178,12 +178,10 @@ export default class AssetLoader {
 
         return new Promise(function (resolve) {
             const geometry = new THREE.ConeGeometry(1, 0.5, 4);
-            const meshMaterial = new THREE.MeshPhongMaterial({color: 0x0000ff, emissive: 0x888888, transparent: true, opacity: 0.8});
-            const lineMaterial = new THREE.LineBasicMaterial({color: 0xffffff});
-            const cone = new THREE.Group();
+            const meshMaterial = new THREE.MeshPhongMaterial({color: 0x0000ff, emissive: 0x888888, transparent: true, opacity: 0.9});
+            const cone = new THREE.Mesh(geometry, meshMaterial);
 
-            cone.add(new THREE.Mesh(geometry, meshMaterial));
-            cone.add(new THREE.LineSegments(geometry, lineMaterial));
+            assetItem.isStartPoint = true;
 
             cone.name = StaticVariable.MESH_NAME_START_POINT_CONE;
             cone.scale.setX(0.5);
@@ -193,6 +191,14 @@ export default class AssetLoader {
             const group = new THREE.Group();
 
             group.add(cone);
+
+            const clone = cone.clone();
+            const lineMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
+
+            clone.material = lineMaterial;
+            clone.scale.set(0.51, 1.01, 1.01);
+
+            group.add(clone);
 
             resolve(group);
         });
