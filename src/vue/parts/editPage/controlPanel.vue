@@ -173,6 +173,7 @@
             const me = this;
 
             return {
+                lockInputEvent: false,
                 StaticVariable: StaticVariable,
                 is3dModel: false,
                 contentType: '',
@@ -230,38 +231,46 @@
             animationEndTime: function (ms) {
                 const me = this;
 
-                me.editor.setAnimationTime(0, ms, true);
+                if (!me.lockInputEvent) {
+                    me.editor.setAnimationTime(0, ms, true);
 
-                me.$emit('control', 'animationTime');
+                    me.$emit('control', 'animationTime');
+                }
             },
             link: function (str) {
                 const me = this;
 
-                me.editor.setLink(str);
+                if (!me.lockInputEvent) {
+                    me.editor.setLink(str);
 
-                me.$emit('control', 'link');
+                    me.$emit('control', 'link');
+                }
             },
             lightIntensity: function (intensity) {
                 const me = this;
 
-                const assetItem = me.editor.selectedItem;
+                if (!me.lockInputEvent) {
+                    const assetItem = me.editor.selectedItem;
 
-                if (assetItem) {
-                    assetItem.setLightOption({
-                        intensity: me.lightIntensity
-                    });
+                    if (assetItem) {
+                        assetItem.setLightOption({
+                            intensity: me.lightIntensity
+                        });
+                    }
                 }
             },
             enableOutline: function (bool) {
                 const me = this;
 
-                const assetItem = me.editor.selectedItem;
+                if (!me.lockInputEvent) {
+                    const assetItem = me.editor.selectedItem;
 
-                if (assetItem) {
-                    assetItem.enableOutline = bool;
+                    if (assetItem) {
+                        assetItem.enableOutline = bool;
+                    }
+
+                    me.$emit('control', 'enableOutline');
                 }
-
-                me.$emit('control', 'enableOutline');
             }
         },
         mounted: function () {
@@ -273,18 +282,10 @@
             me.editor.options.onSelect = function (assetItem, editor) {
                 evt1(assetItem, editor);
 
-                // 대상 선택시 수치가 갱신되는 과정에서 대상의 이동 이벤트가 처리되기 때문에 작업 기록을 막는다.
-                me.editor.historyManager.lock();
-
                 me.is3dModel = StaticVariable.ITEM_3D_TYPES.indexOf(assetItem.type) > -1;
                 me.assetItem = assetItem;
 
                 me.setItemData(me.assetItem);
-
-                // 대상의 이벤트가 끝나기를 기다린다.
-                setTimeout(function () {
-                    me.editor.historyManager.unlock();
-                }, 250);
             };
 
             //==========
@@ -311,6 +312,9 @@
             setItemData: function (assetItem) {
                 const me = this;
 
+                // 데이터를 표시할 때 이벤트 발생을 막기위한 플래그.
+                me.lockInputEvent = true;
+
                 me.contentType = assetItem.type;
 
                 if (me.contentType == 'html') {
@@ -328,55 +332,65 @@
                 me.link = assetItem.link;
                 me.enableOutline = assetItem.enableOutline;
                 me.lightIntensity = assetItem.lightOption.intensity;
+
+                setTimeout(function () {
+                    me.lockInputEvent = false;
+                }, 250);
             },
             scale: function (percent) {
                 const me = this;
 
-                const assetItem = me.editor.selectedItem;
+                if (!me.lockInputEvent) {
+                    const assetItem = me.editor.selectedItem;
 
-                if (assetItem) {
-                    if (percent <= 0) {
-                        alert('0 이하의 값은 가질 수 없습니다.');
+                    if (assetItem) {
+                        if (percent <= 0) {
+                            alert('0 이하의 값은 가질 수 없습니다.');
 
-                        me.scalePercent = 0.1;
+                            me.scalePercent = 0.1;
 
-                    } else {
-                        const scale = assetItem.zeroScale.x * (percent / 100);
+                        } else {
+                            const scale = assetItem.zeroScale.x * (percent / 100);
 
-                        me.editor.setScale(scale, scale, scale);
+                            me.editor.setScale(scale, scale, scale);
 
-                        me.$emit('control', 'scale');
+                            me.$emit('control', 'scale');
+                        }
                     }
                 }
             },
             position: function (x, y, z) {
                 const me = this;
 
-                const assetItem = me.editor.selectedItem;
+                if (!me.lockInputEvent) {
+                    const assetItem = me.editor.selectedItem;
 
-                if (assetItem) {
-                    x = x || me.positionX;
-                    y = y || me.positionY;
-                    z = z || me.positionZ;
+                    if (assetItem) {
+                        x = x || me.positionX;
+                        y = y || me.positionY;
+                        z = z || me.positionZ;
 
-                    me.editor.setPosition(x, y, z);
+                        me.editor.setPosition(x, y, z);
 
-                    me.$emit('control', 'position');
+                        me.$emit('control', 'position');
+                    }
                 }
             },
             rotation: function (x, y, z) {
                 const me = this;
 
-                const assetItem = me.editor.selectedItem;
+                if (!me.lockInputEvent) {
+                    const assetItem = me.editor.selectedItem;
 
-                if (assetItem) {
-                    x = x || me.rotationX;
-                    y = y || me.rotationY;
-                    z = z || me.rotationZ;
+                    if (assetItem) {
+                        x = x || me.rotationX;
+                        y = y || me.rotationY;
+                        z = z || me.rotationZ;
 
-                    me.editor.setRotation(Utils.d2r(x), Utils.d2r(y), Utils.d2r(z));
+                        me.editor.setRotation(Utils.d2r(x), Utils.d2r(y), Utils.d2r(z));
 
-                    me.$emit('control', 'rotation');
+                        me.$emit('control', 'rotation');
+                    }
                 }
             },
             onClickUndo: function () {
