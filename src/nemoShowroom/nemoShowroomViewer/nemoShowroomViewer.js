@@ -43,9 +43,8 @@ export default class NemoShowroomEditor {
         me.lightField.add(me.light);
 
         // ---
-        me.subLight = new THREE.DirectionalLight();
-        me.subLight.position.copy(StaticVariable.SUB_LIGHT_ZERO_POSITION);
-        me.subLight.intensity = me.light.intensity / 2;
+        me.subLight = new THREE.AmbientLight();
+        me.subLight.intensity = StaticVariable.SUB_LIGHT_INTENSITY;
         me.lightField.add(me.subLight);
 
         // ---
@@ -305,7 +304,6 @@ export default class NemoShowroomEditor {
         const me = this;
 
         me.light.intensity = intensity;
-        me.subLight.intensity = intensity / 2;
     }
 
     /**

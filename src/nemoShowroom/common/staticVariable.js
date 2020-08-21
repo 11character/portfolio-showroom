@@ -36,9 +36,10 @@ export const ELEMENT_FIELD_ID = 'nemo-web-showroom';
 export const LIGHT_ZERO_POSITION = new THREE.Vector3(0, 1, 1);
 
 /**
- * 전역 보조조명 초기 위치.
+ * 전역 보조 조명 밝기.
  */
-export const SUB_LIGHT_ZERO_POSITION = new THREE.Vector3(0, -1, -1);
+
+export const SUB_LIGHT_INTENSITY = 0.25;
 
 /**
  * 에디터 카메라의 초기 위치.
