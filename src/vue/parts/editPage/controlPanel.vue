@@ -117,9 +117,33 @@
                                 <input-text v-model.trim="link" label="Link"></input-text>
                             </div>
 
-                            <div v-if="assetItem.isLight" class="control-row">
-                                <input-slider v-model.number="lightIntensity" :min="0" :max="2" :step="0.1" :label="'Light intensity'"></input-slider>
-                            </div>
+                            <!-- 조명 -->
+                            <template v-if="assetItem.isLight">
+                                <div class="control-row">
+                                    <input-slider v-model.number="lightAngle" :min="1" :max="180" :step="1" :label="'Light angle'"></input-slider>
+                                </div>
+
+                                <div class="control-row">
+                                    <input-slider v-model.number="lightIntensity" :min="0" :max="2" :step="0.1" :label="'Light intensity'"></input-slider>
+                                </div>
+
+                                <div class="control-row">
+                                    <input-slider v-model.number="lightPenumbra" :min="0" :max="1" :step="0.1" :label="'Light penumbra'"></input-slider>
+                                </div>
+
+                                <div class="control-row">
+                                    <input-slider v-model.number="lightDistance" :min="0" :max="100" :step="1" :label="'Light distance'"></input-slider>
+                                </div>
+
+                                <div class="control-row">
+                                    <input-slider v-model.number="lightDecay" :min="0" :max="1" :step="0.1" :label="'Light decay'"></input-slider>
+                                </div>
+
+                                <div class="control-row">
+                                    <input-color v-model="lightColor" label="Light color"></input-color>
+                                </div>
+                            </template>
+                            <!-- END-조명 -->
 
                             <div class="control-row">
                                 <button @click="onClickRemove" type="button" class="control-btn" tabindex="-1">
@@ -135,8 +159,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </template>
     </div>
@@ -155,6 +177,7 @@
     import inputTextVue from '../inputItem/inputText.vue';
     import inputSliderVue from '../inputItem/inputSlider.vue';
     import inputCheckboxVue from '../inputItem/inputCheckbox.vue';
+    import inputColorVue from '../inputItem/inputColor.vue';
 
     /**
      * template event : control
@@ -166,7 +189,8 @@
             'input-number': inputNumberVue,
             'input-text': inputTextVue,
             'input-slider': inputSliderVue,
-            'input-checkbox': inputCheckboxVue
+            'input-checkbox': inputCheckboxVue,
+            'input-color': inputColorVue
         },
         props: ['editor'],
         data: function () {
@@ -187,7 +211,12 @@
                 rotationY: 0,
                 rotationZ: 0,
                 animationEndTime: 0,
+                lightAngle: 60,
                 lightIntensity: 1,
+                lightPenumbra: 0,
+                lightDistance: 0,
+                lightDecay: 1,
+                lightColor: 'rgb(255, 255, 255)',
                 link: '',
                 enableOutline: true
             };
@@ -196,37 +225,37 @@
             scalePercent: function (percent) {
                 const me = this;
 
-                this.scale(percent);
+                me.setScale(percent);
             },
             positionX: function (x) {
                 const me = this;
 
-                me.position(x, 0, 0);
+                me.setPosition(x, 0, 0);
             },
             positionY: function (y) {
                 const me = this;
 
-                me.position(0, y, 0);
+                me.setPosition(0, y, 0);
             },
             positionZ: function (z) {
                 const me = this;
 
-                me.position(0, 0, z);
+                me.setPosition(0, 0, z);
             },
             rotationX: function (x) {
                 const me = this;
 
-                me.rotation(x, 0, 0);
+                me.setRotation(x, 0, 0);
             },
             rotationY: function (y) {
                 const me = this;
 
-                me.rotation(0, y, 0);
+                me.setRotation(0, y, 0);
             },
             rotationZ: function (z) {
                 const me = this;
 
-                me.rotation(0, 0, z);
+                me.setRotation(0, 0, z);
             },
             animationEndTime: function (ms) {
                 const me = this;
@@ -246,17 +275,46 @@
                     me.$emit('control', 'link');
                 }
             },
-            lightIntensity: function (intensity) {
+            lightAngle: function () {
                 const me = this;
 
                 if (!me.lockInputEvent) {
-                    const assetItem = me.editor.selectedItem;
+                    me.setLightOption();
+                }
+            },
+            lightIntensity: function () {
+                const me = this;
 
-                    if (assetItem) {
-                        assetItem.setLightOption({
-                            intensity: me.lightIntensity
-                        });
-                    }
+                if (!me.lockInputEvent) {
+                    me.setLightOption();
+                }
+            },
+            lightPenumbra: function () {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    me.setLightOption();
+                }
+            },
+            lightDistance: function () {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    me.setLightOption();
+                }
+            },
+            lightDecay: function () {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    me.setLightOption();
+                }
+            },
+            lightColor: function () {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    me.setLightOption();
                 }
             },
             enableOutline: function (bool) {
@@ -331,13 +389,38 @@
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
                 me.enableOutline = assetItem.enableOutline;
+                me.lightAngle = Math.round(Utils.r2d(assetItem.lightOption.angle));
                 me.lightIntensity = assetItem.lightOption.intensity;
+                me.lightPenumbra = assetItem.lightOption.penumbra;
+                me.lightDistance = assetItem.lightOption.distance;
+                me.lightDecay = assetItem.lightOption.decay;
+                me.lightColor = assetItem.lightOption.color;
 
                 setTimeout(function () {
                     me.lockInputEvent = false;
                 }, 250);
             },
-            scale: function (percent) {
+            setLightOption: function () {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    const assetItem = me.editor.selectedItem;
+
+                    if (assetItem) {
+                        assetItem.setLightOption({
+                            angle: Utils.d2r(me.lightAngle),
+                            intensity: me.lightIntensity,
+                            penumbra: me.lightPenumbra,
+                            distance: me.lightDistance,
+                            decay: me.lightDecay,
+                            color: me.lightColor
+                        });
+
+                        me.$emit('control', 'lightOption');
+                    }
+                }
+            },
+            setScale: function (percent) {
                 const me = this;
 
                 if (!me.lockInputEvent) {
@@ -359,7 +442,7 @@
                     }
                 }
             },
-            position: function (x, y, z) {
+            setPosition: function (x, y, z) {
                 const me = this;
 
                 if (!me.lockInputEvent) {
@@ -376,7 +459,7 @@
                     }
                 }
             },
-            rotation: function (x, y, z) {
+            setRotation: function (x, y, z) {
                 const me = this;
 
                 if (!me.lockInputEvent) {

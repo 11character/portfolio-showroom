@@ -160,8 +160,16 @@ export default class AssetItem {
 
             me.object3D.traverse(function (obj) {
                 if (obj instanceof THREE.SpotLight) {
+                    let val;
+
                     for (let key in me.lightOption) {
-                        obj[key] = me.lightOption[key];
+                        val = me.lightOption[key];
+
+                        if (key == 'color') {
+                            val = new THREE.Color(val);
+                        }
+
+                        obj[key] = val;
                     }
                 }
             });

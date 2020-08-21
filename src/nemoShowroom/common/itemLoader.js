@@ -208,15 +208,21 @@ export default class AssetLoader {
         const me = this;
 
         return new Promise(function (resolve) {
-            const spotLight = new THREE.SpotLight( 0xffffff );
+            const spotLight = new THREE.SpotLight(
+                new THREE.Color(assetItem.lightOption.color),
+                assetItem.lightOption.intensity,
+                assetItem.lightOption.distance,
+                assetItem.lightOption.angle,
+                assetItem.lightOption.penumbra,
+                assetItem.lightOption.decay
+            );
+
             const group = new THREE.Group();
 
             assetItem.isLight = true;
 
             spotLight.position.set(0, 0.5, 0);
             spotLight.target.position.set(0, -4.5, 0);
-            spotLight.angle = Utils.d2r(45);
-            spotLight.intensity = assetItem.lightOption.intensity;
 
             group.add(spotLight);
             group.add(spotLight.target);
