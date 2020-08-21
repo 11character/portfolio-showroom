@@ -191,9 +191,3 @@ export const CONTROLS_RAY_FAR = 1;
  * light cone 메쉬 이름.
  */
 export const MESH_NAME_LIGHT_CONE = 'lightCone';
-
-/**
- * start point cone 메쉬 이름.
- */
-
-export const MESH_NAME_START_POINT_CONE = 'startPointCone';

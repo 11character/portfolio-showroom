@@ -183,7 +183,6 @@ export default class AssetLoader {
 
             assetItem.isStartPoint = true;
 
-            cone.name = StaticVariable.MESH_NAME_START_POINT_CONE;
             cone.scale.setX(0.5);
             cone.position.set(0, 1, -0.25);
             cone.rotation.set(Math.PI / 2, 0, Math.PI);

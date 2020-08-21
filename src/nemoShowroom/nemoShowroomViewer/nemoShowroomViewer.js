@@ -235,7 +235,7 @@ export default class NemoShowroomEditor {
 
                         // 시작위치 지정, 도형 숨김.
                         if (assetItem.isStartPoint) {
-                            assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_START_POINT_CONE));
+                            assetItem.object3D.children[0].remove.apply(assetItem.object3D.children[0], assetItem.object3D.children[0].children);
                             me.camera.position.copy(assetItem.object3D.position);
                             me.camera.rotation.set(0, assetItem.object3D.rotation.y, 0);
                         }
