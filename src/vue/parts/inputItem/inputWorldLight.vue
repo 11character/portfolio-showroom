@@ -32,6 +32,7 @@
             const me = this;
 
             return {
+                lockInputEvent: false,
                 intensity: 0,
                 lightAngle: 0
             };
@@ -40,16 +41,20 @@
             intensity: function (val) {
                 const me = this;
 
-                me.editor.setLightIntensity(val);
+                if (!me.lockInputEvent) {
+                    me.editor.setLightIntensity(val);
 
-                me.$emit('control', 'lightIntensity');
+                    me.$emit('control', 'lightIntensity');
+                }
             },
             lightAngle: function (val) {
                 const me = this;
 
-                me.editor.setLightHorizontalAngle(Utils.d2r(val));
+                if (!me.lockInputEvent) {
+                    me.editor.setLightHorizontalAngle(Utils.d2r(val));
 
-                me.$emit('control', 'lightAngle');
+                    me.$emit('control', 'lightAngle');
+                }
             }
         },
         mounted: function () {
@@ -58,8 +63,14 @@
             const func = me.editor.options.onLoad;
 
             me.editor.options.onLoad = function (assetItem) {
+                me.lockInputEvent = true;
+
                 me.intensity = me.editor.getLightIntensity();
                 me.lightAngle = parseInt(Utils.r2d(me.editor.getLightHorizontalAngle()), 10);
+
+                setTimeout(function () {
+                    me.lockInputEvent = false;
+                }, 250);
 
                 func(assetItem);
             };

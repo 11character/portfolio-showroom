@@ -1,11 +1,11 @@
 <template>
     <div class="asset-panel-field">
         <div class="item-row">
-            <input-light :editor="editor" @control="onControl" label="World light"></input-light>
+            <input-world-light :editor="editor" @control="onControl" label="World light"></input-world-light>
         </div>
 
         <div class="item-row">
-            <input-text v-model="assetItem.name" label="Asset name" @input="onControl"></input-text>
+            <input-text v-model="name" label="Asset name"></input-text>
         </div>
 
         <div class="item-row">
@@ -17,7 +17,7 @@
 <script>
     import AssetItem from '../../../nemoShowroom/common/assetItem';
 
-    import inputLightVue from '../inputItem/inputLight.vue';
+    import inputWorldLightVue from '../inputItem/inputWorldLight.vue';
     import inputTextVue from '../inputItem/inputText.vue';
     import meshPanelVue from './meshPanel.vue';
 
@@ -28,7 +28,7 @@
      */
     export default {
         components: {
-            'input-light': inputLightVue,
+            'input-world-light': inputWorldLightVue,
             'input-text': inputTextVue,
             'mesh-panel': meshPanelVue,
         },
@@ -36,7 +36,49 @@
             editor: {type: EditorInterface},
             assetItem: {type: AssetItem}
         },
+        data: function () {
+            return {
+                lockInputEvent: false,
+                name: ''
+            };
+        },
+        watch: {
+            assetItem: function () {
+                const me = this;
+
+                me.onChangeAssetItem();
+            },
+            name: function (name) {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    me.assetItem.name = name;
+
+                    me.onControl('assetName');
+                }
+            }
+        },
+        mounted: function () {
+            const me = this;
+
+            if (me.assetItem) {
+                me.onChangeAssetItem();
+            }
+        },
         methods: {
+            onChangeAssetItem: function () {
+                const me = this;
+
+                const assetItem = me.assetItem;
+
+                me.lockInputEvent = true;
+
+                me.name = assetItem.name;
+
+                setTimeout(function () {
+                    me.lockInputEvent = false;
+                }, 250);
+            },
             onControl: function (type) {
                 const me = this;
 

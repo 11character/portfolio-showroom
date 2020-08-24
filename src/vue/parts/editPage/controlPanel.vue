@@ -33,7 +33,7 @@
         </div>
 
         <div class="item-row">
-            <input-light :editor="editor" label="World light"></input-light>
+            <input-world-light :editor="editor" @control="onControl" label="World light"></input-world-light>
         </div>
 
         <template v-if="editor.selectedItem">
@@ -155,7 +155,7 @@
 
                     <div class="tab-2 tab-pane fade">
                         <div class="asset-material-field">
-                            <mesh-panel :asset-item="assetItem" @control="onControlMesh"></mesh-panel>
+                            <mesh-panel :asset-item="assetItem" @control="onControl"></mesh-panel>
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
     import * as ApiUrl from '../../../class/apiUrl';
 
     import meshPanelVue from '../assetEditPage/meshPanel.vue';
-    import inputLightVue from '../inputItem/inputLight.vue';
+    import inputWorldLightVue from '../inputItem/inputWorldLight.vue';
     import inputNumberVue from '../inputItem/inputNumber.vue';
     import inputTextVue from '../inputItem/inputText.vue';
     import inputSliderVue from '../inputItem/inputSlider.vue';
@@ -185,7 +185,7 @@
     export default {
         components: {
             'mesh-panel': meshPanelVue,
-            'input-light': inputLightVue,
+            'input-world-light': inputWorldLightVue,
             'input-number': inputNumberVue,
             'input-text': inputTextVue,
             'input-slider': inputSliderVue,
@@ -591,7 +591,7 @@
                 me.editor.remove();
                 me.$emit('control', 'remove');
             },
-            onControlMesh: function (type) {
+            onControl: function (type) {
                 const me = this;
 
                 me.$emit('control', type);

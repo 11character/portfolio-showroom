@@ -59,7 +59,7 @@
         beforeRouteLeave: function (to, from, next) {
             const me = this;
 
-            if (me.isConfigEdited && !confirm('보고있는 페이지를 나가시겠습니까?')) {
+            if (me.isConfigEdited && !confirm('변경사항이 저장되지 않았을 수도 있습니다.\n나가시겠습니까?')) {
                 next(false);
 
             } else {

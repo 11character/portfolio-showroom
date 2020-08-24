@@ -5,43 +5,43 @@
         </div>
 
         <div v-if="typeof material.roughness != 'undefined'" class="item-row">
-            <input-slider v-model="materialOption.roughness" label="Roughness"></input-slider>
+            <input-slider v-model="mtlRoughness" label="Roughness"></input-slider>
         </div>
 
         <div v-if="typeof material.metalness != 'undefined'" class="item-row">
-            <input-slider v-model="materialOption.metalness" label="Metalness"></input-slider>
+            <input-slider v-model="mtlMetalness" label="Metalness"></input-slider>
         </div>
 
         <div v-if="typeof material.color != 'undefined'" class="item-row">
-            <input-color v-model="materialOption.color" label="Color"></input-color>
+            <input-color v-model="mtlColor" label="Color"></input-color>
         </div>
 
         <div v-if="typeof material.map != 'undefined'" class="item-row">
-            <input-image-select v-model="materialOption.map" :item-array="textureItemArr" label="Map"></input-image-select>
+            <input-image-select v-model="mtlMap" :item-array="textureItemArr" label="Map"></input-image-select>
         </div>
 
         <div v-if="typeof material.normalMap != 'undefined'" class="item-row">
-            <input-image-select v-model="materialOption.normalMap" :item-array="textureItemArr" label="Normal map"></input-image-select>
+            <input-image-select v-model="mtlNormalMap" :item-array="textureItemArr" label="Normal map"></input-image-select>
         </div>
 
         <div v-if="typeof material.roughnessMap != 'undefined'" class="item-row">
-            <input-image-select v-model="materialOption.roughnessMap" :item-array="textureItemArr" label="Roughness map"></input-image-select>
+            <input-image-select v-model="mtlRoughnessMap" :item-array="textureItemArr" label="Roughness map"></input-image-select>
         </div>
 
         <div v-if="typeof material.metalnessMap != 'undefined'" class="item-row">
-            <input-image-select v-model="materialOption.metalnessMap" :item-array="textureItemArr" label="Metalness map"></input-image-select>
+            <input-image-select v-model="mtlMetalnessMap" :item-array="textureItemArr" label="Metalness map"></input-image-select>
         </div>
 
         <div v-if="typeof material.emissive != 'undefined'" class="item-row">
-            <input-color v-model="materialOption.emissive" label="Emissive"></input-color>
+            <input-color v-model="mtlEmissive" label="Emissive"></input-color>
         </div>
 
         <div v-if="typeof material.envMap != 'undefined'" class="item-row">
-            <input-cube-texture v-model="materialOption.envMap" :item-array="cubeTextureItemArr" label="Env map"></input-cube-texture>
+            <input-cube-texture v-model="mtlEnvMap" :item-array="cubeTextureItemArr" label="Env map"></input-cube-texture>
         </div>
 
         <div v-if="typeof material.reflectivity != 'undefined'" class="item-row">
-            <input-slider v-model="materialOption.reflectivity" label="Reflectivity"></input-slider>
+            <input-slider v-model="mtlReflectivity" label="Reflectivity"></input-slider>
         </div>
     </div>
 </template>
@@ -77,9 +77,20 @@
         },
         data: function () {
             return {
+                lockInputEvent: false,
                 materialOption: new MaterialOption(),
                 textureItemArr: [],
-                cubeTextureItemArr: []
+                cubeTextureItemArr: [],
+                mtlRoughness: 1,
+                mtlMetalness: 0.5,
+                mtlColor: 'rgb(255, 255, 255)',
+                mtlMap: '',
+                mtlNormalMap: '',
+                mtlMetalnessMap: '',
+                mtlRoughnessMap: '',
+                mtlEmissive: 'rgb(0, 0, 0)',
+                mtlEnvMap: [],
+                mtlReflectivity: 0
             };
         },
         watch: {
@@ -88,15 +99,55 @@
 
                 me.onChangeAssetItem(assetItem);
             },
-            materialOption: {
-                deep: true,
-                handler: function (mtlOption) {
-                    const me = this;
+            mtlRoughness: function (roughness) {
+                const me = this;
 
-                    me.assetItem.setMaterialOption(mtlOption, me.index);
+                me.setMtlOption();
+            },
+            mtlMetalness: function (metalness) {
+                const me = this;
 
-                    me.$emit('control', 'material');
-                }
+                me.setMtlOption();
+            },
+            mtlColor: function (color) {
+                const me = this;
+
+                me.setMtlOption();
+            },
+            mtlMap: function (map) {
+                const me = this;
+
+                me.setMtlOption();
+            },
+            mtlNormalMap: function (normalMap) {
+                const me = this;
+
+                me.setMtlOption();
+            },
+            mtlMetalnessMap: function (metalnessMap) {
+                const me = this;
+
+                me.setMtlOption();
+            },
+            mtlRoughnessMap: function (roughnessMap) {
+                const me = this;
+
+                me.setMtlOption();
+            },
+            mtlEmissive: function (emissive) {
+                const me = this;
+
+                me.setMtlOption();
+            },
+            mtlEnvMap: function (envMap) {
+                const me = this;
+
+                me.setMtlOption();
+            },
+            mtlReflectivity: function (reflectivity) {
+                const me = this;
+
+                me.setMtlOption();
             }
         },
         mounted: function () {
@@ -105,6 +156,48 @@
             me.onChangeAssetItem(me.assetItem);
         },
         methods: {
+            setMtlOption: function () {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    const materialOption = new MaterialOption({
+                        roughness: me.mtlRoughness,
+                        metalness: me.mtlMetalness,
+                        color: me.mtlColor,
+                        map: me.mtlMap,
+                        normalMap: me.mtlNormalMap,
+                        metalnessMap: me.mtlMetalnessMap,
+                        roughnessMap: me.mtlRoughnessMap,
+                        emissive: me.mtlEmissive,
+                        envMap: me.mtlEnvMap,
+                        reflectivity: me.mtlReflectivity
+                    });
+    
+                    me.assetItem.setMaterialOption(materialOption, me.index);
+    
+                    me.$emit('control', 'material');
+                }
+            },
+            setMtlData: function (materialOption) {
+                const me = this;
+
+                me.lockInputEvent = true;
+
+                me.mtlRoughness = materialOption.roughness;
+                me.mtlMetalness = materialOption.metalness;
+                me.mtlColor = materialOption.color;
+                me.mtlMap = materialOption.map;
+                me.mtlNormalMap = materialOption.normalMap;
+                me.mtlMetalnessMap = materialOption.metalnessMap;
+                me.mtlRoughnessMap = materialOption.roughnessMap;
+                me.mtlEmissive = materialOption.emissive;
+                me.mtlEnvMap = materialOption.envMap;
+                me.mtlReflectivity = materialOption.reflectivity;
+
+                setTimeout(function () {
+                    me.lockInputEvent = false;
+                }, 250);
+            },
             loadTextureList: function (assetItem) {
                 const me = this;
 
@@ -161,9 +254,12 @@
                 const me = this;
 
                 if (assetItem.itemUrl) {
-                    me.materialOption = me.assetItem.materialOptions[me.index] || new MaterialOption();
                     me.loadTextureList(assetItem);
                     me.loadCubeTextureList(assetItem);
+
+                    const materialOption = assetItem.materialOptions[me.index] || new MaterialOption();
+
+                    me.setMtlData(materialOption);
                 }
             }
         }
