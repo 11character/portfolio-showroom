@@ -227,16 +227,21 @@ export default class NemoShowroomEditor {
                     for (let i = 0; i < itemArr.length; i++) {
                         assetItem = itemArr[i];
     
-                        // 조명 도형 숨김.
+                        // 조명 도형 제거.
                         if (assetItem.isLight) {
                             assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_LIGHT_CONE));
                         }
 
-                        // 시작위치 지정, 도형 숨김.
+                        // 시작위치 지정, 도형 제거.
                         if (assetItem.isStartPoint) {
                             assetItem.object3D.children[0].remove.apply(assetItem.object3D.children[0], assetItem.object3D.children[0].children);
                             me.camera.position.copy(assetItem.object3D.position);
                             me.camera.rotation.set(0, assetItem.object3D.rotation.y, 0);
+                        }
+
+                        // 보이지 않는 도형 숨김.
+                        if (assetItem.isTransparent) {
+                            assetItem.setOpacity(0);
                         }
     
                         me.objectField.add(assetItem.object3D);
@@ -255,7 +260,7 @@ export default class NemoShowroomEditor {
                             assetItem = itemArr[i];
     
                             // 충돌박스 생성.
-                            if (assetItem.type !== StaticVariable.ITEM_TYPE_SPOT_LIGHT) {
+                            if (assetItem.isCollider) {
                                 // 두 배열의 순서 일치.
                                 me.checkBoxArr.push(assetItem.getBox3());
                                 me.checkItemArr.push(assetItem);
@@ -422,7 +427,7 @@ export default class NemoShowroomEditor {
         let check = false;
 
         for (let i = 0; i < me.checkBoxArr.length; i++) {
-            // 중심.
+            // 중심 선.
             ray.origin.setY(originY);
             ray.intersectBox(me.checkBoxArr[i], vec3);
 
@@ -433,7 +438,7 @@ export default class NemoShowroomEditor {
 
             // 위, 아래 이동이 아닌 경우.
             if (direction.y == 0) {
-                // 위.
+                // 상단 선.
                 ray.origin.setY(originY + (StaticVariable.CONTROLS_RAY_FAR * 0.75));
                 ray.intersectBox(me.checkBoxArr[i], vec3);
 
@@ -442,7 +447,7 @@ export default class NemoShowroomEditor {
                     break;
                 }
 
-                // 아래.
+                // 하단 선.
                 ray.origin.setY(originY - (StaticVariable.CONTROLS_RAY_FAR * 0.75));
                 ray.intersectBox(me.checkBoxArr[i], vec3);
 

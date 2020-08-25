@@ -65,8 +65,12 @@
                                 </button>
                             </div>
 
-                            <div v-if="!assetItem.isLight && !assetItem.isStartPoint" class="control-row">
-                                <input-checkbox v-model="enableOutline" label="Focus"></input-checkbox>
+                            <div v-if="!assetItem.isLight && !assetItem.isStartPoint" class="control-row control-row-flex">
+                                <input-checkbox v-model="enableOutline" label="Outline"></input-checkbox>
+
+                                <input-checkbox v-model="isTransparent" label="Hidden"></input-checkbox>
+
+                                <input-checkbox v-model="isCollider" label="Collider"></input-checkbox>
                             </div>
 
                             <div v-if="(contentType == 'text')" class="control-row">
@@ -218,7 +222,9 @@
                 lightDecay: 1,
                 lightColor: 'rgb(255, 255, 255)',
                 link: '',
-                enableOutline: true
+                enableOutline: false,
+                isTransparent: false,
+                isCollider: false
             };
         },
         watch: {
@@ -329,6 +335,32 @@
 
                     me.$emit('control', 'enableOutline');
                 }
+            },
+            isTransparent: function (bool) {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    const assetItem = me.editor.selectedItem;
+
+                    if (assetItem) {
+                        assetItem.isTransparent = bool;
+                    }
+
+                    me.$emit('control', 'isTransparent');
+                }
+            },
+            isCollider: function (bool) {
+                const me = this;
+
+                if (!me.lockInputEvent) {
+                    const assetItem = me.editor.selectedItem;
+
+                    if (assetItem) {
+                        assetItem.isCollider = bool;
+                    }
+
+                    me.$emit('control', 'isCollider');
+                }
             }
         },
         mounted: function () {
@@ -389,6 +421,8 @@
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
                 me.enableOutline = assetItem.enableOutline;
+                me.isTransparent = assetItem.isTransparent;
+                me.isCollider = assetItem.isCollider;
                 me.lightAngle = Math.round(Utils.r2d(assetItem.lightOption.angle));
                 me.lightIntensity = assetItem.lightOption.intensity;
                 me.lightPenumbra = assetItem.lightOption.penumbra;
@@ -695,6 +729,12 @@
                 background-color: #8c8c8c;
                 color: #eaeaea;
             }
+        }
+
+        .control-row-flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .sub-control-row {

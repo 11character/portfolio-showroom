@@ -37,8 +37,9 @@
             width: 100%;
             font-size: 15px;
             font-weight: 600;
-            text-align: left;
+            text-align: center;
             color: #ffffff;
+            margin-bottom: 0.5rem;
         }
 
         .input-checkbox {

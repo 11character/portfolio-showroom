@@ -57,6 +57,8 @@ export default class AssetItem {
         this.isLight = !!obj.isLight;
         this.isStartPoint = !!obj.isStartPoint;
 
+        this.isCollider = !!obj.isCollider;
+        this.isTransparent = !!obj.isTransparent;
         this.enableOutline = !!obj.enableOutline;
 
         this.isLoaded = !!obj.isLoaded;
@@ -112,6 +114,8 @@ export default class AssetItem {
             isLight: me.isLight,
             isStartPoint: me.isStartPoint,
 
+            isCollider: me.isCollider,
+            isTransparent: me.isTransparent,
             enableOutline: me.enableOutline,
 
             materialOptions: me.materialOptions,
@@ -180,6 +184,25 @@ export default class AssetItem {
         const me = this;
 
         return new THREE.Box3().setFromObject(me.object3D);
+    }
+
+    setOpacity(num = 1) {
+        const me = this;
+
+        me.object3D.traverse(function (obj) {
+            if (obj.material) {
+                let mtlArr = [obj.material];
+
+                if (Array.isArray(obj.material)) {
+                    mtlArr = obj.material;
+                }
+
+                for (let i = 0; i < mtlArr.length; i++) {
+                    mtlArr[i].transparent = true;
+                    mtlArr[i].opacity = num;
+                }
+            }
+        });
     }
 
     show(callEvent = true) {
