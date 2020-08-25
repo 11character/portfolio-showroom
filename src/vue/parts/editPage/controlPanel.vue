@@ -68,7 +68,9 @@
                             <div v-if="!assetItem.isLight && !assetItem.isStartPoint" class="control-row control-row-flex">
                                 <input-checkbox v-model="enableOutline" label="Outline"></input-checkbox>
 
-                                <input-checkbox v-model="isTransparent" label="Hidden"></input-checkbox>
+                                <template v-if="'html,image,youtube'.indexOf(assetItem.type) == -1">
+                                    <input-checkbox v-model="isTransparent" label="Hidden"></input-checkbox>
+                                </template>
 
                                 <input-checkbox v-model="isCollider" label="Collider"></input-checkbox>
                             </div>
