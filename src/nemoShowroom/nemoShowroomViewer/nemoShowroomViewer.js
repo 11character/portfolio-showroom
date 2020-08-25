@@ -64,7 +64,7 @@ export default class NemoShowroomEditor {
             moveDown: false,
             velocity: new THREE.Vector3(),
             direction: new THREE.Vector3(),
-            speed: 100.0
+            speed: 50.0
         };
 
         // ---
