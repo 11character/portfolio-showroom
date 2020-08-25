@@ -94,23 +94,25 @@
                             </template>
 
                             <div v-if="!assetItem.isStartPoint" class="control-row">
-                                <input-number v-model.number="scalePercent" :step="0.1" label="Scale ( % )"></input-number>
+                                <input-number v-model.number="scaleX" :step="0.1" class="sub-control-row" sub-label="X" label="Scale ( % )"></input-number>
+                                <input-number v-model.number="scaleY" :step="0.1" class="sub-control-row" sub-label="Y"></input-number>
+                                <input-number v-model.number="scaleZ" :step="0.1" class="sub-control-row" sub-label="Z"></input-number>
                             </div>
 
                             <div class="control-row">
-                                <input-number v-model.number="positionX" :step="0.5" class="sub-control-row" subLabel="X" label="Position"></input-number>
-                                <input-number v-model.number="positionY" :step="0.5" class="sub-control-row" subLabel="Y"></input-number>
-                                <input-number v-model.number="positionZ" :step="0.5" class="sub-control-row" subLabel="Z"></input-number>
+                                <input-number v-model.number="positionX" :step="0.5" class="sub-control-row" sub-label="X" label="Position"></input-number>
+                                <input-number v-model.number="positionY" :step="0.5" class="sub-control-row" sub-label="Y"></input-number>
+                                <input-number v-model.number="positionZ" :step="0.5" class="sub-control-row" sub-label="Z"></input-number>
                             </div>
 
                             <div v-if="!assetItem.isSprite && !assetItem.isStartPoint" class="control-row">
-                                <input-number v-model.number="rotationX" :step="1" class="sub-control-row" subLabel="X" label="Rotation ( ° )"></input-number>
-                                <input-number v-model.number="rotationY" :step="1" class="sub-control-row" subLabel="Y"></input-number>
-                                <input-number v-model.number="rotationZ" :step="1" class="sub-control-row" subLabel="Z"></input-number>
+                                <input-number v-model.number="rotationX" :step="1" class="sub-control-row" sub-label="X" label="Rotation ( ° )"></input-number>
+                                <input-number v-model.number="rotationY" :step="1" class="sub-control-row" sub-label="Y"></input-number>
+                                <input-number v-model.number="rotationZ" :step="1" class="sub-control-row" sub-label="Z"></input-number>
                             </div>
 
                             <div v-if="assetItem.isStartPoint" class="control-row">
-                                <input-number v-model.number="rotationY" :step="1" class="sub-control-row" subLabel="Y" label="Rotation ( ° )"></input-number>
+                                <input-number v-model.number="rotationY" :step="1" class="sub-control-row" sub-label="Y" label="Rotation ( ° )"></input-number>
                             </div>
 
                             <div v-if="assetItem.isAnimation" class="control-row">
@@ -207,7 +209,9 @@
                 contentType: '',
                 assetItem: new AssetItem(),
                 light: me.editor.light,
-                scalePercent: 0,
+                scaleX: 0,
+                scaleY: 0,
+                scaleZ: 0,
                 positionX: 0,
                 positionY: 0,
                 positionZ: 0,
@@ -228,40 +232,71 @@
             };
         },
         watch: {
-            scalePercent: function (percent) {
+            scaleX: function (percent) {
                 const me = this;
 
-                me.setScale(percent);
+                if (percent <= 0) {
+                    alert('0 이하의 값은 가질 수 없습니다.');
+
+                    me.scaleX = 0.1;
+
+                } else {
+                    me.setScale();
+                }
             },
-            positionX: function (x) {
+            scaleY: function (percent) {
                 const me = this;
 
-                me.setPosition(x, 0, 0);
+                if (percent <= 0) {
+                    alert('0 이하의 값은 가질 수 없습니다.');
+
+                    me.scaleY = 0.1;
+
+                } else {
+                    me.setScale();
+                }
             },
-            positionY: function (y) {
+            scaleZ: function (percent) {
                 const me = this;
 
-                me.setPosition(0, y, 0);
+                if (percent <= 0) {
+                    alert('0 이하의 값은 가질 수 없습니다.');
+
+                    me.scaleZ = 0.1;
+
+                } else {
+                    me.setScale();
+                }
             },
-            positionZ: function (z) {
+            positionX: function () {
                 const me = this;
 
-                me.setPosition(0, 0, z);
+                me.setPosition();
             },
-            rotationX: function (x) {
+            positionY: function () {
                 const me = this;
 
-                me.setRotation(x, 0, 0);
+                me.setPosition();
             },
-            rotationY: function (y) {
+            positionZ: function () {
                 const me = this;
 
-                me.setRotation(0, y, 0);
+                me.setPosition();
             },
-            rotationZ: function (z) {
+            rotationX: function () {
                 const me = this;
 
-                me.setRotation(0, 0, z);
+                me.setRotation();
+            },
+            rotationY: function () {
+                const me = this;
+
+                me.setRotation();
+            },
+            rotationZ: function () {
+                const me = this;
+
+                me.setRotation();
             },
             animationEndTime: function (ms) {
                 const me = this;
@@ -411,7 +446,9 @@
                     me.contentType = $(assetItem.content).data('type') || 'html';
                 }
 
-                me.scalePercent = parseFloat((assetItem.scale.x / assetItem.zeroScale.x * 100).toFixed(3));
+                me.scaleX = parseFloat((assetItem.scale.x / assetItem.zeroScale.x * 100).toFixed(3));
+                me.scaleY = parseFloat((assetItem.scale.y / assetItem.zeroScale.y * 100).toFixed(3));
+                me.scaleZ = parseFloat((assetItem.scale.z / assetItem.zeroScale.y * 100).toFixed(3));
                 me.positionX = parseFloat(assetItem.position.x.toFixed(3));
                 me.positionY = parseFloat(assetItem.position.y.toFixed(3));
                 me.positionZ = parseFloat(assetItem.position.z.toFixed(3));
@@ -432,7 +469,7 @@
 
                 setTimeout(function () {
                     me.lockInputEvent = false;
-                }, 250);
+                }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
             },
             setLightOption: function () {
                 const me = this;
@@ -454,25 +491,24 @@
                     }
                 }
             },
-            setScale: function (percent) {
+            setScale: function () {
                 const me = this;
 
                 if (!me.lockInputEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
-                        if (percent <= 0) {
-                            alert('0 이하의 값은 가질 수 없습니다.');
+                        let x = me.scaleX;
+                        let y = me.scaleY;
+                        let z = me.scaleZ;
 
-                            me.scalePercent = 0.1;
+                        x = assetItem.zeroScale.x * (x / 100);
+                        y = assetItem.zeroScale.y * (y / 100);
+                        z = assetItem.zeroScale.z * (z / 100);
 
-                        } else {
-                            const scale = assetItem.zeroScale.x * (percent / 100);
+                        me.editor.setScale(x, y, z);
 
-                            me.editor.setScale(scale, scale, scale);
-
-                            me.$emit('control', 'scale');
-                        }
+                        me.$emit('control', 'scale');
                     }
                 }
             },
@@ -483,9 +519,9 @@
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
-                        x = x || me.positionX;
-                        y = y || me.positionY;
-                        z = z || me.positionZ;
+                        const x = me.positionX;
+                        const y = me.positionY;
+                        const z = me.positionZ;
 
                         me.editor.setPosition(x, y, z);
 
@@ -500,9 +536,9 @@
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
-                        x = x || me.rotationX;
-                        y = y || me.rotationY;
-                        z = z || me.rotationZ;
+                        const x = me.rotationX;
+                        const y = me.rotationY;
+                        const z = me.rotationZ;
 
                         me.editor.setRotation(Utils.d2r(x), Utils.d2r(y), Utils.d2r(z));
 

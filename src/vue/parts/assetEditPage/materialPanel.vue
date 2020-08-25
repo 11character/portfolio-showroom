@@ -47,6 +47,7 @@
 </template>
 
 <script>
+    import * as StaticVariable from '../../../nemoShowroom/common/staticVariable';
     import * as ApiUrl from '../../../class/apiUrl';
     import Utils from '../../../class/utils';
     import AssetItem from '../../../nemoShowroom/common/assetItem';
@@ -196,7 +197,7 @@
 
                 setTimeout(function () {
                     me.lockInputEvent = false;
-                }, 250);
+                }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
             },
             loadTextureList: function (assetItem) {
                 const me = this;

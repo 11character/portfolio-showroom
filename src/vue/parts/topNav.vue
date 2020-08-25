@@ -63,7 +63,7 @@
 
 <style lang="scss" scoped>
     .navbar {
-        -ms-user-select: none; 
+        -ms-user-select: none;
         -moz-user-select: -moz-none;
         -khtml-user-select: none;
         -webkit-user-select: none;

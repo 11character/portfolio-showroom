@@ -70,7 +70,7 @@
 
                 setTimeout(function () {
                     me.lockInputEvent = false;
-                }, 250);
+                }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
 
                 func(assetItem);
             };

@@ -192,3 +192,8 @@ export const CONTROLS_RAY_FAR = 1;
  * light cone 메쉬 이름.
  */
 export const MESH_NAME_LIGHT_CONE = 'lightCone';
+
+/**
+ * 입력값 잠금 대기시간.
+ */
+export const INPUT_CONTROL_LOCK_TIME = 100;

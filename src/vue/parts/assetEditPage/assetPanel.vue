@@ -15,6 +15,7 @@
 </template>
 
 <script>
+    import * as StaticVariable from '../../../nemoShowroom/common/staticVariable';
     import AssetItem from '../../../nemoShowroom/common/assetItem';
 
     import inputWorldLightVue from '../inputItem/inputWorldLight.vue';
@@ -77,7 +78,7 @@
 
                 setTimeout(function () {
                     me.lockInputEvent = false;
-                }, 250);
+                }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
             },
             onControl: function (type) {
                 const me = this;
