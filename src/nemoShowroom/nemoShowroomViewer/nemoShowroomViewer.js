@@ -1,10 +1,10 @@
 import * as THREE from 'three/build/three.module';
-import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import * as StaticVariable from '../common/staticVariable';
+import MouseRaycaster from '../common/mouseRaycaster';
 import AssetItem from '../common/assetItem';
 import ItemLoader from '../common/itemLoader';
 import CssRenderer from '../common/cssRenderer';
@@ -49,10 +49,10 @@ export default class NemoShowroomEditor {
 
         // ---
         me.camera = new THREE.PerspectiveCamera(45, winW / winH, StaticVariable.CAMERA_NEAR, StaticVariable.CAMERA_FAR);
-
-        //--
-        me.controls = new PointerLockControls(me.camera, me.rootEl);
-        me.controls.getObject().position.setY(StaticVariable.CONTROLS_RAY_FAR);
+        me.camera.position.setY(StaticVariable.CONTROLS_RAY_FAR);
+        me.camera.target = new THREE.Vector3();
+        me.cameraLon = 0;
+        me.cameraLat = 0;
 
         // --
         me.moveInfo = {
@@ -89,6 +89,9 @@ export default class NemoShowroomEditor {
         me.objectField.name = StaticVariable.ITEM_OBJECT_FIELD_NAME;
 
         // ---
+        me.mouseRaycaster = new MouseRaycaster(me.renderer, me.camera);
+
+        // ---
         me.clock = new THREE.Clock();
 
         // ---
@@ -98,7 +101,6 @@ export default class NemoShowroomEditor {
 
         // ---
         me.scene.add(me.camera);
-        me.scene.add(me.controls.getObject());
         me.scene.add(me.lightField);
         me.scene.add(me.objectField);
         me.scene.add(me.baseFloor);
@@ -132,9 +134,10 @@ export default class NemoShowroomEditor {
         // ---
         me.checkBoxArr = [];
         me.checkItemArr = [];
-        me.detectedItem = null;
+        me.outlineObjArr = [];
+        me.intersectedItem = null;
 
-        //--
+        //---
         me.start();
         me.__initEvent();
     }
@@ -160,8 +163,6 @@ export default class NemoShowroomEditor {
 
             me.cssRenderer.updateAll();
             me.cssRenderer.render();
-
-            me.__detectItem();
 
             me.composer.render();
         })();
@@ -222,11 +223,11 @@ export default class NemoShowroomEditor {
                 // 불러오는 중에 destroy() 호출시 오류 방지.
                 if (me.options) {
                     let assetItem;
-    
+
                     // 배치.
                     for (let i = 0; i < itemArr.length; i++) {
                         assetItem = itemArr[i];
-    
+
                         // 조명 도형 제거.
                         if (assetItem.isLight) {
                             assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_LIGHT_CONE));
@@ -237,36 +238,44 @@ export default class NemoShowroomEditor {
                             assetItem.object3D.children[0].remove.apply(assetItem.object3D.children[0], assetItem.object3D.children[0].children);
                             me.camera.position.copy(assetItem.object3D.position);
                             me.camera.rotation.set(0, assetItem.object3D.rotation.y, 0);
+                            me.cameraLon = Utils.r2d(me.camera.rotation.y * -1);
+                            me.cameraLat = Utils.r2d(me.camera.rotation.x * -1);
                         }
 
                         // 보이지 않는 도형 숨김.
                         if (assetItem.isTransparent) {
                             assetItem.setOpacity(0);
                         }
-    
+
                         me.objectField.add(assetItem.object3D);
                         me.cssRenderer.add(assetItem);
                         me.assetItemManager.add(assetItem);
-    
+
                         assetItem.animationPlay();
                     }
-    
+
                     // cssRenderer에 배치되어 크기를 구할 수 있도록 대기.
                     setTimeout(function () {
                         me.checkBoxArr = [];
                         me.checkItemArr = [];
-    
+                        me.outlineObjArr = [];
+
                         for (let i = 0; i < itemArr.length; i++) {
                             assetItem = itemArr[i];
-    
+
                             // 충돌박스 생성.
                             if (assetItem.isCollider) {
                                 // 두 배열의 순서 일치.
                                 me.checkBoxArr.push(assetItem.getBox3());
                                 me.checkItemArr.push(assetItem);
                             }
+
+                            // 클릭대상.
+                            if (assetItem.enableOutline) {
+                                me.outlineObjArr.push(assetItem.object3D);
+                            }
                         }
-    
+
                         me.options.onLoad(me);
                     }, 500);
                 }
@@ -362,42 +371,12 @@ export default class NemoShowroomEditor {
         }, 1);
     }
 
-    __detectItem() {
-        const me = this;
+    __cameraLookDir(camera) {
+        const vector3 = new THREE.Vector3(0, 0, -1);
 
-        // 바라보는 방향.
-        const direction = me.controls.getDirection(new THREE.Vector3()).clone();
+        vector3.applyEuler(camera.rotation, camera.rotation.order);
 
-        // 계산된 방향으로 선을 긋는다.
-        const position = me.controls.getObject().position.clone();
-        const ray = new THREE.Ray(position, direction);
-        const vec3 = new THREE.Vector3();
-
-        // 충돌검사.
-        let distance = 0;
-        let prevDistance = 0;
-        let index = -1;
-
-        for (let i = 0; i < me.checkBoxArr.length; i++) {
-            ray.intersectBox(me.checkBoxArr[i], vec3);
-
-            if (vec3.lengthSq()) {
-                distance = vec3.distanceTo(position);
-
-                // 처음이거나 이전 박스보다 가까운 경우.
-                if (index == -1 || distance < prevDistance) {
-                    prevDistance = distance;
-                    index = i;
-                }
-            }
-        }
-
-        const bool = (index != -1);
-
-        me.detectedItem = bool ? me.checkItemArr[index] : null;
-
-        // 테두리 표시.
-        me.outlinePass.selectedObjects = (bool && me.checkItemArr[index].enableOutline) ? [me.detectedItem.object3D] : [];
+        return vector3;
     }
 
     __detectPlayerCollision() {
@@ -406,7 +385,7 @@ export default class NemoShowroomEditor {
         // 이동방향.
         const direction = me.moveInfo.direction.clone();
         // 바라보는 방향. (높이제거)
-        const cameraDirection = me.controls.getDirection(new THREE.Vector3()).clone();
+        const cameraDirection = me.__cameraLookDir(me.camera);
         cameraDirection.setY(0);
 
         // 전방을 기준으로 카메라가 바라보는 각도.
@@ -418,7 +397,7 @@ export default class NemoShowroomEditor {
         direction.normalize();
 
         // 계산된 방향으로 선을 긋는다.
-        const position = me.controls.getObject().position.clone();
+        const position = me.camera.position.clone();
         const ray = new THREE.Ray(position, direction);
         const originY = position.y;
         const vec3 = new THREE.Vector3();
@@ -493,34 +472,115 @@ export default class NemoShowroomEditor {
                 velocity.y -= direction.y * speed * delta;
             }
 
-            me.controls.moveRight(-velocity.x * delta);
-            me.controls.moveForward(velocity.z * delta);
-            // y축.
-            me.controls.getObject().position.y -= (velocity.y * delta);
+            let vector3 = new THREE.Vector3();
 
-            if (me.controls.getObject().position.y < StaticVariable.CONTROLS_RAY_FAR) {
+            // x축.
+            let distance = -velocity.x * delta;
+            vector3.setFromMatrixColumn(me.camera.matrix, 0);
+            me.camera.position.addScaledVector(vector3, distance);
+
+            // z축.
+            distance = velocity.z * delta;
+            vector3.setFromMatrixColumn(me.camera.matrix, 0);
+            vector3.crossVectors(me.camera.up, vector3);
+            me.camera.position.addScaledVector(vector3, distance);
+
+            // y축.
+            me.camera.position.y -= (velocity.y * delta);
+
+            if (me.camera.position.y < StaticVariable.CONTROLS_RAY_FAR) {
                 velocity.y = 0;
-                me.controls.getObject().position.y = StaticVariable.CONTROLS_RAY_FAR;
+                me.camera.position.y = StaticVariable.CONTROLS_RAY_FAR;
             }
         }
+    }
+
+    __intersect(evt) {
+        const me = this;
+
+        const intersectChild = me.mouseRaycaster.intersect(me.outlineObjArr, evt.offsetX, evt.offsetY);
+
+        let group = null;
+
+        if (intersectChild) {
+            intersectChild.traverseAncestors(function (object3D) {
+                if (object3D.parent && object3D.parent.name === StaticVariable.ITEM_OBJECT_FIELD_NAME) {
+                    group = object3D;
+                }
+            });
+        }
+
+        return me.assetItemManager.getItemByObject3D(group);
     }
 
     __initEvent() {
         const me = this;
 
-        me.rootEl.addEventListener('click', function (evt) {
-            if (me.controls.isLocked) {
-                switch(evt.button) {
-                    case 0:
-                        if (me.detectedItem) {
-                            me.options.onSelect(me.detectedItem);
-                        }
-                        break;
-                }
-            } else {
-                me.controls.lock();
+        let isUserInteracting = false;
+        let onMouseDownMouseX = 0;
+        let onMouseDownMouseY = 0;
+        let onMouseDownLon = 0;
+        let onMouseDownLat = 0;
+
+        function onPointerStart(evt) {
+            isUserInteracting = true;
+
+            const clientX = evt.clientX || evt.touches[0].clientX;
+            const clientY = evt.clientY || evt.touches[0].clientY;
+
+            onMouseDownMouseX = clientX;
+            onMouseDownMouseY = clientY;
+
+            onMouseDownLon = me.cameraLon;
+            onMouseDownLat = me.cameraLat;
+        }
+
+        function onPointerMove(evt) {
+            // 테두리 표시.
+            me.intersectedItem = me.__intersect(evt);
+            me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+
+            // 화면 회전.
+            if (isUserInteracting) {
+                const clientX = evt.clientX || evt.touches[0].clientX;
+                const clientY = evt.clientY || evt.touches[0].clientY;
+
+                me.cameraLon = (onMouseDownMouseX - clientX) * 0.1 + onMouseDownLon;
+                me.cameraLat = (clientY - onMouseDownMouseY) * 0.1 + onMouseDownLat;
+
+                me.cameraLat = Math.max(-85, Math.min(85, me.cameraLat));
+
+                const theta = Utils.d2r(me.cameraLon - 90);
+                const phi = Utils.d2r(90 - me.cameraLat);
+
+                me.camera.target.x = 500 * Math.sin(phi) * Math.cos(theta);
+                me.camera.target.y = 500 * Math.cos(phi);
+                me.camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
+                me.camera.lookAt(me.camera.target);
             }
-        });
+        }
+
+        function onPointerUp(evt) {
+            isUserInteracting = false;
+
+            switch(evt.button) {
+                case 0:
+                    if (me.intersectedItem) {
+                        me.options.onSelect(me.intersectedItem);
+                    }
+                    break;
+            }
+        }
+
+        me.rootEl.addEventListener('mousedown', onPointerStart);
+        me.rootEl.addEventListener('mousemove', onPointerMove);
+        me.rootEl.addEventListener('mouseup', onPointerUp);
+
+        me.rootEl.addEventListener('touchstart', onPointerStart);
+        me.rootEl.addEventListener('touchmove', onPointerMove);
+        me.rootEl.addEventListener('touchend', onPointerUp);
+
+        me.rootEl.addEventListener('mouseleave', onPointerUp);
 
         me.rootEl.addEventListener('keydown', function (evt) {
             switch (evt.keyCode) {

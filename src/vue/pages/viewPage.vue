@@ -8,8 +8,6 @@
             <cover :hidden="hiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
             <div ref="viewField" class="view-field">
-                <div class="cross-hair"></div>
-
                 <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button">
                     <div class="content">
                         <span v-if="isPlayMusic">Music On</span>
@@ -229,19 +227,6 @@
         .view-field {
             left: 0px;
             top: 0px;
-
-            .cross-hair {
-                width: 0.5rem;
-                height: 0.5rem;
-                background-color: #ffffff;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                margin-top: -0.25rem;
-                margin-left: -0.25rem;
-                border-radius: 50%;
-                z-index: 1;
-            }
 
             .view-button {
                 position: absolute;

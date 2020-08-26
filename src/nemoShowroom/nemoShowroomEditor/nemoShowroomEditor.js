@@ -1044,7 +1044,7 @@ export default class NemoShowroomEditor extends EditorInterface {
     __intersect(evt) {
         const me = this;
 
-        const intersectChild = me.mouseRaycaster.intersect(this.objectField.children, evt.offsetX, evt.offsetY);
+        const intersectChild = me.mouseRaycaster.intersect(me.objectField.children, evt.offsetX, evt.offsetY);
 
         let group = null;
 
