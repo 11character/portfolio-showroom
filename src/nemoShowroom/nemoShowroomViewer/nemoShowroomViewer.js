@@ -236,8 +236,12 @@ export default class NemoShowroomEditor {
                         // 시작위치 지정, 도형 제거.
                         if (assetItem.isStartPoint) {
                             assetItem.object3D.children[0].remove.apply(assetItem.object3D.children[0], assetItem.object3D.children[0].children);
+
                             me.camera.position.copy(assetItem.object3D.position);
+                            me.camera.position.y += StaticVariable.CONTROLS_RAY_FAR;
+
                             me.camera.rotation.set(0, assetItem.object3D.rotation.y, 0);
+
                             me.cameraLon = Utils.r2d(me.camera.rotation.y * -1);
                             me.cameraLat = Utils.r2d(me.camera.rotation.x * -1);
                         }
