@@ -59,7 +59,7 @@ export default class AssetItem {
 
         this.isCollider = !!obj.isCollider;
         this.isTransparent = !!obj.isTransparent;
-        this.enableOutline = !!obj.enableOutline;
+        this.isClickTarget = !!obj.isClickTarget;
 
         this.isLoaded = !!obj.isLoaded;
 
@@ -116,7 +116,7 @@ export default class AssetItem {
 
             isCollider: me.isCollider,
             isTransparent: me.isTransparent,
-            enableOutline: me.enableOutline,
+            isClickTarget: me.isClickTarget,
 
             materialOptions: me.materialOptions,
             lightOption: me.lightOption

@@ -66,7 +66,7 @@
                             </div>
 
                             <div v-if="!assetItem.isLight && !assetItem.isStartPoint" class="control-row control-row-flex">
-                                <input-checkbox v-model="enableOutline" label="Outline"></input-checkbox>
+                                <input-checkbox v-model="isClickTarget" label="Click"></input-checkbox>
 
                                 <template v-if="'html,image,youtube'.indexOf(assetItem.type) == -1">
                                     <input-checkbox v-model="isTransparent" label="Hidden"></input-checkbox>
@@ -228,7 +228,7 @@
                 lightDecay: 1,
                 lightColor: 'rgb(255, 255, 255)',
                 link: '',
-                enableOutline: false,
+                isClickTarget: false,
                 isTransparent: false,
                 isCollider: false
             };
@@ -360,17 +360,17 @@
                     me.setLightOption();
                 }
             },
-            enableOutline: function (bool) {
+            isClickTarget: function (bool) {
                 const me = this;
 
                 if (!me.lockInputEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
-                        assetItem.enableOutline = bool;
+                        assetItem.isClickTarget = bool;
                     }
 
-                    me.$emit('control', 'enableOutline');
+                    me.$emit('control', 'isClickTarget');
                 }
             },
             isTransparent: function (bool) {
@@ -459,7 +459,7 @@
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
-                me.enableOutline = assetItem.enableOutline;
+                me.isClickTarget = assetItem.isClickTarget;
                 me.isTransparent = assetItem.isTransparent;
                 me.isCollider = assetItem.isCollider;
                 me.lightAngle = Math.round(Utils.r2d(assetItem.lightOption.angle));

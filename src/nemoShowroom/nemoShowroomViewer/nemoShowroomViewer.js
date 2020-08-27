@@ -271,7 +271,7 @@ export default class NemoShowroomEditor {
                             }
 
                             // 클릭대상.
-                            if (assetItem.enableOutline) {
+                            if (assetItem.isClickTarget) {
                                 me.outlineObjArr.push(assetItem.object3D);
                             }
                         }
