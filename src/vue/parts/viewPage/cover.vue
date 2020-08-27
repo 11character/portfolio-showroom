@@ -7,7 +7,7 @@
                 <div ref="bar" class="progress-bar"></div>
             </div>
 
-            <div v-else @click="onClickEnter" class="btn-enter">Enter to Exhibition</div>
+            <div v-else @click="onClickEnter" class="btn-enter none-select-text">Enter to Exhibition</div>
         </div>
 
         <div class="right pt-5 pl-5">
@@ -84,6 +84,16 @@
         background-color: #bdbdbd;
         display: flex;
         justify-content: center;
+
+        .none-select-text {
+            cursor: default;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
 
         .left {
             width: 25%;

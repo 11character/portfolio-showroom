@@ -8,7 +8,7 @@
             <cover :hidden="hiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
             <div ref="viewField" class="view-field">
-                <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button">
+                <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button none-select-text">
                     <div class="content">
                         <span v-if="isPlayMusic">Music On</span>
                         <span v-else>Music Off</span>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
 
-                <div @click="showText" ref="textButton" class="view-button object-button">
+                <div @click="showText" ref="textButton" class="view-button object-button none-select-text">
                     <div class="content">
                         <span>Available Work</span>
                     </div>
@@ -27,7 +27,7 @@
                 </div>
 
                 <div :hidden="!isShowText" ref="textField" class="text-field">
-                    <div @click="hideText" class="text-header">
+                    <div @click="hideText" class="text-header none-select-text">
                         <div class="content">
                             <span>Available Product List</span>
                         </div>
@@ -204,6 +204,16 @@
 
 <style lang="scss" scoped>
 .root-field {
+    .none-select-text {
+        cursor: default;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
     .top {
         width: 100%;
         height: 108px;
@@ -234,13 +244,6 @@
                 color: #ffffff;
                 background-color: #000000;
                 border: 1px solid #ffffff;
-                cursor: default;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
                 z-index: 1;
             }
 
