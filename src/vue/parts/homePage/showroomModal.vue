@@ -70,14 +70,14 @@
 </template>
 
 <script>
-    import * as ApiUrl from '../../class/apiUrl';
-    import Utils from '../../class/utils';
-    import Showroom from '../../class/showroom';
+    import * as ApiUrl from '../../../class/apiUrl';
+    import Utils from '../../../class/utils';
+    import Showroom from '../../../class/showroom';
 
-    import confirmModalVue from './confirmModal.vue';
+    import confirmModalVue from '../confirmModal.vue';
 
     /**
-     * template event : create
+     * template event : create, update
      */
     export default {
         components: {
@@ -152,10 +152,10 @@
                             formData.append('bgmFile', bgmFile);
                         }
 
-                        let apiUrl = ApiUrl.SHOWROOM_CREATE;
+                        let apiUrl = ApiUrl.SHOWROOM_UPDATE;
 
-                        if (me.showroom.seqId != 0) {
-                            apiUrl = ApiUrl.SHOWROOM_UPDATE;
+                        if (me.showroom.seqId == 0) {
+                            apiUrl = ApiUrl.SHOWROOM_CREATE;
                         }
 
                         $.ajax({
@@ -177,7 +177,12 @@
 
                                 me.close();
 
-                                me.$emit('create', me.showroom);
+                                if (me.showroom.seqId == 0) {
+                                    me.$emit('create', me.showroom);
+
+                                } else {
+                                    me.$emit('update', me.showroom);
+                                }
 
                                 me.clear();
 

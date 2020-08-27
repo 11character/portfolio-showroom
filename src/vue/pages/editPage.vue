@@ -4,7 +4,7 @@
 
         <top-nav separate-page="Edit"></top-nav>
 
-        <showroom-modal ref="showroomModal"></showroom-modal>
+        <showroom-modal @update="onUpdateInfo" ref="showroomModal"></showroom-modal>
 
         <model-modal @apply="onApplyModel" ref="modelModal"></model-modal>
 
@@ -71,7 +71,7 @@
 
     import topNavVue from '../parts/topNav.vue';
     import loadingVue from '../parts/loading.vue';
-    import showroomModalVue from '../parts/showroomModal.vue';
+    import showroomModalVue from '../parts/homePage/showroomModal.vue';
     import modelModalVue from '../parts/editPage/modelModal.vue';
     import textModalVue from '../parts/editPage/textModal.vue';
     import webModalVue from '../parts/editPage/webModal.vue';
@@ -401,6 +401,15 @@
                 const me = this;
 
                 me.$refs.showroomModal.open(me.showroom);
+            },
+            onUpdateInfo: function () {
+                const me = this;
+
+                Utils.apiRequest(ApiUrl.SHOWROOM_DATA, {seqId: me.id}).then(function (data) {
+                    if (data.data.length > 0) {
+                        me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
+                    }
+                });
             }
         }
     }

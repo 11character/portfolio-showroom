@@ -24,7 +24,7 @@
 
 <script>
     import topNavVue from '../parts/topNav.vue';
-    import showroomModalVue from '../parts/showroomModal.vue';
+    import showroomModalVue from '../parts/homePage/showroomModal.vue';
     import showroomTableVue from '../parts/homePage/showroomTable.vue';
 
     const Promise = window.Promise;

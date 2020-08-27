@@ -248,12 +248,25 @@
             }
 
             .music-button {
+                width: 120px;
+                height: 45px;
+                font-size: 0.5rem 1.2rem;
+                padding: 0.5rem 1rem;
+                font-weight: bold;
                 left: 18px;
                 top: 100%;
-                margin-top: -42px;
+                margin-top: -63px;
 
-                audio {
-                    display: none;
+                .content {
+                    text-align: center;
+                    overflow: hidden;
+                    white-space:nowrap;
+                    word-wrap:normal;
+                    text-overflow:ellipsis;
+
+                    audio {
+                        display: none;
+                    }
                 }
             }
 
