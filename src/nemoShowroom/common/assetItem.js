@@ -4,6 +4,7 @@ import Utils from '../../class/utils';
 import * as StaticVariable from './staticVariable';
 import MaterialOption from '../common/materialOption';
 import LightOption from '../common/lightOption';
+import ImageButton from './imageButton';
 
 const Promise = window.Promise;
 
@@ -71,6 +72,20 @@ export default class AssetItem {
         }
 
         this.lightOption = new LightOption(obj.lightOption);
+
+        this.linkButtonArray = [];
+        if (Array.isArray(obj.linkButtonArray)) {
+            for (let i = 0; i < obj.linkButtonArray.length; i++) {
+                this.linkButtonArray.push(new ImageButton(obj.linkButtonArray[i]));
+            }
+        }
+
+        this.textureButtonArray = [];
+        if (Array.isArray(obj.textureButtonArray)) {
+            for (let i = 0; i < obj.textureButtonArray.length; i++) {
+                this.textureButtonArray.push(new ImageButton(obj.textureButtonArray[i]));
+            }
+        }
     }
 
     get isAnimation() {
@@ -119,7 +134,10 @@ export default class AssetItem {
             isClickTarget: me.isClickTarget,
 
             materialOptions: me.materialOptions,
-            lightOption: me.lightOption
+            lightOption: me.lightOption,
+
+            linkButtonArray: me.linkButtonArray,
+            textureButtonArray: me.textureButtonArray
         };
     }
 

@@ -78,7 +78,7 @@
         },
         data: function () {
             return {
-                lockInputEvent: false,
+                lockEvent: false,
                 materialOption: new MaterialOption(),
                 textureItemArr: [],
                 cubeTextureItemArr: [],
@@ -160,7 +160,7 @@
             setMtlOption: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     const materialOption = new MaterialOption({
                         roughness: me.mtlRoughness,
                         metalness: me.mtlMetalness,
@@ -182,7 +182,7 @@
             setMtlData: function (materialOption) {
                 const me = this;
 
-                me.lockInputEvent = true;
+                me.lockEvent = true;
 
                 me.mtlRoughness = materialOption.roughness;
                 me.mtlMetalness = materialOption.metalness;
@@ -196,7 +196,7 @@
                 me.mtlReflectivity = materialOption.reflectivity;
 
                 setTimeout(function () {
-                    me.lockInputEvent = false;
+                    me.lockEvent = false;
                 }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
             },
             loadTextureList: function (assetItem) {

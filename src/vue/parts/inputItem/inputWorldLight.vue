@@ -32,7 +32,7 @@
             const me = this;
 
             return {
-                lockInputEvent: false,
+                lockEvent: false,
                 intensity: 0,
                 lightAngle: 0
             };
@@ -41,7 +41,7 @@
             intensity: function (val) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.editor.setLightIntensity(val);
 
                     me.$emit('control', 'lightIntensity');
@@ -50,7 +50,7 @@
             lightAngle: function (val) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.editor.setLightHorizontalAngle(Utils.d2r(val));
 
                     me.$emit('control', 'lightAngle');
@@ -63,13 +63,13 @@
             const func = me.editor.options.onLoad;
 
             me.editor.options.onLoad = function (assetItem) {
-                me.lockInputEvent = true;
+                me.lockEvent = true;
 
                 me.intensity = me.editor.getLightIntensity();
                 me.lightAngle = parseInt(Utils.r2d(me.editor.getLightHorizontalAngle()), 10);
 
                 setTimeout(function () {
-                    me.lockInputEvent = false;
+                    me.lockEvent = false;
                 }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
 
                 func(assetItem);

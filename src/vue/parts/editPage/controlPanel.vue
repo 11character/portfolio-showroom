@@ -40,11 +40,15 @@
             <div class="item-row">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href=".tab-1">Control</a>
+                        <a ref="firstTabBtn" class="nav-link active" data-toggle="tab" href=".tab-1">Control</a>
                     </li>
 
                     <li v-if="is3dModel" class="nav-item">
                         <a class="nav-link" data-toggle="tab" href=".tab-2">Material</a>
+                    </li>
+
+                    <li v-if="is3dModel" class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href=".tab-3">Buttons</a>
                     </li>
                 </ul>
 
@@ -166,6 +170,12 @@
                             <mesh-panel :asset-item="assetItem" @control="onControl"></mesh-panel>
                         </div>
                     </div>
+
+                    <div class="tab-3 tab-pane fade">
+                        <div class="asset-material-field">
+                            <image-button-panel :asset-item="assetItem" @control="onControl"></image-button-panel>
+                        </div>
+                    </div>
                 </div>
             </div>
         </template>
@@ -180,6 +190,7 @@
     import * as ApiUrl from '../../../class/apiUrl';
 
     import meshPanelVue from '../assetEditPage/meshPanel.vue';
+    import imageButtonPanelVue from '../assetEditPage/imageButtonPanel.vue';
     import inputWorldLightVue from '../inputItem/inputWorldLight.vue';
     import inputNumberVue from '../inputItem/inputNumber.vue';
     import inputTextVue from '../inputItem/inputText.vue';
@@ -193,6 +204,7 @@
     export default {
         components: {
             'mesh-panel': meshPanelVue,
+            'image-button-panel': imageButtonPanelVue,
             'input-world-light': inputWorldLightVue,
             'input-number': inputNumberVue,
             'input-text': inputTextVue,
@@ -205,7 +217,7 @@
             const me = this;
 
             return {
-                lockInputEvent: false,
+                lockEvent: false,
                 StaticVariable: StaticVariable,
                 is3dModel: false,
                 contentType: '',
@@ -303,7 +315,7 @@
             animationEndTime: function (ms) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.editor.setAnimationTime(0, ms, true);
 
                     me.$emit('control', 'animationTime');
@@ -312,7 +324,7 @@
             link: function (str) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.editor.setLink(str);
 
                     me.$emit('control', 'link');
@@ -321,49 +333,49 @@
             lightAngle: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.setLightOption();
                 }
             },
             lightIntensity: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.setLightOption();
                 }
             },
             lightPenumbra: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.setLightOption();
                 }
             },
             lightDistance: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.setLightOption();
                 }
             },
             lightDecay: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.setLightOption();
                 }
             },
             lightColor: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.setLightOption();
                 }
             },
             isClickTarget: function (bool) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
@@ -376,7 +388,7 @@
             isTransparent: function (bool) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
@@ -389,7 +401,7 @@
             isCollider: function (bool) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
@@ -408,6 +420,8 @@
 
             me.editor.options.onSelect = function (assetItem, editor) {
                 evt1(assetItem, editor);
+
+                $(me.$refs.firstTabBtn).tab('show');
 
                 me.is3dModel = StaticVariable.ITEM_3D_TYPES.indexOf(assetItem.type) > -1;
                 me.assetItem = assetItem;
@@ -440,7 +454,7 @@
                 const me = this;
 
                 // 데이터를 표시할 때 이벤트 발생을 막기위한 플래그.
-                me.lockInputEvent = true;
+                me.lockEvent = true;
 
                 me.contentType = assetItem.type;
 
@@ -470,13 +484,13 @@
                 me.lightColor = assetItem.lightOption.color;
 
                 setTimeout(function () {
-                    me.lockInputEvent = false;
+                    me.lockEvent = false;
                 }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
             },
             setLightOption: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
@@ -496,7 +510,7 @@
             setScale: function () {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
@@ -517,7 +531,7 @@
             setPosition: function (x, y, z) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
@@ -534,7 +548,7 @@
             setRotation: function (x, y, z) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
@@ -681,12 +695,18 @@
         .nav-tabs {
             margin-bottom: 0.5rem;
 
-            .nav-link {
-                color: #ffffff;
-            }
+            .nav-item {
+                width: 33.33%;
 
-            .nav-link.active {
-                color: #000000;
+                .nav-link {
+                    color: #ffffff;
+                    padding: 0.5rem;
+                    text-align: center;
+                }
+
+                .nav-link.active {
+                    color: #000000;
+                }
             }
         }
 

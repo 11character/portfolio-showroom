@@ -47,24 +47,23 @@
             }
         },
         watch: {
-            assetItem: function () {
+            assetItem: function (item) {
                 const me = this;
 
-                me.onChangeAssetItem();
+                me.onChangeAssetItem(item);
             }
         },
         mounted: function () {
             const me = this;
 
             if (me.assetItem) {
-                me.onChangeAssetItem();
+                me.onChangeAssetItem(me.assetItem);
             }
         },
         methods: {
-            onChangeAssetItem: function () {
+            onChangeAssetItem: function (assetItem) {
                 const me = this;
 
-                const assetItem = me.assetItem;
                 const arr = [];
                 const is3d = StaticVariable.ITEM_3D_TYPES.indexOf(assetItem.type) > -1;
 

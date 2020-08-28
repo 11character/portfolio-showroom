@@ -49,7 +49,7 @@
                 disabled: true,
                 isConfigEdited: false,
                 modelFileInfo: new ModelFileInfo(),
-                assetItem: new AssetItem(),
+                assetItem: null,
                 assetEditor: new NemoAssetEditor({
                     width: 100,
                     height: 100

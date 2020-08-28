@@ -9,7 +9,29 @@
         </div>
 
         <div class="item-row">
-            <mesh-panel :asset-item="assetItem" @control="onControl"></mesh-panel>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a ref="firstTabBtn" class="nav-link active" data-toggle="tab" href=".tab-1">Material</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href=".tab-2">Buttons</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-1 tab-pane fade show active">
+                    <div class="asset-material-field">
+                        <mesh-panel :asset-item="assetItem" @control="onControl"></mesh-panel>
+                    </div>
+                </div>
+
+                <div class="tab-2 tab-pane fade">
+                    <div class="asset-material-field">
+                        <image-button-panel :asset-item="assetItem" @control="onControl"></image-button-panel>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -21,6 +43,7 @@
     import inputWorldLightVue from '../inputItem/inputWorldLight.vue';
     import inputTextVue from '../inputItem/inputText.vue';
     import meshPanelVue from './meshPanel.vue';
+    import imageButtonPanelVue from './imageButtonPanel.vue';
 
     import EditorInterface from '../../../nemoShowroom/common/editorInterface';
 
@@ -30,8 +53,9 @@
     export default {
         components: {
             'input-world-light': inputWorldLightVue,
+            'image-button-panel': imageButtonPanelVue,
             'input-text': inputTextVue,
-            'mesh-panel': meshPanelVue,
+            'mesh-panel': meshPanelVue
         },
         props: {
             editor: {type: EditorInterface},
@@ -39,7 +63,7 @@
         },
         data: function () {
             return {
-                lockInputEvent: false,
+                lockEvent: false,
                 name: ''
             };
         },
@@ -52,7 +76,7 @@
             name: function (name) {
                 const me = this;
 
-                if (!me.lockInputEvent) {
+                if (!me.lockEvent) {
                     me.assetItem.name = name;
 
                     me.onControl('assetName');
@@ -72,12 +96,12 @@
 
                 const assetItem = me.assetItem;
 
-                me.lockInputEvent = true;
+                me.lockEvent = true;
 
                 me.name = assetItem.name;
 
                 setTimeout(function () {
-                    me.lockInputEvent = false;
+                    me.lockEvent = false;
                 }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
             },
             onControl: function (type) {
@@ -103,6 +127,24 @@
 
         .item-row:first-child {
             margin-top: 0px;
+        }
+
+        .nav-tabs {
+            margin-bottom: 0.5rem;
+
+            .nav-item {
+                width: 33.33%;
+
+                .nav-link {
+                    color: #ffffff;
+                    padding: 0.5rem;
+                    text-align: center;
+                }
+
+                .nav-link.active {
+                    color: #000000;
+                }
+            }
         }
     }
 </style>

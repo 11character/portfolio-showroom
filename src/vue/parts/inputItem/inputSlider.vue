@@ -1,6 +1,6 @@
 <template>
     <div class="input-slider-field">
-        <div v-if="label"class="label">{{ label }}</div>
+        <div v-if="label" class="label">{{ label }}</div>
 
         <div class="value">{{ value }}</div>
 
