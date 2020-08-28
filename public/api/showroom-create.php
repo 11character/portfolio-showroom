@@ -77,11 +77,12 @@
                             SEQ_ID => $row['SEQ_ID'],
                             NAME => $row['NAME'],
                             DESCRIPTION => $row['DESCRIPTION'],
+                            LINK => $row['link'],
                             IMG_URL => $row['IMG_URL'],
                             BGM_URL => $row['BGM_URL'],
                             CONTENT_KO => $row['CONTENT_KO'],
                             CONTENT_EN => $row['CONTENT_EN'],
-                            DATA => $_POST['DATA']
+                            DATA => $row['DATA']
                         ];
 
                         $pdo->prepare($sql_update_tb_showroom)->execute($updateValue);
