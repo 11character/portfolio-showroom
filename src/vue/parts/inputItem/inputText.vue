@@ -41,7 +41,7 @@
         .input-text {
             width: 100%;
             height: 25px;
-            padding: 0px 0.5rem;
+            padding: 0rem 0.5rem;
             border: 0px;
             border-radius: 0.25rem;
         }

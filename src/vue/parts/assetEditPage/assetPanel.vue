@@ -121,7 +121,7 @@
 
         .item-row {
             width: 100%;
-            padding: 0px 1rem;
+            padding: 0rem 1rem;
             margin-top: 1rem;
         }
 

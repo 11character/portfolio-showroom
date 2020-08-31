@@ -3,7 +3,9 @@
         <div class="logo"></div>
 
         <div class="top-buttons font-neuemachina">
-            <div :hidden="!isShowText" ref="textField" class="text-field">{{ showroom.contentKo }}</div>
+            <div :hidden="!isShowText" ref="textField" class="text-field">
+                <pre class="font-neuemachina">{{ showroom.contentKo }}</pre>
+            </div>
 
             <template v-if="isShowSmallButton">
                 <div @click="onClickLink" class="top-button-sm">
@@ -188,7 +190,6 @@
                 display: flex;
 
                 .content {
-                    width: 90%;
                     overflow: hidden;
                     white-space:nowrap;
                     word-wrap:normal;
@@ -215,7 +216,7 @@
                 width:50%;
                 max-width: 250px;
                 height: 45px;
-                padding: 0.5rem 1rem;
+                padding: 0rem 1rem;
                 font-size: 1.2rem;
                 font-weight: bold;
                 color: #ffffff;
@@ -223,6 +224,9 @@
                 border-top: 1px solid #ffffff;
                 border-left: 1px solid #ffffff;
                 border-bottom: 1px solid #ffffff;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 cursor: default;
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
@@ -233,7 +237,6 @@
                 display: flex;
 
                 .content {
-                    width: 90%;
                     overflow: hidden;
                     white-space:nowrap;
                     word-wrap:normal;
@@ -263,10 +266,15 @@
             max-height: 400px;
             padding: 16px;
             overflow-y: auto;
-            font-weight: bold;
-            color: #ffffff;
             background-color: #000000;
             border: 1px solid #ffffff;
+
+            pre {
+                width: 100%;
+                white-space: pre-wrap;
+                font-weight: bold;
+                color: #ffffff;
+            }
         }
     }
 </style>

@@ -117,7 +117,7 @@
             }
 
             .btn-enter {
-                padding: 0px 1rem;
+                padding: 0rem 1rem;
                 background-color: #000000;
                 color: #ffffff;
                 cursor: default;
@@ -146,7 +146,7 @@
 
             .loading-text {
                 display: inline-block;
-                padding: 0px 1rem;
+                padding: 0rem 1rem;
             }
 
             .loading-text:nth-child(odd) {

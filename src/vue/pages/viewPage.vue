@@ -240,7 +240,10 @@
 
             .view-button {
                 position: absolute;
-                padding: 0px 1rem;
+                padding: 0rem 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
                 color: #ffffff;
                 background-color: #000000;
                 border: 1px solid #ffffff;
@@ -286,10 +289,8 @@
                 top: 100%;
                 margin-left: -228px;
                 margin-top: -63px;
-                display: flex;
 
                 .content {
-                    width: 90%;
                     overflow: hidden;
                     white-space:nowrap;
                     word-wrap:normal;
@@ -297,7 +298,6 @@
                 }
 
                 .icon {
-                    width: 10%;
                     text-align: right;
                 }
             }
@@ -322,7 +322,10 @@
                 .text-header {
                     width: 100%;
                     height: 42px;
-                    padding: 0.5rem 1rem;
+                    padding: 0rem 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
                     font-size: 1.2rem;
                     font-weight: bold;
                     border-bottom: 1px solid #000000;

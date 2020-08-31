@@ -156,7 +156,7 @@
         .divider {
             width: 100%;
             height: 2px;
-            margin: 2rem 0px;
+            margin: 2rem 0rem;
             background-color: #ffffff;
         }
     }
