@@ -186,7 +186,6 @@
                 const me = this;
 
                 me.isConfigEdited = true;
-
             },
             onClickSave: function () {
                 const me = this;
