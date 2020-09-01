@@ -525,6 +525,7 @@ export default class NemoShowroomEditor {
         let onMouseDownMouseY = 0;
         let onMouseDownLon = 0;
         let onMouseDownLat = 0;
+        let pointerStartTimeout;
 
         function onPointerStart(evt) {
             evt.stopPropagation();
@@ -539,10 +540,22 @@ export default class NemoShowroomEditor {
 
             onMouseDownLon = me.cameraLon;
             onMouseDownLat = me.cameraLat;
+
+            pointerStartTimeout = setTimeout(function () {
+                switch(evt.button) {
+                    case 0:
+                        if (me.intersectedItem) {
+                            me.options.onSelect(me.intersectedItem);
+                        }
+                        break;
+                }
+            }, 100);
         }
 
         function onPointerMove(evt) {
             evt.stopPropagation();
+
+            clearTimeout(pointerStartTimeout);
 
             // 테두리 표시.
             me.intersectedItem = me.__intersect(evt);
@@ -572,14 +585,6 @@ export default class NemoShowroomEditor {
             evt.stopPropagation();
 
             isUserInteracting = false;
-
-            switch(evt.button) {
-                case 0:
-                    if (me.intersectedItem) {
-                        me.options.onSelect(me.intersectedItem);
-                    }
-                    break;
-            }
         }
 
         me.rootEl.addEventListener('mousedown', onPointerStart);
