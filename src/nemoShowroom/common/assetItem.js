@@ -2,8 +2,8 @@ import * as THREE from 'three/build/three.module';
 
 import Utils from '../../class/utils';
 import * as StaticVariable from './staticVariable';
-import MaterialOption from '../common/materialOption';
-import LightOption from '../common/lightOption';
+import MaterialOption from './materialOption';
+import LightOption from './lightOption';
 import ImageButton from './imageButton';
 
 const Promise = window.Promise;

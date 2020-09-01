@@ -9,8 +9,6 @@
 </template>
 
 <script>
-    import ImageButton from '../../../nemoShowroom/common/imageButton';
-
     export default {
         props: ['assetItem'],
         data: function () {
@@ -22,7 +20,9 @@
             assetItem: function (item) {
                 const me = this;
 
-                me.buttonArray = item.linkButtonArray;
+                if (item) {
+                    me.buttonArray = item.linkButtonArray;
+                }
             }
         },
         methods: {

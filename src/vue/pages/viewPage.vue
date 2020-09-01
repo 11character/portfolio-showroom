@@ -26,7 +26,7 @@
                     </div>
                 </div>
 
-                <div :hidden="!isShowList" ref="listField" class="text-field">
+                <div :hidden="!isShowList" ref="listField" class="list-field">
                     <div @click="onClickHideList" class="text-header none-select-text">
                         <div class="content">
                             <span>Available Product List</span>
@@ -40,6 +40,10 @@
                     <div class="product-body">
                         <item-link-list :asset-item="selectedItem"></item-link-list>
                     </div>
+                </div>
+
+                <div :hidden="!isShowTextureList" ref="textureButtonField" class="texture-button-field">
+                    <item-texture-list :asset-item="selectedItem"></item-texture-list>
                 </div>
             </div>
         </div>
@@ -58,6 +62,7 @@
     import topMenuVue from '../parts/viewPage/topMenu.vue';
     import coverVue from '../parts/viewPage/cover.vue';
     import itemLinkListVue from '../parts/viewPage/itemLinkList.vue';
+    import itemTextureListVue from '../parts/viewPage/itemTextureList.vue';
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
@@ -65,7 +70,8 @@
         components: {
             'top-menu': topMenuVue,
             'cover': coverVue,
-            'item-link-list': itemLinkListVue
+            'item-link-list': itemLinkListVue,
+            'item-texture-list': itemTextureListVue
         },
         props: ['id'],
         data: function () {
@@ -75,16 +81,23 @@
                 showroom: new Showroom(),
                 isPlayMusic: false,
                 isShowList: false,
+                isShowTextureList: false,
                 hiddenCover: false,
                 loadingPercent: 0,
                 selectedItem: null,
                 showroomViewer: new NemoShowroomViewer({
                     width: 100,
                     height: 100,
-                    onSelect: function (assetItem) {
+                    onClick: function (assetItem) {
                         me.selectedItem = assetItem;
 
-                        console.log(assetItem.name);
+                        if (assetItem && assetItem.textureButtonArray.length != 0) {
+                            me.onClickShowTextureButton();
+
+                        } else {
+                            me.onClickHideTextureButton();
+                            me.onClickHideList();
+                        }
                     },
                     onLoadProgress: function (count, total, assetItem) {
                         me.loadingPercent = parseInt(count / total * 100, 10);
@@ -108,24 +121,9 @@
 
             $(window).on('resize.view.page', function () {
                 me.onClickHideList();
+                me.onClickHideTextureButton();
 
-                const jWin = $(window);
-                const jTop = $(me.$refs.top);
-                const jCenter = $(me.$refs.center);
-                const jBottom = $(me.$refs.bottom);
-                const jViewField = $(me.$refs.viewField);
-
-                let w = jWin.outerWidth();
-                let h = jWin.outerHeight();
-
-                if (!me.centerStyle['center-full']) {
-                    w = w - 36;
-                    h = h - jTop.outerHeight() - jBottom.outerHeight() - 36;
-                }
-
-                jCenter.outerWidth(w).outerHeight(h);
-
-                me.showroomViewer.resize(w, h);
+                me.onResizeViewer();
             });
 
             Utils.apiRequest(ApiUrl.SHOWROOM_DATA, {seqId: me.id}).then(function (data) {
@@ -155,6 +153,52 @@
             $(window).off('resize.view.page');
         },
         methods: {
+            onResizeViewer: function () {
+                const me = this;
+
+                const jWin = $(window);
+                const jTop = $(me.$refs.top);
+                const jCenter = $(me.$refs.center);
+                const jBottom = $(me.$refs.bottom);
+                const jViewField = $(me.$refs.viewField);
+
+                let width = jWin.outerWidth();
+                let height = jWin.outerHeight();
+
+                if (!me.centerStyle['center-full']) {
+                    width = width - 36;
+                    height = height - jTop.outerHeight() - jBottom.outerHeight() - 36;
+                }
+
+                jCenter.outerWidth(width).outerHeight(height);
+
+                me.showroomViewer.resize(width, height);
+            },
+            onClickShowTextureButton: function () {
+                const me = this;
+
+                const jButtonField = $(me.$refs.textureButtonField);
+                const jWindow = $(window);
+
+                let width = 700;
+                let top = jWindow.height() - 138;
+
+                if (jWindow.width() < 1160) {
+                    width = jWindow.width() - 36;
+                    top = top - 63;
+                }
+
+                let left = (jWindow.width() - width) / 2;
+
+                jButtonField.width(width).css('top', top + 'px').css('left', left + 'px');
+
+                me.isShowTextureList = true;
+            },
+            onClickHideTextureButton: function () {
+                const me = this;
+
+                me.isShowTextureList = false;
+            },
             onClickShowList: function () {
                 const me = this;
 
@@ -170,7 +214,7 @@
                 let left = position.left - width - 2 + jButton.outerWidth();
 
                 if (jWindow.width() < 1160) {
-                    width = jWindow.width() - 36; 
+                    width = jWindow.width() - 36;
                     left = 18;
                 }
 
@@ -234,7 +278,7 @@
         position: fixed;
         left: 0px;
         top: 0px;
-        z-index: 3;
+        z-index: 4;
     }
 
     .center {
@@ -245,7 +289,7 @@
 
         .cover {
             position: absolute;
-            z-index: 2;
+            z-index: 3;
         }
 
         .view-field {
@@ -261,7 +305,7 @@
                 color: #ffffff;
                 background-color: #000000;
                 border: 1px solid #ffffff;
-                z-index: 1;
+                z-index: 2;
             }
 
             .music-button {
@@ -322,7 +366,7 @@
                 background-color: #ffffff;
             }
 
-            .text-field {
+            .list-field {
                 position: absolute;
                 height: 245px;
                 overflow-y: auto;
@@ -330,7 +374,7 @@
                 color: #000000;
                 background-color: #ffffff;
                 border: 1px solid #000000;
-                z-index: 1;
+                z-index: 2;
 
                 .text-header {
                     width: 100%;
@@ -369,6 +413,12 @@
                     width: 100%;
                     height: 200px;
                 }
+            }
+
+            .texture-button-field {
+                position: absolute;
+                height: 120px;
+                z-index: 1;
             }
         }
     }

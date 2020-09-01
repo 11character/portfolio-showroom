@@ -64,7 +64,7 @@ export default class NemoShowroomEditor {
             moveDown: false,
             velocity: new THREE.Vector3(),
             direction: new THREE.Vector3(),
-            speed: 25.0
+            speed: 50
         };
 
         // ---
@@ -544,9 +544,7 @@ export default class NemoShowroomEditor {
             pointerStartTimeout = setTimeout(function () {
                 switch(evt.button) {
                     case 0:
-                        if (me.intersectedItem) {
-                            me.options.onSelect(me.intersectedItem);
-                        }
+                        me.options.onClick(me.intersectedItem);
                         break;
                 }
             }, 100);
@@ -566,8 +564,8 @@ export default class NemoShowroomEditor {
                 const clientX = evt.clientX || evt.touches[0].clientX;
                 const clientY = evt.clientY || evt.touches[0].clientY;
 
-                me.cameraLon = (onMouseDownMouseX - clientX) * 0.1 + onMouseDownLon;
-                me.cameraLat = (clientY - onMouseDownMouseY) * 0.1 + onMouseDownLat;
+                me.cameraLon = (onMouseDownMouseX - clientX) * 0.05 + onMouseDownLon;
+                me.cameraLat = (clientY - onMouseDownMouseY) * 0.05 + onMouseDownLat;
 
                 me.cameraLat = Math.max(-85, Math.min(85, me.cameraLat));
 

@@ -4,7 +4,7 @@ export default class Options {
         this.width = obj.width || 800;
         this.height = obj.height || 600;
 
-        this.onSelect = (typeof obj.onSelect == 'function') ? obj.onSelect : function () {};
+        this.onClick = (typeof obj.onClick == 'function') ? obj.onClick : function () {};
         this.onLoadProgress = (typeof obj.onLoadProgress == 'function') ? obj.onLoadProgress : function () {};
         this.onLoad = (typeof obj.onLoad == 'function') ? obj.onLoad : function () {};
     }
