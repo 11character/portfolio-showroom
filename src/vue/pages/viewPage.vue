@@ -16,7 +16,7 @@
                     </div>
                 </div>
 
-                <div @click="showText" ref="textButton" class="view-button object-button none-select-text">
+                <div @click="onClickShowList" ref="workButton" class="view-button object-button none-select-text">
                     <div class="content">
                         <span>Available Work</span>
                     </div>
@@ -26,8 +26,8 @@
                     </div>
                 </div>
 
-                <div :hidden="!isShowText" ref="textField" class="text-field">
-                    <div @click="hideText" class="text-header none-select-text">
+                <div :hidden="!isShowList" ref="listField" class="text-field">
+                    <div @click="onClickHideList" class="text-header none-select-text">
                         <div class="content">
                             <span>Available Product List</span>
                         </div>
@@ -37,8 +37,8 @@
                         </div>
                     </div>
 
-                    <div class="text-body">
-
+                    <div class="product-body">
+                        <item-link-list :asset-item="selectedItem"></item-link-list>
                     </div>
                 </div>
             </div>
@@ -57,13 +57,15 @@
 
     import topMenuVue from '../parts/viewPage/topMenu.vue';
     import coverVue from '../parts/viewPage/cover.vue';
+    import itemLinkListVue from '../parts/viewPage/itemLinkList.vue';
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
     export default {
         components: {
             'top-menu': topMenuVue,
-            'cover': coverVue
+            'cover': coverVue,
+            'item-link-list': itemLinkListVue
         },
         props: ['id'],
         data: function () {
@@ -72,13 +74,16 @@
             return {
                 showroom: new Showroom(),
                 isPlayMusic: false,
-                isShowText: false,
+                isShowList: false,
                 hiddenCover: false,
                 loadingPercent: 0,
+                selectedItem: null,
                 showroomViewer: new NemoShowroomViewer({
                     width: 100,
                     height: 100,
                     onSelect: function (assetItem) {
+                        me.selectedItem = assetItem;
+
                         console.log(assetItem.name);
                     },
                     onLoadProgress: function (count, total, assetItem) {
@@ -102,7 +107,7 @@
             me.$refs.viewField.appendChild(me.showroomViewer.rootEl);
 
             $(window).on('resize.view.page', function () {
-                me.hideText();
+                me.onClickHideList();
 
                 const jWin = $(window);
                 const jTop = $(me.$refs.top);
@@ -150,24 +155,33 @@
             $(window).off('resize.view.page');
         },
         methods: {
-            showText: function () {
+            onClickShowList: function () {
                 const me = this;
 
-                const jButton = $(me.$refs.textButton);
-                const jText = $(me.$refs.textField);
+                const jButton = $(me.$refs.workButton);
+                const jListField = $(me.$refs.listField);
+                const jWindow = $(window);
 
                 const position = jButton.offset();
-                const top = position.top - jText.outerHeight() + jButton.outerHeight();
-                const left = position.left - jText.outerWidth() + jButton.outerWidth();
+                const top = position.top - jListField.outerHeight() + jButton.outerHeight();
 
-                jText.css('top', top + 'px').css('left', left + 'px');
+                // topMenu.vue의 버튼 크기와 맞춤. (창 넓이의 32.3%)
+                let width = (jWindow.width() * 0.323);
+                let left = position.left - width - 2 + jButton.outerWidth();
 
-                me.isShowText = true;
+                if (jWindow.width() < 1160) {
+                    width = jWindow.width() - 36; 
+                    left = 18;
+                }
+
+                jListField.width(width).css('top', top + 'px').css('left', left + 'px');
+
+                me.isShowList = true;
             },
-            hideText: function () {
+            onClickHideList: function () {
                 const me = this;
 
-                me.isShowText = false;
+                me.isShowList = false;
             },
             onClickCover: function () {
                 const me = this;
@@ -310,8 +324,7 @@
 
             .text-field {
                 position: absolute;
-                width: 500px;
-                height: 400px;
+                height: 245px;
                 overflow-y: auto;
                 font-weight: bold;
                 color: #000000;
@@ -352,9 +365,9 @@
                     }
                 }
 
-                .text-body {
+                .product-body {
                     width: 100%;
-                    height: 355px;
+                    height: 200px;
                 }
             }
         }

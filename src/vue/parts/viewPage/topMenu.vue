@@ -75,6 +75,16 @@
                 isShowText: false
             };
         },
+        mounted: function () {
+            const me = this;
+
+            $(window).on('resize.topmenu', function () {
+                me.hideText();
+            });
+        },
+        beforeDestroy: function () {
+            $(window).off('resize.topmenu');
+        },
         methods: {
             smallButton: function () {
                 const me = this;
@@ -106,13 +116,21 @@
                 setTimeout(function () {
                     const jButton = $(me.$refs.textButton);
                     const jText = $(me.$refs.textField);
-                    
+                    const jWindow = $(window);
+
                     const position = jButton.offset();
                     const top = position.top + jButton.outerHeight();
-                    const left = position.left;
-    
-                    jText.width(jButton.outerWidth() - 34).css('top', top + 'px').css('left', left + 'px');
-    
+
+                    let width = jButton.outerWidth() - 34;
+                    let left = position.left;
+
+                    if (jWindow.width() < 1160) {
+                        width = jWindow.width() - 69;
+                        left = 18;
+                    }
+
+                    jText.width(width).css('top', top + 'px').css('left', left + 'px');
+
                     me.isShowText = true;
                 }, 100);
             },
@@ -150,8 +168,8 @@
     .top-menu {
         width: 100%;
         height: 100%;
-        display: flex;
         padding: 18px 18px;
+        display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
 
@@ -180,6 +198,8 @@
                 border-top: 1px solid #000000;
                 border-left: 1px solid #000000;
                 border-bottom: 1px solid #000000;
+                display: flex;
+                justify-content: space-between;
                 cursor: default;
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
@@ -187,7 +207,6 @@
                 -moz-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
-                display: flex;
 
                 .content {
                     overflow: hidden;
@@ -204,12 +223,6 @@
 
             .top-button:last-child {
                 border-right: 1px solid #000000;
-            }
-
-            .top-button:hover {
-                color: #ffffff;
-                border: 1px solid #ffffff;
-                background-color: #000000;
             }
 
             .top-button-sm {
@@ -234,7 +247,6 @@
                 -moz-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
-                display: flex;
 
                 .content {
                     overflow: hidden;
@@ -253,17 +265,12 @@
                 border-right: 1px solid #ffffff;
             }
 
-            .top-button-sm:hover {
-                color: #000000;
-                border: 1px solid #000000;
-                background-color: #ffffff;
-            }
         }
 
         .text-field {
             position: absolute;
             height: 30vh;
-            max-height: 400px;
+            min-height: 500px;
             padding: 16px;
             overflow-y: auto;
             background-color: #000000;

@@ -527,6 +527,8 @@ export default class NemoShowroomEditor {
         let onMouseDownLat = 0;
 
         function onPointerStart(evt) {
+            evt.stopPropagation();
+
             isUserInteracting = true;
 
             const clientX = evt.clientX || evt.touches[0].clientX;
@@ -540,6 +542,8 @@ export default class NemoShowroomEditor {
         }
 
         function onPointerMove(evt) {
+            evt.stopPropagation();
+
             // 테두리 표시.
             me.intersectedItem = me.__intersect(evt);
             me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
@@ -565,6 +569,8 @@ export default class NemoShowroomEditor {
         }
 
         function onPointerUp(evt) {
+            evt.stopPropagation();
+
             isUserInteracting = false;
 
             switch(evt.button) {

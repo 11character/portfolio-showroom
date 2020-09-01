@@ -10,8 +10,10 @@
 
         <div class="body">
             <div v-for="(button, i) in value" :key="i" class="image-button">
-                <div @click="onClickDelete(i)" class="button-item item-btn">
-                    <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
+                <div class="button-item">
+                    <span @click="onClickDelete(i)" class="item-btn">
+                        <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
+                    </span>
                 </div>
 
                 <input-image-select v-model="button.url" :item-array="itemArray" class="button-item" label="Image"></input-image-select>
