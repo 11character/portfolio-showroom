@@ -1,7 +1,9 @@
 import * as THREE from 'three/build/three.module';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 
 import * as StaticVariable from '../common/staticVariable';
 import MouseRaycaster from '../common/mouseRaycaster';
@@ -22,6 +24,7 @@ export default class NemoShowroomEditor {
 
         const winW = me.options.width;
         const winH = me.options.height;
+        const pixelRatio = window.devicePixelRatio;
 
         // ---
         me.itemLoader = new ItemLoader();
@@ -54,7 +57,7 @@ export default class NemoShowroomEditor {
         me.cameraLon = 0;
         me.cameraLat = 0;
 
-        // --
+        // ---
         me.moveInfo = {
             moveForward: false,
             moveLeft: false,
@@ -68,20 +71,20 @@ export default class NemoShowroomEditor {
         };
 
         // ---
-        me.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, logarithmicDepthBuffer: true});
+        me.renderer = new THREE.WebGLRenderer({antialias: false, alpha: true, logarithmicDepthBuffer: true});
+        me.renderer.setPixelRatio(pixelRatio);
         me.renderer.setSize(winW, winH);
-        me.renderer.setPixelRatio(window.devicePixelRatio);
         me.renderer.domElement.style.position = 'absolute';
         me.renderer.domElement.style.left = '0px';
         me.renderer.domElement.style.top = '0px';
 
-        //--
+        // ---
         me.cssRenderer = new CssRenderer(me.renderer, me.camera);
         me.cssRenderer.resize();
         me.cssRenderer.domElement.style.left = '0px';
         me.cssRenderer.domElement.style.top = '0px';
 
-        //--
+        // ---
         me.assetItemManager = new AssetItemManager();
 
         // ---
@@ -105,15 +108,22 @@ export default class NemoShowroomEditor {
         me.scene.add(me.objectField);
         me.scene.add(me.baseFloor);
 
-        // 후처리. 화면에 보여지는 결과. ---
+        // --- 후처리. 화면에 보여지는 결과.
+        // 테두리 표시, 안티얼라이어싱.
         me.composer = new EffectComposer(me.renderer);
+
         me.renderPass = new RenderPass(me.scene, me.camera);
 
         me.outlinePass = new OutlinePass( new THREE.Vector2(winW, winH), me.scene, me.camera);
         me.outlinePass.edgeStrength = 10;
 
+        me.fxaaPass = new ShaderPass(FXAAShader);
+        me.fxaaPass.material.uniforms['resolution'].value.x = 1 / (winW * pixelRatio);
+        me.fxaaPass.material.uniforms['resolution'].value.y = 1 / (winH * pixelRatio);
+
         me.composer.addPass(me.renderPass);
         me.composer.addPass(me.outlinePass);
+        me.composer.addPass(me.fxaaPass);
 
         // ---
         me.rootEl.classList.add(StaticVariable.ELEMENT_FIELD_CLASS_NAME);
@@ -137,7 +147,7 @@ export default class NemoShowroomEditor {
         me.outlineObjArr = [];
         me.intersectedItem = null;
 
-        //---
+        // ---
         me.start();
         me.__initEvent();
     }
@@ -161,10 +171,10 @@ export default class NemoShowroomEditor {
 
             me.__move(delta);
 
+            me.composer.render();
+
             me.cssRenderer.updateAll();
             me.cssRenderer.render();
-
-            me.composer.render();
         })();
     }
 
@@ -300,11 +310,18 @@ export default class NemoShowroomEditor {
     resize(width = 800, height = 600) {
         const me = this;
 
+        const pixelRatio = window.devicePixelRatio;
+
         me.rootEl.style.width = width + 'px';
         me.rootEl.style.height = height + 'px';
 
+        me.renderer.setPixelRatio(pixelRatio);
         me.renderer.setSize(width, height);
+
         me.composer.setSize(width, height);
+
+        me.fxaaPass.material.uniforms['resolution'].value.x = 1 / (width * pixelRatio);
+        me.fxaaPass.material.uniforms['resolution'].value.y = 1 / (height * pixelRatio);
 
         me.cssRenderer.resize();
         me.cssRenderer.domElement.style.left = '0px';

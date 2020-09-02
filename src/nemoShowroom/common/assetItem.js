@@ -386,6 +386,8 @@ export default class AssetItem {
             const loader = new THREE.TextureLoader();
 
             loader.load(url, function (texture) {
+                texture.flipY = false;
+
                 resolve(texture);
             }, undefined, reject);
         });

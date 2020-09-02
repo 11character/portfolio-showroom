@@ -64,13 +64,13 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.renderer.domElement.style.left = '0px';
         me.renderer.domElement.style.top = '0px';
 
-        //--
+        // ---
         me.cssRenderer = new CssRenderer(me.renderer, me.camera);
         me.cssRenderer.resize();
         me.cssRenderer.domElement.style.left = '0px';
         me.cssRenderer.domElement.style.top = '0px';
 
-        //--
+        // ---
         me.assetItemManager = new AssetItemManager();
 
         // ---
@@ -133,11 +133,11 @@ export default class NemoShowroomEditor extends EditorInterface {
         // ---
         me.isRun = true;
 
-        //--
+        // ---
         me.disableAttach = false;
         me.selectedItem = null;
 
-        //--
+        // ---
         me.start();
         me.__initEvent();
     }
