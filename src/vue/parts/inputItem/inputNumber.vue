@@ -5,11 +5,11 @@
         <div :class="inputFieldStyle">
             <div v-if="subLabel" class="label">{{ subLabel }}</div>
 
-            <button @click="onClick(-1)" type="button" class="num-btn num-btn-left" tabindex="-1">-</button>
+            <button @mousedown="onMousedown(-1)" @mouseup="onMouseup" @mouseleave="onMouseup" type="button" class="num-btn num-btn-left" tabindex="-1">-</button>
 
             <input v-model.number="value" type="number" class="input-number">
 
-            <button @click="onClick(1)" type="button" class="num-btn num-btn-right" tabindex="-1">＋</button>
+            <button @mousedown="onMousedown(1)" @mouseup="onMouseup" @mouseleave="onMouseup" type="button" class="num-btn num-btn-right" tabindex="-1">＋</button>
         </div>
     </div>
 </template>
@@ -32,7 +32,9 @@
                 inputFieldStyle: {
                     'input-field': true,
                     'sub-label': !me.subLabel
-                }
+                },
+                btnTimeout: null,
+                btnInterval: null
             };
         },
         watch: {
@@ -43,10 +45,33 @@
             }
         },
         methods: {
-            onClick: function (sign) {
+            onMousedown: function (sign) {
                 const me = this;
 
                 me.value += (me.step * sign);
+
+                clearTimeout(me.btnTimeout);
+                clearInterval(me.btnInterval);
+
+                me.btnTimeout = setTimeout(function () {
+                    me.autoAction(sign);
+                }, 500);
+            },
+            onMouseup: function () {
+                const me = this;
+
+                clearTimeout(me.btnTimeout);
+                clearInterval(me.btnInterval);
+            },
+            autoAction: function (sign) {
+                const me = this;
+
+                me.btnInterval = setInterval(function () {
+                    let val = me.value;
+
+                    val += (me.step * sign);
+                    me.value = val.toFixed(3);
+                }, 10);
             }
         }
     }
