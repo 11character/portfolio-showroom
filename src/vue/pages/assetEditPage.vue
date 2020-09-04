@@ -11,8 +11,8 @@
                     <div class="nav-btn-font">SAVE</div>
                 </div>
 
-                <div @click="onClickMtlClear" class="nav-btn nav-btn-sm">
-                    <div class="nav-btn-font">MTL CLEAR</div>
+                <div @click="onClickResetModel" class="nav-btn nav-btn-sm">
+                    <div class="nav-btn-font">RESET MODEL</div>
                 </div>
             </nav>
 
@@ -201,10 +201,10 @@
                     alert('오류!')
                 });
             },
-            onClickMtlClear: function () {
+            onClickResetModel: function () {
                 const me = this;
 
-                if (confirm('Material 설정을 초기화 합니다.')) {
+                if (confirm('모델 설정을 초기화 합니다.')) {
                     me.disabled = true;
 
                     setTimeout(function () {

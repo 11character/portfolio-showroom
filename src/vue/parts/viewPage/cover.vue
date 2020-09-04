@@ -7,7 +7,7 @@
                 <div ref="bar" class="progress-bar"></div>
             </div>
 
-            <div v-else @click="onClickEnter" class="btn-enter none-select-text">Enter to Exhibition</div>
+            <div v-else @click="onClickEnter" class="btn-enter disable-user-select">Enter to Exhibition</div>
         </div>
 
         <div class="right pt-5 pl-5">
@@ -85,7 +85,7 @@
         display: flex;
         justify-content: center;
 
-        .none-select-text {
+        .disable-user-select {
             cursor: default;
             -webkit-touch-callout: none;
             -webkit-user-select: none;

@@ -8,7 +8,7 @@
             <cover :hidden="hiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
             <div ref="viewField" class="view-field">
-                <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button none-select-text">
+                <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button disable-user-select">
                     <div class="content">
                         <span v-if="isPlayMusic">Music On</span>
                         <span v-else>Music Off</span>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
 
-                <div @click="onClickShowList" ref="workButton" class="view-button object-button none-select-text">
+                <div @click="onClickShowList" ref="workButton" class="view-button object-button disable-user-select">
                     <div class="content">
                         <span>Available Product</span>
                     </div>
@@ -27,7 +27,7 @@
                 </div>
 
                 <div :hidden="!isShowList" ref="listField" class="list-field">
-                    <div @click="onClickHideList" class="text-header none-select-text">
+                    <div @click="onClickHideList" class="text-header disable-user-select">
                         <div class="content">
                             <span>Available Product List</span>
                         </div>
@@ -43,7 +43,7 @@
                 </div>
 
                 <div :hidden="!isShowTextureList" ref="textureButtonField" class="texture-button-field">
-                    <item-texture-list :asset-item="selectedItem"></item-texture-list>
+                    <item-material-list :asset-item="selectedItem"></item-material-list>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
     import topMenuVue from '../parts/viewPage/topMenu.vue';
     import coverVue from '../parts/viewPage/cover.vue';
     import itemLinkListVue from '../parts/viewPage/itemLinkList.vue';
-    import itemTextureListVue from '../parts/viewPage/itemTextureList.vue';
+    import itemMaterialListVue from '../parts/viewPage/itemMaterialList.vue';
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
@@ -71,7 +71,7 @@
             'top-menu': topMenuVue,
             'cover': coverVue,
             'item-link-list': itemLinkListVue,
-            'item-texture-list': itemTextureListVue
+            'item-material-list': itemMaterialListVue
         },
         props: ['id'],
         data: function () {
@@ -262,7 +262,7 @@
 
 <style lang="scss" scoped>
 .root-field {
-    .none-select-text {
+    .disable-user-select {
         cursor: default;
         -webkit-touch-callout: none;
         -webkit-user-select: none;

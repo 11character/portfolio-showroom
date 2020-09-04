@@ -18,7 +18,7 @@
 
                 <input-image-select v-model="button.url" :item-array="itemArray" class="button-item" label="Image"></input-image-select>
                 <input-text v-model="button.name" class="button-item" label="Name"></input-text>
-                <input-text v-if="!disableLink" v-model="button.link" class="button-item" label="Link"></input-text>
+                <input-text v-model="button.link" class="button-item" label="Link"></input-text>
             </div>
         </div>
     </div>
@@ -41,8 +41,7 @@
         props: {
             label: {type: String},
             value: {type: Array, default: []},
-            itemArray: {type: Array, default: []},
-            disableLink: {type: Boolean, default: false}
+            itemArray: {type: Array, default: []}
         },
         watch: {
             value: {

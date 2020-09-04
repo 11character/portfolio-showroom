@@ -4,7 +4,7 @@
 
         <div class="divider"></div>
 
-        <input-image-button v-model="linkBtnArr" :item-array="linkItemArr" :disable-link="false" label="Link button"></input-image-button>
+        <input-image-button v-model="linkBtnArr" :item-array="linkItemArr" label="Link button"></input-image-button>
     </div>
 </template>
 

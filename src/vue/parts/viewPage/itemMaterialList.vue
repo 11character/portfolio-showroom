@@ -1,7 +1,7 @@
 <template>
-    <div class="item-texture-list-field">
-        <div class="item-texture-list">
-            <img v-for="(button, i) in buttonArray" :key="i" :src="button.url" :alt="button.name" @click="onClickTexture(button.url)" class="texture-button">
+    <div class="item-material-list-field disable-user-select">
+        <div class="item-material-list">
+            <img v-for="(button, i) in buttonArray" :key="i" :src="button.url" :alt="button.name" @click="onClickMaterial(button)" class="texture-button">
         </div>
     </div>
 </template>
@@ -27,21 +27,17 @@
             }
         },
         methods: {
-            onClickTexture: function (url) {
+            onClickMaterial: function (button) {
                 const me = this;
 
-                const materialOption = new MaterialOption({
-                    map: url
-                });
-
-                me.assetItem.setMaterialOption(materialOption, 0);
+                me.assetItem.setMaterialOptions(button.materialOptions);
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    .item-texture-list-field {
+    .item-material-list-field {
         width: 100%;
         height: 100%;
         background-color: rgba(255, 255, 255, 0.5);
@@ -49,7 +45,16 @@
         display: flex;
         justify-content: center;
 
-        .item-texture-list {
+        .disable-user-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .item-material-list {
             height: 100%;
             margin: 0px auto;
             display: flex;
@@ -59,17 +64,18 @@
 
             .texture-button {
                 display: block;
-                width: 70px;
-                min-width: 70px;
-                height: 70px;
+                width: 90px;
+                min-width: 90px;
+                height: 90px;
                 border: 1px solid #000000;
                 margin: 8px 8px;
                 float: left;
+                cursor: pointer;
             }
 
             .texture-button:hover {
                 border-color: #ffffff;
-                box-shadow: 0px 0px 5px 3px #ffffff;
+                border-width: 3px;
             }
 
             .texture-button:first-child {

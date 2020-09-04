@@ -5,6 +5,10 @@
         <div class="view-field" ref="viewField"></div>
 
         <div ref="controlField" class="control-field">
+            <div class="button-item">
+                <button @click="onClickResetModel" type="button" class="clear-btn" tabindex="-1">RESET MODEL</button>
+            </div>
+
             <mesh-panel :asset-item="viewAssetItem" @control="onControl"></mesh-panel>
         </div>
     </div>
@@ -28,7 +32,7 @@
             'loading': loadingVue
         },
         props: {
-            value: {type: MaterialButton, default: new MaterialButton()},
+            value: {type: MaterialButton},
             assetItem: {type: AssetItem}
         },
         data: function () {
@@ -119,6 +123,19 @@
 
                 me.$emit('input', me.value);
                 me.$emit('control', type);
+            },
+            onClickResetModel: function () {
+                const me = this;
+
+                me.disabled = true;
+
+                me.assetView.openItem(me.assetItem).then(function (item) {
+                    me.viewAssetItem = item;
+
+                    me.value.materialOptions = item.materialOptions;
+
+                    me.disabled = false;
+                });
             }
         }
     }
@@ -137,8 +154,29 @@
 
         .control-field {
             width: 30%;
-            padding-left: 1rem;
+            background-color: #343a40;
+            padding: 1.25rem;
             overflow-y: auto;
+
+            .clear-btn {
+                width: 100%;
+                height: 36px;
+                border: 1px solid #5d5d5d;
+                background-color: #5d5d5d;
+                color: #bdbdbd;
+                border-radius: 0.25rem;
+                text-align: center;
+                overflow: hidden;
+                white-space:nowrap;
+                word-wrap:normal;
+                text-overflow:ellipsis;
+                margin-bottom: 1rem;
+            }
+
+            .clear-btn:hover {
+                background-color: #8c8c8c;
+                color: #eaeaea;
+            }
         }
     }
 </style>

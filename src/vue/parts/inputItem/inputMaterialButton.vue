@@ -58,7 +58,7 @@
 
     import inputTextVue from '../inputItem/inputText.vue';
     import inputImageSelectVue from '../inputItem/inputImageSelect.vue';
-    import inputMaterialOptionsVue from '../inputItem/inputMaterialOptions.vue';
+    import inputMaterialButtonOptionsVue from '../inputItem/inputMaterialButtonOptions.vue';
 
     /**
      * template event : input, control
@@ -67,7 +67,7 @@
         components: {
             'input-text': inputTextVue,
             'input-image-select': inputImageSelectVue,
-            'input-material-options': inputMaterialOptionsVue
+            'input-material-options': inputMaterialButtonOptionsVue
         },
         props: {
             label: {type: String},
