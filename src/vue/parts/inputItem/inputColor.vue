@@ -2,7 +2,7 @@
     <div class="input-color-field">
         <div v-if="label" class="label">{{ label }}</div>
 
-        <div ref="colorBox" class="color-box"></div>
+        <div :class="{'none-color': !value}" ref="colorBox" class="color-box"></div>
     </div>
 </template>
 
@@ -29,7 +29,16 @@
             value: function (val) {
                 const me = this;
 
-                $(me.$refs.colorBox).css('backgroundColor', me.value);
+                const jColor = $(me.$refs.colorBox);
+
+                jColor.css('backgroundColor', val);
+
+                if (val) {
+                    jColor.text('');
+
+                } else {
+                    jColor.text('None');
+                }
             }
         },
         mounted: function () {
@@ -86,6 +95,12 @@
             height: 25px;
             border: 1px solid #ffffff;
             border-radius: 0.25rem;
+        }
+
+        .none-color {
+            text-align: center;
+            background-color: #343a40;
+            color: #ffffff;
         }
     }
 </style>

@@ -22,7 +22,7 @@
                 const me = this;
 
                 if (item) {
-                    me.buttonArray = item.textureButtonArray;
+                    me.buttonArray = item.materialButtonArray;
                 }
             }
         },

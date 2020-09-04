@@ -28,7 +28,7 @@
 
                 <div class="tab-2 tab-pane fade">
                     <div class="asset-material-field">
-                        <image-button-panel :asset-item="assetItem" @control="onControl"></image-button-panel>
+                        <asset-button-panel :asset-item="assetItem" @control="onControl"></asset-button-panel>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
     import inputWorldLightVue from '../inputItem/inputWorldLight.vue';
     import inputTextVue from '../inputItem/inputText.vue';
     import meshPanelVue from './meshPanel.vue';
-    import imageButtonPanelVue from './imageButtonPanel.vue';
+    import assetButtonPanelVue from './assetButtonPanel.vue';
 
     import EditorInterface from '../../../nemoShowroom/common/editorInterface';
 
@@ -53,7 +53,7 @@
     export default {
         components: {
             'input-world-light': inputWorldLightVue,
-            'image-button-panel': imageButtonPanelVue,
+            'asset-button-panel': assetButtonPanelVue,
             'input-text': inputTextVue,
             'mesh-panel': meshPanelVue
         },

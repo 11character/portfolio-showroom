@@ -18,7 +18,7 @@
 
                 <div @click="onClickShowList" ref="workButton" class="view-button object-button none-select-text">
                     <div class="content">
-                        <span>Available Work</span>
+                        <span>Available Product</span>
                     </div>
 
                     <div class="icon">
@@ -91,11 +91,11 @@
                     onClick: function (assetItem) {
                         me.selectedItem = assetItem;
 
-                        if (assetItem && assetItem.textureButtonArray.length != 0) {
-                            me.onClickShowTextureButton();
+                        if (assetItem && assetItem.materialButtonArray.length != 0) {
+                            me.onClickShowMaterialButton();
 
                         } else {
-                            me.onClickHideTextureButton();
+                            me.onClickHideMaterialButton();
                             me.onClickHideList();
                         }
                     },
@@ -121,7 +121,7 @@
 
             $(window).on('resize.view.page', function () {
                 me.onClickHideList();
-                me.onClickHideTextureButton();
+                me.onClickHideMaterialButton();
 
                 me.onResizeViewer();
             });
@@ -174,7 +174,7 @@
 
                 me.showroomViewer.resize(width, height);
             },
-            onClickShowTextureButton: function () {
+            onClickShowMaterialButton: function () {
                 const me = this;
 
                 const jButtonField = $(me.$refs.textureButtonField);
@@ -194,7 +194,7 @@
 
                 me.isShowTextureList = true;
             },
-            onClickHideTextureButton: function () {
+            onClickHideMaterialButton: function () {
                 const me = this;
 
                 me.isShowTextureList = false;

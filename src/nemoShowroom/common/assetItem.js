@@ -3,6 +3,7 @@ import * as THREE from 'three/build/three.module';
 import Utils from '../../class/utils';
 import * as StaticVariable from './staticVariable';
 import MaterialOption from './materialOption';
+import MaterialButton from './materialButton';
 import LightOption from './lightOption';
 import ImageButton from './imageButton';
 
@@ -80,10 +81,10 @@ export default class AssetItem {
             }
         }
 
-        this.textureButtonArray = [];
-        if (Array.isArray(obj.textureButtonArray)) {
-            for (let i = 0; i < obj.textureButtonArray.length; i++) {
-                this.textureButtonArray.push(new ImageButton(obj.textureButtonArray[i]));
+        this.materialButtonArray = [];
+        if (Array.isArray(obj.materialButtonArray)) {
+            for (let i = 0; i < obj.materialButtonArray.length; i++) {
+                this.materialButtonArray.push(new MaterialButton(obj.materialButtonArray[i]));
             }
         }
     }
@@ -137,7 +138,7 @@ export default class AssetItem {
             lightOption: me.lightOption,
 
             linkButtonArray: me.linkButtonArray,
-            textureButtonArray: me.textureButtonArray
+            materialButtonArray: me.materialButtonArray
         };
     }
 
@@ -172,6 +173,34 @@ export default class AssetItem {
         for (let index in options) {
             me.setMaterialOption(options[index], index);
         }
+    }
+
+    getOriginalMaterialOptions() {
+        const me = this;
+
+        const options = {};
+
+        let i = 0;
+
+        // traverse 로 검색되는 순서를 인덱스로 사용한다.
+        me.object3D.traverse(function (obj) {
+            if (obj.isMesh && obj.material) {
+                const mtl = obj.material;
+                const mtlOption = new MaterialOption();
+
+                for (let key in mtl) {
+                    if (mtlOption.hasOwnProperty(key)) {
+                        me.__setMtlOptionValue(key, mtlOption, mtl[key]);
+                    }
+                }
+
+                options[i] = mtlOption;
+
+                i++;
+            }
+        });
+
+        return options;
     }
 
     setLightOption(obj = {}) {
@@ -345,34 +374,6 @@ export default class AssetItem {
         me.scale.x = scale.x;
         me.scale.y = scale.y;
         me.scale.z = scale.z;
-    }
-
-    syncMaterialMembers() {
-        const me = this;
-
-        const options = {};
-
-        let i = 0;
-
-        // traverse 로 검색되는 순서를 인덱스로 사용한다.
-        me.object3D.traverse(function (obj) {
-            if (obj.isMesh && obj.material) {
-                const mtl = obj.material;
-                const mtlOption = new MaterialOption();
-
-                for (let key in mtl) {
-                    if (mtlOption.hasOwnProperty(key)) {
-                        me.__setMtlOptionValue(key, mtlOption, mtl[key]);
-                    }
-                }
-
-                options[i] = mtlOption;
-
-                i++;
-            }
-        });
-
-        me.materialOptions = options;
     }
 
     clone() {

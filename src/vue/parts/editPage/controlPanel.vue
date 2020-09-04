@@ -173,7 +173,7 @@
 
                     <div class="tab-3 tab-pane fade">
                         <div class="asset-material-field">
-                            <image-button-panel :asset-item="assetItem" @control="onControl"></image-button-panel>
+                            <asset-button-panel :asset-item="assetItem" @control="onControl"></asset-button-panel>
                         </div>
                     </div>
                 </div>
@@ -190,7 +190,7 @@
     import * as ApiUrl from '../../../class/apiUrl';
 
     import meshPanelVue from '../assetEditPage/meshPanel.vue';
-    import imageButtonPanelVue from '../assetEditPage/imageButtonPanel.vue';
+    import assetButtonPanelVue from '../assetEditPage/assetButtonPanel.vue';
     import inputWorldLightVue from '../inputItem/inputWorldLight.vue';
     import inputNumberVue from '../inputItem/inputNumber.vue';
     import inputTextVue from '../inputItem/inputText.vue';
@@ -204,7 +204,7 @@
     export default {
         components: {
             'mesh-panel': meshPanelVue,
-            'image-button-panel': imageButtonPanelVue,
+            'asset-button-panel': assetButtonPanelVue,
             'input-world-light': inputWorldLightVue,
             'input-number': inputNumberVue,
             'input-text': inputTextVue,

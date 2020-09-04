@@ -69,7 +69,7 @@
             me.assetView.destroy();
             me.assetView = null;
 
-            $(window).off('resize.assetview.page').off('beforeunload.assetview.page');
+            $(window).off('resize.assetview.page');
         },
         methods: {
             onModelItemLoad: function (assetItem) {

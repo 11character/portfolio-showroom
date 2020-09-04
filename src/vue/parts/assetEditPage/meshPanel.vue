@@ -13,7 +13,7 @@
 
                 <div :id="accordionId + '-' + i" :data-parent="'#' + accordionId" :class="{'show': (i == 0)}" class="collapse">
                     <div class="card-body bg-dark">
-                        <material-panel :index="i" :material="mesh.material" :asset-item="assetItem" @control="onControlMaterial"></material-panel>
+                        <material-panel :index="i" :material="mesh.material" :asset-item="assetItem" @control="onControl"></material-panel>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
 
                 me.meshArr = arr;
             },
-            onControlMaterial: function (type) {
+            onControl: function (type) {
                 const me = this;
 
                 me.$emit('control', type);
