@@ -7,6 +7,10 @@
 
                     <div class="view-field" ref="viewField"></div>
 
+                    <div :hidden="!isShowMaterialList" class="material-button-field">
+                        <item-material-list :asset-item="assetItem"></item-material-list>
+                    </div>
+
                     <div class="link-field">
                         <div class="link-text">{{ linkUrl }}</div>
                     </div>
@@ -24,18 +28,22 @@
     import Utils from '../../../class/utils';
 
     import loadingVue from '../loading.vue';
+    import itemMaterialListVue from '../viewPage/itemMaterialList.vue';
 
     import NemoAssetEditor from '../../../nemoShowroom/nemoAssetEditor/nemoAssetEditor';
 
     export default {
         components: {
-            'loading': loadingVue
+            'loading': loadingVue,
+            'item-material-list': itemMaterialListVue
         },
         data: function () {
             return {
                 disabled: true,
                 assetView: null,
-                linkUrl: ''
+                linkUrl: '',
+                assetItem: null,
+                isShowMaterialList: false
             };
         },
         mounted: function () {
@@ -75,6 +83,8 @@
             onModelItemLoad: function (assetItem) {
                 const me = this;
 
+                me.assetItem = assetItem;
+                me.isShowMaterialList = (assetItem.materialButtonArray.length != 0);
                 me.disabled = false;
             },
             load2d: function (data) {
@@ -121,21 +131,20 @@
                 const url = window.location.href.substring(0, window.location.href.lastIndexOf('#'));
                 const assetViewRoute = me.$router.resolve({name: 'asset-view', params: {id: modelFileInfo.seqId}}).route;
 
+                me.disabled = true;
+                me.isShowMaterialList = false;
+
                 me.linkUrl = url + 'showroom.php#' + assetViewRoute.fullPath;
 
                 $(me.$el).modal('show');
 
                 setTimeout(function () {
                     $(window).trigger('resize.assetview.page');
-
-                    me.disabled = true;
                 }, 100);
 
                 setTimeout(function () {
                     if (modelFileInfo.data) {
-                        me.assetView.openJson(modelFileInfo.data).then(function (assetItem) {
-                            me.disabled = false;
-                        });
+                        me.assetView.openJson(modelFileInfo.data).then(me.onModelItemLoad);
     
                     } else {
                         me.loadModel(modelFileInfo);

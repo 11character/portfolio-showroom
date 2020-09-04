@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div :hidden="!isShowTextureList" ref="textureButtonField" class="texture-button-field">
+                <div :hidden="!isShowMaterialList" ref="materialButtonField" class="material-button-field">
                     <item-material-list :asset-item="selectedItem"></item-material-list>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                 showroom: new Showroom(),
                 isPlayMusic: false,
                 isShowList: false,
-                isShowTextureList: false,
+                isShowMaterialList: false,
                 hiddenCover: false,
                 loadingPercent: 0,
                 selectedItem: null,
@@ -177,7 +177,7 @@
             onClickShowMaterialButton: function () {
                 const me = this;
 
-                const jButtonField = $(me.$refs.textureButtonField);
+                const jButtonField = $(me.$refs.materialButtonField);
                 const jWindow = $(window);
 
                 let width = 700;
@@ -192,12 +192,12 @@
 
                 jButtonField.width(width).css('top', top + 'px').css('left', left + 'px');
 
-                me.isShowTextureList = true;
+                me.isShowMaterialList = true;
             },
             onClickHideMaterialButton: function () {
                 const me = this;
 
-                me.isShowTextureList = false;
+                me.isShowMaterialList = false;
             },
             onClickShowList: function () {
                 const me = this;
@@ -415,7 +415,7 @@
                 }
             }
 
-            .texture-button-field {
+            .material-button-field {
                 position: absolute;
                 height: 120px;
                 z-index: 1;

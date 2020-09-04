@@ -3,6 +3,10 @@
         <loading :hidden="!disabled" ref="loading"></loading>
 
         <div class="view-field" ref="viewField"></div>
+
+        <div :hidden="!isShowMaterialList" class="material-button-field">
+            <item-material-list :asset-item="assetItem"></item-material-list>
+        </div>
     </div>
 </template>
 
@@ -12,18 +16,22 @@
     import ModelFileInfo from '../../class/modelFileInfo';
 
     import loadingVue from '../parts/loading.vue';
+    import itemMaterialListVue from '../parts/viewPage/itemMaterialList.vue';
 
     import NemoAssetEditor from '../../nemoShowroom/nemoAssetEditor/nemoAssetEditor';
 
     export default {
         components: {
-            'loading': loadingVue
+            'loading': loadingVue,
+            'item-material-list': itemMaterialListVue
         },
         props: ['id'],
         data: function () {
             return {
                 disabled: true,
-                assetView: null
+                assetView: null,
+                assetItem: null,
+                isShowMaterialList: false
             };
         },
         mounted: function () {
@@ -65,6 +73,8 @@
             onModelItemLoad: function (assetItem) {
                 const me = this;
 
+                me.assetItem = assetItem;
+                me.isShowMaterialList = (assetItem.materialButtonArray.length != 0);
                 me.disabled = false;
             },
             load2d: function (data) {
@@ -109,10 +119,7 @@
                 const me = this;
 
                 if (modelFileInfo.data) {
-                    me.assetView.openJson(modelFileInfo.data).then(function (assetItem) {
-                        me.assetItem = assetItem;
-                        me.disabled = false;
-                    });
+                    me.assetView.openJson(modelFileInfo.data).then(me.onModelItemLoad);
 
                 } else {
                     me.loadModel(modelFileInfo);
@@ -135,6 +142,20 @@
         },
     }
 </script>
+
+<style lang="scss" scoped>
+    .root-field {
+        .material-button-field {
+            width: 80%;
+            height: 120px;
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            margin-left: -40%;
+            margin-top: -150px;
+        }
+    }
+</style>
 
 <style lang="scss">
     // 화면에 표시되는 텍스트 아이템의 공통 스타일.

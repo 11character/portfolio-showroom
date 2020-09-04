@@ -61,6 +61,7 @@
             justify-content: flex-start;
             align-items: center;
             overflow-x: auto;
+            padding: 0rem 1rem;
 
             .texture-button {
                 display: block;
