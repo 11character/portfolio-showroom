@@ -105,6 +105,11 @@
                     me.name = button.name;
                     me.imgUrl = button.url;
                 }
+            },
+            assetItem: function (item) {
+                const me = this;
+
+                me.loadBtnImageList(item);
             }
         },
         mounted: function () {
