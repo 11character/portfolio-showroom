@@ -32,8 +32,8 @@
             'loading': loadingVue
         },
         props: {
-            value: {type: MaterialButton},
-            assetItem: {type: AssetItem}
+            value: {type: MaterialButton, default: null},
+            assetItem: {type: AssetItem, default: null}
         },
         data: function () {
             return {
@@ -91,6 +91,23 @@
 
                 me.assetView.resize(vW, vH);
             },
+            viewStart: function () {
+                const me = this;
+
+                me.assetView.start();
+            },
+            viewStop: function () {
+                const me = this;
+
+                me.assetView.stop();
+            },
+            cameraReset: function () {
+                const me = this;
+
+                if (me.assetItem) {
+                    me.assetView.viewTarget(me.assetItem);
+                }
+            },
             onChangeButton: function (button) {
                 const me = this;
 
@@ -114,6 +131,10 @@
 
                         me.disabled = false;
                     });
+
+                } else {
+                    me.assetView.removeAll();
+                    me.assetView.viewDefault();
                 }
             },
             onControl: function (type) {

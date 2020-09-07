@@ -160,12 +160,21 @@
 
                 me.viewAssetItem = me.assetItem;
 
-                me.selectButton = button;
+                if (me.selectButton == button) {
+                    me.$refs.inputMaterialOptions.cameraReset();
+
+                } else {
+                    me.selectButton = button;
+                }
+
+                me.$refs.inputMaterialOptions.viewStart();
 
                 $(me.$refs.materialModal).modal('show');
             },
             onClickClose: function () {
                 const me = this;
+
+                me.$refs.inputMaterialOptions.viewStop();
 
                 $(me.$refs.materialModal).modal('hide');
             },
