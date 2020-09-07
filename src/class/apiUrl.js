@@ -11,4 +11,4 @@ export const MODEL_FILE_UPDATE = './api/model-file-update.php';
 export const MODEL_FILE_DELETE = './api/model-file-delete.php';
 export const TEXTURE_LIST = './api/texture-list.php';
 export const CUBE_TEXTURE_LIST = './api/cube-texture-list.php';
-export const SHOP_IMAGE_LIST = './api/shop-image-list.php';
+export const THUMBNAIL_LIST = './api/thumbnail-list.php';

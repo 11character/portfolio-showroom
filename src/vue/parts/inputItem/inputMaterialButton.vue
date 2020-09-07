@@ -124,7 +124,7 @@
 
                 const id = Utils.urlToParentName(assetItem.itemUrl);
 
-                Utils.apiRequest(ApiUrl.SHOP_IMAGE_LIST, {id: id}).then(function (data) {
+                Utils.apiRequest(ApiUrl.THUMBNAIL_LIST, {id: id}).then(function (data) {
                     const dataArr = data.data;
                     const tempArr = [];
 

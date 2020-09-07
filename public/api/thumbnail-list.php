@@ -10,7 +10,7 @@
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
 
-        $dir_path = $MODEL_FILE_DIR_PATH . '/' . $id . '/shop';
+        $dir_path = $MODEL_FILE_DIR_PATH . '/' . $id . '/thumbnail';
 
         if (is_dir($dir_path)) {
             $arr = glob($dir_path . '/*', $GLOB_MARK);
@@ -18,7 +18,7 @@
             foreach ($arr as $file_path) {
                 $info = pathinfo($file_path);
 
-                $data['data'][] = $MODEL_FILE_DIR . '/' . $id . '/shop/' . $info['basename'];
+                $data['data'][] = $MODEL_FILE_DIR . '/' . $id . '/thumbnail/' . $info['basename'];
             }
         }
     }
