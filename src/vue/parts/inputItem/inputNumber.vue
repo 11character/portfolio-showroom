@@ -22,7 +22,7 @@
         props: {
             label: {type: String, default: ''},
             subLabel: {type: String, default: ''},
-            value: {type: Number},
+            value: {type: Number, default: 0},
             step: {type: Number, default: 1}
         },
         data: function () {

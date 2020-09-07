@@ -614,7 +614,7 @@
 
                 const prevItem = me.editor.selectedItem;
 
-                if (prevItem) {
+                if (confirm('모델 기본 설정을 불러옵니다.') && prevItem) {
                     Utils.apiRequest(ApiUrl.MODEL_FILE_URL_DATA, {url: prevItem.itemUrl}).then(function (data) {
                         if (data.data.length > 0) {
                             const modelFileInfo = new ModelFileInfo(Utils.snakeObjToCamelObj(data.data[0]));

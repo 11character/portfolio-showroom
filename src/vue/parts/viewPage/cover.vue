@@ -1,8 +1,6 @@
 <template>
     <div ref="coverField" class="cover-field font-neuemachina">
-        <div class="left"></div>
-
-        <div class="center">
+        <div class="button-field">
             <div v-if="percent < 100" class="progress border border-dark rounded-0">
                 <div ref="bar" class="progress-bar"></div>
             </div>
@@ -10,8 +8,8 @@
             <div v-else @click="onClickEnter" class="btn-enter disable-user-select">Enter to Exhibition</div>
         </div>
 
-        <div class="right pt-5 pl-5">
-            <template v-if="percent < 100">
+        <div class="loading-text-field">
+            <div class="loading-text-list" v-if="percent < 100">
                 <div class="loading-text">Please Wait</div>
 
                 <div v-if="percent > 15" class="loading-text">It will be open soon</div>
@@ -23,7 +21,7 @@
                 <div v-if="percent > 60" class="loading-text">Visit to a shop</div>
 
                 <div v-if="percent > 75" class="loading-text">While waiting</div>
-            </template>
+            </div>
         </div>
     </div>
 </template>
@@ -40,11 +38,6 @@
                 default: ''
             }
         },
-        data: function () {
-            return {
-                visible: true
-            }
-        },
         watch: {
             img: function (val) {
                 const me = this;
@@ -57,12 +50,6 @@
                 const me = this;
 
                 $(me.$refs.bar).css('width', val + '%');
-
-                if (val >= 100) {
-                    setTimeout(function () {
-                        me.visible = false;
-                    }, 1000);
-                }
             }
         },
         methods: {
@@ -82,8 +69,6 @@
         background-position: center;
         background-size: 100%;
         background-color: #bdbdbd;
-        display: flex;
-        justify-content: center;
 
         .disable-user-select {
             cursor: default;
@@ -95,14 +80,9 @@
             user-select: none;
         }
 
-        .left {
-            width: 25%;
-            height: 100%;
-        }
-
-        .center {
-            width: 50%;
-            height: 100%;
+        .button-field {
+            width: 100%;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -136,27 +116,32 @@
             }
         }
 
-        .right {
-            width: 25%;
-            height: 100%;
+        .loading-text-field {
+            margin-top: 100px;
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
+            justify-content: flex-end;
 
-            .loading-text {
-                display: inline-block;
-                padding: 0rem 1rem;
-            }
+            .loading-text-list {
+                width: 220px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
 
-            .loading-text:nth-child(odd) {
-                background-color: #000000;
-                color: #ffffff;
-            }
+                .loading-text {
+                    display: inline-block;
+                    padding: 0rem 1rem;
+                }
 
-            .loading-text:nth-child(even) {
-                background-color: #ffffff;
-                border: 1px solid #000000;
+                .loading-text:nth-child(odd) {
+                    background-color: #000000;
+                    color: #ffffff;
+                }
+
+                .loading-text:nth-child(even) {
+                    background-color: #ffffff;
+                    border: 1px solid #000000;
+                }
             }
         }
     }

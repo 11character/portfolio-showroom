@@ -43,9 +43,9 @@
             height: 100%;
             overflow-x: auto;
             display: flex;
-            flex-wrap: nowrap;
 
             .link-button {
+                width: 200px;
                 min-width: 200px;
                 height: 100%;
                 border: 1px solid #8d8d8d;
