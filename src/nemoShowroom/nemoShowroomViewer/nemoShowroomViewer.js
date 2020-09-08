@@ -187,6 +187,72 @@ export default class NemoShowroomEditor {
         me.isRun = false;
     }
 
+    __onOpenJson(itemArr) {
+        const me = this;
+
+        // 불러오는 중에 destroy() 호출시 오류 방지.
+        if (me.options) {
+            // 배치.
+            for (let i = 0; i < itemArr.length; i++) {
+                const assetItem = itemArr[i];
+
+                // 조명 도형 제거.
+                if (assetItem.isLight) {
+                    assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_LIGHT_CONE));
+                }
+
+                // 시작위치 지정, 도형 제거.
+                if (assetItem.isStartPoint) {
+                    assetItem.object3D.children[0].remove.apply(assetItem.object3D.children[0], assetItem.object3D.children[0].children);
+
+                    me.camera.position.copy(assetItem.object3D.position);
+                    me.camera.position.y += StaticVariable.CONTROLS_RAY_FAR;
+
+                    me.camera.rotation.set(0, assetItem.object3D.rotation.y, 0);
+
+                    me.cameraLon = Utils.r2d(me.camera.rotation.y * -1);
+                    me.cameraLat = Utils.r2d(me.camera.rotation.x * -1);
+                }
+
+                // 보이지 않는 도형 숨김.
+                if (assetItem.isTransparent) {
+                    assetItem.setOpacity(0);
+                }
+
+                me.objectField.add(assetItem.object3D);
+                me.cssRenderer.add(assetItem);
+                me.assetItemManager.add(assetItem);
+
+                assetItem.animationPlay();
+            }
+
+            // cssRenderer에 배치되어 크기를 구할 수 있도록 대기.
+            setTimeout(function () {
+                me.checkBoxArr = [];
+                me.checkItemArr = [];
+                me.outlineObjArr = [];
+
+                for (let i = 0; i < itemArr.length; i++) {
+                    const assetItem = itemArr[i];
+
+                    // 충돌박스 생성.
+                    if (assetItem.isCollider) {
+                        // 두 배열의 순서 일치.
+                        me.checkBoxArr.push(assetItem.getBox3());
+                        me.checkItemArr.push(assetItem);
+                    }
+
+                    // 클릭대상.
+                    if (assetItem.isClickTarget) {
+                        me.outlineObjArr.push(assetItem.object3D);
+                    }
+                }
+
+                me.options.onLoad(me);
+            }, 500);
+        }
+    }
+
     /**
      * json을 읽어 저장된 값을 불러온다.
      * @param {String} json
@@ -211,11 +277,26 @@ export default class NemoShowroomEditor {
             let count = 0;
             let assetItem = null;
 
-            // 시작값.
-            me.options.onLoadProgress(count, totalCount, assetItem);
+            const loadingArr0 = [];
+            const loadingArr1 = [];
 
+            // 로드 순서 구분.
             for (let i = 0; i < arr.length; i++) {
                 assetItem = new AssetItem(arr[i]);
+                // 로드 순서가 없거나 0인 경우 선행 로딩으로 처리.
+                if (!assetItem.backgroundLoading) {
+                    loadingArr0.push(assetItem);
+
+                } else {
+                    loadingArr1.push(assetItem);
+                }
+            }
+
+            // 선행 로딩 처리. (완료시 onLoad 이벤트 실행)
+            me.options.onLoadProgress(count, totalCount, assetItem);
+
+            for (let i = 0; i < loadingArr0.length; i++) {
+                assetItem = loadingArr0[i];
 
                 promiseArr.push(me.itemLoader.load(assetItem).then(function (assetItem) {
                     count++
@@ -229,70 +310,17 @@ export default class NemoShowroomEditor {
                 }));
             }
 
-            promise = Promise.all(promiseArr).then(function (itemArr) {
-                // 불러오는 중에 destroy() 호출시 오류 방지.
-                if (me.options) {
-                    let assetItem;
+            promise = Promise.all(promiseArr).then(me.__onOpenJson.bind(me));
 
-                    // 배치.
-                    for (let i = 0; i < itemArr.length; i++) {
-                        assetItem = itemArr[i];
-
-                        // 조명 도형 제거.
-                        if (assetItem.isLight) {
-                            assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_LIGHT_CONE));
-                        }
-
-                        // 시작위치 지정, 도형 제거.
-                        if (assetItem.isStartPoint) {
-                            assetItem.object3D.children[0].remove.apply(assetItem.object3D.children[0], assetItem.object3D.children[0].children);
-
-                            me.camera.position.copy(assetItem.object3D.position);
-                            me.camera.position.y += StaticVariable.CONTROLS_RAY_FAR;
-
-                            me.camera.rotation.set(0, assetItem.object3D.rotation.y, 0);
-
-                            me.cameraLon = Utils.r2d(me.camera.rotation.y * -1);
-                            me.cameraLat = Utils.r2d(me.camera.rotation.x * -1);
-                        }
-
-                        // 보이지 않는 도형 숨김.
-                        if (assetItem.isTransparent) {
-                            assetItem.setOpacity(0);
-                        }
-
-                        me.objectField.add(assetItem.object3D);
-                        me.cssRenderer.add(assetItem);
-                        me.assetItemManager.add(assetItem);
-
-                        assetItem.animationPlay();
-                    }
-
-                    // cssRenderer에 배치되어 크기를 구할 수 있도록 대기.
-                    setTimeout(function () {
-                        me.checkBoxArr = [];
-                        me.checkItemArr = [];
-                        me.outlineObjArr = [];
-
-                        for (let i = 0; i < itemArr.length; i++) {
-                            assetItem = itemArr[i];
-
-                            // 충돌박스 생성.
-                            if (assetItem.isCollider) {
-                                // 두 배열의 순서 일치.
-                                me.checkBoxArr.push(assetItem.getBox3());
-                                me.checkItemArr.push(assetItem);
-                            }
-
-                            // 클릭대상.
-                            if (assetItem.isClickTarget) {
-                                me.outlineObjArr.push(assetItem.object3D);
-                            }
-                        }
-
-                        me.options.onLoad(me);
-                    }, 500);
+            //후속 로딩 비동기 실행.
+            promise.then(function (itemArr) {
+                for (let i = 0; i < loadingArr1.length; i++) {
+                    me.itemLoader.load(loadingArr1[i]).then(function (item) {
+                        (me.__onOpenJson.bind(me))([item]);
+                    });
                 }
+
+                return Promise.resolve(itemArr);
             });
 
         } else {

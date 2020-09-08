@@ -69,6 +69,10 @@
                                 </button>
                             </div>
 
+                            <div class="control-row control-row-flex">
+                                <input-checkbox v-model="backgroundLoading" label="Background loding"></input-checkbox>
+                            </div>
+
                             <div v-if="!assetItem.isLight && !assetItem.isStartPoint" class="control-row control-row-flex">
                                 <input-checkbox v-model="isClickTarget" label="Click"></input-checkbox>
 
@@ -240,6 +244,7 @@
                 lightDecay: 1,
                 lightColor: 'rgb(255, 255, 255)',
                 link: '',
+                backgroundLoading: false,
                 isClickTarget: false,
                 isTransparent: false,
                 isCollider: false
@@ -328,6 +333,19 @@
                     me.editor.setLink(str);
 
                     me.$emit('control', 'link');
+                }
+            },
+            backgroundLoading: function (bool) {
+                const me = this;
+
+                if (!me.lockEvent) {
+                    const assetItem = me.editor.selectedItem;
+
+                    if (assetItem) {
+                        assetItem.backgroundLoading = bool;
+                    }
+
+                    me.$emit('control', 'backgroundLoading');
                 }
             },
             lightAngle: function () {
@@ -473,6 +491,7 @@
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
+                me.backgroundLoading = assetItem.backgroundLoading;
                 me.isClickTarget = assetItem.isClickTarget;
                 me.isTransparent = assetItem.isTransparent;
                 me.isCollider = assetItem.isCollider;
