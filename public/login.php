@@ -20,7 +20,7 @@
 <body>
     <div id="container" class="container-fluid my-3 my-lg-5">
         <div class="row">
-            <div class="card offset-lg-3 col-lg-6 px-0">
+            <div class="card offset-1 offset-lg-3 col-10 col-lg-6 px-0">
                 <div class="card-header">
                     <div class="col-12 h4">
                         Login
