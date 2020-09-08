@@ -573,6 +573,7 @@ export default class NemoShowroomEditor {
         let onMouseDownLon = 0;
         let onMouseDownLat = 0;
         let pointerStartTimeout;
+        let intersectTimeout;
 
         function onPointerStart(evt) {
             evt.stopPropagation();
@@ -601,10 +602,7 @@ export default class NemoShowroomEditor {
             evt.stopPropagation();
 
             clearTimeout(pointerStartTimeout);
-
-            // 테두리 표시.
-            me.intersectedItem = me.__intersect(evt);
-            me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+            clearTimeout(intersectTimeout);
 
             // 화면 회전.
             if (isUserInteracting) {
@@ -623,6 +621,13 @@ export default class NemoShowroomEditor {
                 me.camera.target.y = 500 * Math.cos(phi);
                 me.camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
                 me.camera.lookAt(me.camera.target);
+
+            } else {
+                // 테두리 표시.
+                intersectTimeout = setTimeout(function () {
+                    me.intersectedItem = me.__intersect(evt);
+                    me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+                }, 10);
             }
         }
 

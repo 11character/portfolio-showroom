@@ -165,15 +165,15 @@
                 const jBottom = $(me.$refs.bottom);
                 const jViewField = $(me.$refs.viewField);
 
-                let width = jWin.outerWidth();
-                let height = jWin.outerHeight();
+                let width = jWin.width();
+                let height = jWin.height();
 
                 if (!me.centerStyle['center-full']) {
                     width = width - 36;
                     height = height - jTop.outerHeight() - jBottom.outerHeight() - 36;
                 }
 
-                jCenter.outerWidth(width).outerHeight(height);
+                jCenter.width(width).height(height);
 
                 me.showroomViewer.resize(width, height);
             },
