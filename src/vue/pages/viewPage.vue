@@ -96,6 +96,9 @@
 
                         } else {
                             me.onClickHideMaterialButton();
+                        }
+
+                        if (!assetItem || assetItem.linkButtonArray.length == 0) {
                             me.onClickHideList();
                         }
                     },

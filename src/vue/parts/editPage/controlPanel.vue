@@ -47,7 +47,7 @@
                         <a class="nav-link" data-toggle="tab" href=".tab-2">Material</a>
                     </li>
 
-                    <li v-if="is3dModel" class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href=".tab-3">Buttons</a>
                     </li>
                 </ul>

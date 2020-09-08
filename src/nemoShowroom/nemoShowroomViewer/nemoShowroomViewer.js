@@ -187,7 +187,7 @@ export default class NemoShowroomEditor {
         me.isRun = false;
     }
 
-    __onOpenJson(itemArr) {
+    __afterLoding(itemArr, isFirst) {
         const me = this;
 
         // 불러오는 중에 destroy() 호출시 오류 방지.
@@ -228,9 +228,11 @@ export default class NemoShowroomEditor {
 
             // cssRenderer에 배치되어 크기를 구할 수 있도록 대기.
             setTimeout(function () {
-                me.checkBoxArr = [];
-                me.checkItemArr = [];
-                me.outlineObjArr = [];
+                if (isFirst) {
+                    me.checkBoxArr = [];
+                    me.checkItemArr = [];
+                    me.outlineObjArr = [];
+                }
 
                 for (let i = 0; i < itemArr.length; i++) {
                     const assetItem = itemArr[i];
@@ -310,13 +312,13 @@ export default class NemoShowroomEditor {
                 }));
             }
 
-            promise = Promise.all(promiseArr).then(me.__onOpenJson.bind(me));
+            promise = Promise.all(promiseArr).then(function (itemArr) {
+                (me.__afterLoding.bind(me))(itemArr, true);
 
-            //후속 로딩 비동기 실행.
-            promise.then(function (itemArr) {
+                //후속 로딩 비동기 실행.
                 for (let i = 0; i < loadingArr1.length; i++) {
                     me.itemLoader.load(loadingArr1[i]).then(function (item) {
-                        (me.__onOpenJson.bind(me))([item]);
+                        (me.__afterLoding.bind(me))([item], false);
                     });
                 }
 

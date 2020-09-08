@@ -1,8 +1,8 @@
 <template>
     <div class="asset-button-panel-field">
-        <input-material-button v-model="materialBtnArr" :asset-item="assetItem" label="Material button"></input-material-button>
+        <input-material-button v-if="is3dModel" v-model="materialBtnArr" :asset-item="assetItem" label="Material button"></input-material-button>
 
-        <div class="divider"></div>
+        <div v-if="is3dModel" class="divider"></div>
 
         <input-image-button v-model="linkBtnArr" :item-array="linkItemArr" label="Link button"></input-image-button>
     </div>
@@ -31,6 +31,7 @@
         },
         data: function () {
             return {
+                is3dModel: false,
                 lockEvent: false,
                 linkItemArr: [],
                 linkBtnArr: [],
@@ -80,6 +81,8 @@
                 const me = this;
 
                 me.lockEvent = true;
+                
+                me.is3dModel = StaticVariable.ITEM_3D_TYPES.indexOf(assetItem.type) > -1;
 
                 me.linkBtnArr = assetItem.linkButtonArray;
                 me.materialBtnArr = assetItem.materialButtonArray;
