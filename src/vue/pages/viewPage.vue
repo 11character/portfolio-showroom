@@ -8,6 +8,10 @@
             <cover :hidden="hiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
             <div ref="viewField" class="view-field">
+                <div v-if="isMobile && !isShowMaterialList" class="move-control-field">
+                    <move-button :viewer="showroomViewer"></move-button>
+                </div>
+
                 <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button disable-user-select">
                     <div class="content">
                         <span v-if="isPlayMusic">Music On</span>
@@ -63,15 +67,19 @@
     import coverVue from '../parts/viewPage/cover.vue';
     import itemLinkListVue from '../parts/viewPage/itemLinkList.vue';
     import itemMaterialListVue from '../parts/viewPage/itemMaterialList.vue';
+    import moveButtonVue from '../parts/viewPage/moveButton.vue';
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
+
+    import isMobile from 'is-mobile';
 
     export default {
         components: {
             'top-menu': topMenuVue,
             'cover': coverVue,
             'item-link-list': itemLinkListVue,
-            'item-material-list': itemMaterialListVue
+            'item-material-list': itemMaterialListVue,
+            'move-button': moveButtonVue
         },
         props: ['id'],
         data: function () {
@@ -79,6 +87,7 @@
 
             return {
                 showroom: new Showroom(),
+                isMobile: false,
                 isPlayMusic: false,
                 isShowList: false,
                 isShowMaterialList: false,
@@ -117,6 +126,8 @@
         },
         mounted: function () {
             const me = this;
+
+            me.isMobile = isMobile();
 
             // 뷰어 객체는 mounted 실행시 초기화 하여 자식 컴포넌트에 넘겨주려고 하면 오류가 발생한다.
             // data 초기화 후에 에디터의 위치를 이동하는 식으로 처리한다.
@@ -450,6 +461,15 @@
             border-top: 1px solid #000000;
             font-size: 0.6rem;
         }
+    }
+
+    .move-control-field {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -91px;
+        margin-top: -197px;
+        z-index: 1;
     }
 }
 </style>

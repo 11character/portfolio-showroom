@@ -12,6 +12,7 @@ import ItemLoader from '../common/itemLoader';
 import CssRenderer from '../common/cssRenderer';
 import AssetItemManager from '../common/assetItemManager';
 import Options from './options';
+import MoveInfo from './moveInfo';
 import Utils from '../../class/utils';
 
 const Promise = window.Promise;
@@ -58,20 +59,10 @@ export default class NemoShowroomEditor {
         me.cameraLat = 0;
 
         // ---
-        me.moveInfo = {
-            moveForward: false,
-            moveLeft: false,
-            moveBackward: false,
-            moveRight: false,
-            moveUp: false,
-            moveDown: false,
-            velocity: new THREE.Vector3(),
-            direction: new THREE.Vector3(),
-            speed: 50
-        };
+        me.moveInfo = new MoveInfo();
 
         // ---
-        me.renderer = new THREE.WebGLRenderer({antialias: false, alpha: true, logarithmicDepthBuffer: true});
+        me.renderer = new THREE.WebGLRenderer({antialias: false, alpha: true});
         me.renderer.setPixelRatio(pixelRatio);
         me.renderer.setSize(winW, winH);
         me.renderer.domElement.style.position = 'absolute';
@@ -422,6 +413,38 @@ export default class NemoShowroomEditor {
         }, 1);
     }
 
+    moveForwardSwitch(bool) {
+        const me = this;
+
+        me.moveInfo.offDirection();
+
+        me.moveInfo.moveForward = bool;
+    }
+
+    moveBackwardSwitch(bool) {
+        const me = this;
+
+        me.moveInfo.offDirection();
+
+        me.moveInfo.moveBackward = bool;
+    }
+
+    moveLeftSwitch(bool) {
+        const me = this;
+
+        me.moveInfo.offDirection();
+
+        me.moveInfo.moveLeft = bool;
+    }
+
+    moveRightSwitch(bool) {
+        const me = this;
+
+        me.moveInfo.offDirection();
+
+        me.moveInfo.moveRight = bool;
+    }
+
     __cameraLookDir(camera) {
         const vector3 = new THREE.Vector3(0, 0, -1);
 
@@ -546,10 +569,10 @@ export default class NemoShowroomEditor {
         }
     }
 
-    __intersect(evt) {
+    __intersect(x, y) {
         const me = this;
 
-        const intersectChild = me.mouseRaycaster.intersect(me.outlineObjArr, evt.offsetX, evt.offsetY);
+        const intersectChild = me.mouseRaycaster.intersect(me.outlineObjArr, x, y);
 
         let group = null;
 
@@ -567,31 +590,47 @@ export default class NemoShowroomEditor {
     __initEvent() {
         const me = this;
 
+        const pixelRatio = window.devicePixelRatio;
+
         let isUserInteracting = false;
-        let onMouseDownMouseX = 0;
-        let onMouseDownMouseY = 0;
-        let onMouseDownLon = 0;
-        let onMouseDownLat = 0;
-        let pointerStartTimeout;
+        let pointerDownMouseX = 0;
+        let pointerDownMouseY = 0;
+        let pointerDownLon = 0;
+        let pointerDownLat = 0;
+        let pointerDownTimeout;
         let intersectTimeout;
 
-        function onPointerStart(evt) {
-            evt.stopPropagation();
+        function onPointerDown(evt) {
+            clearTimeout(pointerDownTimeout);
 
             isUserInteracting = true;
 
-            const clientX = evt.clientX || evt.touches[0].clientX;
-            const clientY = evt.clientY || evt.touches[0].clientY;
+            let offsetX;
+            let offsetY;
 
-            onMouseDownMouseX = clientX;
-            onMouseDownMouseY = clientY;
+            if (evt.changedTouches && evt.changedTouches[0]) {
+                // 터치는 offetX, offsetY를 제공하지 않는다.
+                offsetX = (evt.changedTouches[0].pageX - evt.target.offsetLeft) * pixelRatio;
+                offsetY = (evt.changedTouches[0].pageY - evt.target.offsetTop) * pixelRatio;
 
-            onMouseDownLon = me.cameraLon;
-            onMouseDownLat = me.cameraLat;
+            } else {
+                offsetX = evt.offsetX * pixelRatio;
+                offsetY = evt.offsetY * pixelRatio;
+            }
 
-            pointerStartTimeout = setTimeout(function () {
+            pointerDownMouseX = offsetX;
+            pointerDownMouseY = offsetY;
+
+            pointerDownLon = me.cameraLon;
+            pointerDownLat = me.cameraLat;
+
+            pointerDownTimeout = setTimeout(function () {
                 switch(evt.button) {
                     case 0:
+                        // 테두리 표시.
+                        me.intersectedItem = me.__intersect(offsetX, offsetY);
+                        me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+
                         me.options.onClick(me.intersectedItem);
                         break;
                 }
@@ -599,18 +638,26 @@ export default class NemoShowroomEditor {
         }
 
         function onPointerMove(evt) {
-            evt.stopPropagation();
-
-            clearTimeout(pointerStartTimeout);
+            clearTimeout(pointerDownTimeout);
             clearTimeout(intersectTimeout);
+
+            let offsetX;
+            let offsetY;
+
+            if (evt.changedTouches && evt.changedTouches[0]) {
+                // 터치는 offetX, offsetY를 제공하지 않는다.
+                offsetX = (evt.changedTouches[0].pageX - evt.target.offsetLeft) * pixelRatio;
+                offsetY = (evt.changedTouches[0].pageY - evt.target.offsetTop) * pixelRatio;
+
+            } else {
+                offsetX = evt.offsetX * pixelRatio;
+                offsetY = evt.offsetY * pixelRatio;
+            }
 
             // 화면 회전.
             if (isUserInteracting) {
-                const clientX = evt.clientX || evt.touches[0].clientX;
-                const clientY = evt.clientY || evt.touches[0].clientY;
-
-                me.cameraLon = (onMouseDownMouseX - clientX) * 0.05 + onMouseDownLon;
-                me.cameraLat = (clientY - onMouseDownMouseY) * 0.05 + onMouseDownLat;
+                me.cameraLon = (pointerDownMouseX - offsetX) * 0.05 + pointerDownLon;
+                me.cameraLat = (offsetY - pointerDownMouseY) * 0.05 + pointerDownLat;
 
                 me.cameraLat = Math.max(-85, Math.min(85, me.cameraLat));
 
@@ -625,23 +672,21 @@ export default class NemoShowroomEditor {
             } else {
                 // 테두리 표시.
                 intersectTimeout = setTimeout(function () {
-                    me.intersectedItem = me.__intersect(evt);
+                    me.intersectedItem = me.__intersect(offsetX, offsetY);
                     me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
                 }, 10);
             }
         }
 
-        function onPointerUp(evt) {
-            evt.stopPropagation();
-
+        function onPointerUp() {
             isUserInteracting = false;
         }
 
-        me.rootEl.addEventListener('mousedown', onPointerStart);
+        me.rootEl.addEventListener('mousedown', onPointerDown);
         me.rootEl.addEventListener('mousemove', onPointerMove);
         me.rootEl.addEventListener('mouseup', onPointerUp);
 
-        me.rootEl.addEventListener('touchstart', onPointerStart);
+        me.rootEl.addEventListener('touchstart', onPointerDown);
         me.rootEl.addEventListener('touchmove', onPointerMove);
         me.rootEl.addEventListener('touchend', onPointerUp);
 

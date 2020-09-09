@@ -57,7 +57,7 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.camera.lookAt(StaticVariable.CAMERA_ZERO_LOOK_AT);
 
         // ---
-        me.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, logarithmicDepthBuffer: true});
+        me.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
         me.renderer.setSize(winW, winH);
         me.renderer.setPixelRatio(window.devicePixelRatio);
         me.renderer.domElement.style.position = 'absolute';
@@ -1041,10 +1041,10 @@ export default class NemoShowroomEditor extends EditorInterface {
         });
     }
 
-    __intersect(evt) {
+    __intersect(x, y) {
         const me = this;
 
-        const intersectChild = me.mouseRaycaster.intersect(me.objectField.children, evt.offsetX, evt.offsetY);
+        const intersectChild = me.mouseRaycaster.intersect(me.objectField.children, x, y);
 
         let group = null;
 
@@ -1074,7 +1074,10 @@ export default class NemoShowroomEditor extends EditorInterface {
 
         // 마우스클릭.
         me.renderer.domElement.addEventListener('mousedown', function (evt) {
-            const intersectedItem = me.__intersect(evt);
+            const pixelRatio = window.devicePixelRatio;
+            const offsetX = evt.offsetX * pixelRatio;
+            const offsetY = evt.offsetY * pixelRatio;
+            const intersectedItem = me.__intersect(offsetX, offsetY);
 
             switch(evt.which) {
                 case 1:

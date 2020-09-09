@@ -54,7 +54,7 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.camera.lookAt(StaticVariable.CAMERA_ZERO_LOOK_AT);
 
         // ---
-        me.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true, logarithmicDepthBuffer: true});
+        me.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
         me.renderer.setSize(winW, winH);
         me.renderer.setPixelRatio(window.devicePixelRatio);
         me.renderer.domElement.style.position = 'absolute';
