@@ -2,7 +2,6 @@ import * as THREE from 'three/build/three.module';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import * as StaticVariable from '../common/staticVariable';
-import MouseRaycaster from '../common/mouseRaycaster';
 import AssetItem from '../common/assetItem';
 import ItemLoader from '../common/itemLoader';
 import CssRenderer from '../common/cssRenderer';
@@ -79,9 +78,6 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.obControls.enableKeys = false;
         me.obControls.minPolarAngle = StaticVariable.CONTROLS_MIN_POLAR_ANGLE;
         me.obControls.maxPolarAngle = StaticVariable.CONTROLS_MAX_POLAR_ANGLE;
-
-        // ---
-        me.mouseRaycaster = new MouseRaycaster(me.renderer, me.camera);
 
         // ---
         me.clock = new THREE.Clock();

@@ -569,10 +569,10 @@ export default class NemoShowroomEditor {
         }
     }
 
-    __intersect(x, y) {
+    __intersect(evt) {
         const me = this;
 
-        const intersectChild = me.mouseRaycaster.intersect(me.outlineObjArr, x, y);
+        const intersectChild = me.mouseRaycaster.intersect(me.outlineObjArr, evt);
 
         let group = null;
 
@@ -605,21 +605,12 @@ export default class NemoShowroomEditor {
 
             isUserInteracting = true;
 
-            let offsetX;
-            let offsetY;
+            const pointerXY = me.mouseRaycaster.getPointerXY(evt);
+            const x = pointerXY.x;
+            const y = pointerXY.y;
 
-            if (evt.changedTouches && evt.changedTouches[0]) {
-                // 터치는 offetX, offsetY를 제공하지 않는다.
-                offsetX = (evt.changedTouches[0].pageX - evt.target.offsetLeft) * pixelRatio;
-                offsetY = (evt.changedTouches[0].pageY - evt.target.offsetTop) * pixelRatio;
-
-            } else {
-                offsetX = evt.offsetX * pixelRatio;
-                offsetY = evt.offsetY * pixelRatio;
-            }
-
-            pointerDownMouseX = offsetX;
-            pointerDownMouseY = offsetY;
+            pointerDownMouseX = x;
+            pointerDownMouseY = y;
 
             pointerDownLon = me.cameraLon;
             pointerDownLat = me.cameraLat;
@@ -628,7 +619,7 @@ export default class NemoShowroomEditor {
                 switch(evt.button) {
                     case 0:
                         // 테두리 표시.
-                        me.intersectedItem = me.__intersect(offsetX, offsetY);
+                        me.intersectedItem = me.__intersect(evt);
                         me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
 
                         me.options.onClick(me.intersectedItem);
@@ -641,23 +632,14 @@ export default class NemoShowroomEditor {
             clearTimeout(pointerDownTimeout);
             clearTimeout(intersectTimeout);
 
-            let offsetX;
-            let offsetY;
-
-            if (evt.changedTouches && evt.changedTouches[0]) {
-                // 터치는 offetX, offsetY를 제공하지 않는다.
-                offsetX = (evt.changedTouches[0].pageX - evt.target.offsetLeft) * pixelRatio;
-                offsetY = (evt.changedTouches[0].pageY - evt.target.offsetTop) * pixelRatio;
-
-            } else {
-                offsetX = evt.offsetX * pixelRatio;
-                offsetY = evt.offsetY * pixelRatio;
-            }
+            const pointerXY = me.mouseRaycaster.getPointerXY(evt);
+            const x = pointerXY.x;
+            const y = pointerXY.y;
 
             // 화면 회전.
             if (isUserInteracting) {
-                me.cameraLon = (pointerDownMouseX - offsetX) * 0.05 + pointerDownLon;
-                me.cameraLat = (offsetY - pointerDownMouseY) * 0.05 + pointerDownLat;
+                me.cameraLon = (pointerDownMouseX - x) * 0.05 + pointerDownLon;
+                me.cameraLat = (y - pointerDownMouseY) * 0.05 + pointerDownLat;
 
                 me.cameraLat = Math.max(-85, Math.min(85, me.cameraLat));
 
@@ -672,7 +654,7 @@ export default class NemoShowroomEditor {
             } else {
                 // 테두리 표시.
                 intersectTimeout = setTimeout(function () {
-                    me.intersectedItem = me.__intersect(offsetX, offsetY);
+                    me.intersectedItem = me.__intersect(evt);
                     me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
                 }, 10);
             }

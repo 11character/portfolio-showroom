@@ -1041,10 +1041,10 @@ export default class NemoShowroomEditor extends EditorInterface {
         });
     }
 
-    __intersect(x, y) {
+    __intersect(evt) {
         const me = this;
 
-        const intersectChild = me.mouseRaycaster.intersect(me.objectField.children, x, y);
+        const intersectChild = me.mouseRaycaster.intersect(me.objectField.children, evt);
 
         let group = null;
 
@@ -1074,10 +1074,7 @@ export default class NemoShowroomEditor extends EditorInterface {
 
         // 마우스클릭.
         me.renderer.domElement.addEventListener('mousedown', function (evt) {
-            const pixelRatio = window.devicePixelRatio;
-            const offsetX = evt.offsetX * pixelRatio;
-            const offsetY = evt.offsetY * pixelRatio;
-            const intersectedItem = me.__intersect(offsetX, offsetY);
+            const intersectedItem = me.__intersect(evt);
 
             switch(evt.which) {
                 case 1:
