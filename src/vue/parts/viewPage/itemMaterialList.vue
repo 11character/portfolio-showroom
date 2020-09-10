@@ -40,8 +40,6 @@
     .item-material-list-field {
         width: 100%;
         height: 100%;
-        background-color: rgba(255, 255, 255, 0.5);
-        border: 1px solid #ffffff;
         display: flex;
         justify-content: center;
 
@@ -68,14 +66,14 @@
                 width: 90px;
                 min-width: 90px;
                 height: 90px;
-                border: 1px solid #000000;
+                border-radius: 50%;
                 margin: 8px 8px;
                 float: left;
                 cursor: pointer;
             }
 
             .texture-button:hover {
-                border-color: #ffffff;
+                border: 3px solid #ffffff;
                 border-width: 3px;
             }
 

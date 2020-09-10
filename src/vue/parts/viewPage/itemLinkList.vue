@@ -22,6 +22,9 @@
 
                 if (item) {
                     me.buttonArray = item.linkButtonArray;
+
+                } else {
+                    me.buttonArray = [];
                 }
             }
         },

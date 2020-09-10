@@ -431,7 +431,6 @@
 
             .material-button-field {
                 position: absolute;
-                height: 120px;
                 z-index: 1;
             }
         }

@@ -205,6 +205,18 @@
 
                 me.isConfigEdited = true;
             },
+            onModelItemLoad: function (assetItem) {
+                const me = this;
+
+                const box3 = assetItem.getBox3();
+                const scale = 1 / (box3.max.y - box3.min.y);
+
+                assetItem.object3D.scale.set(scale, scale, scale);
+                assetItem.syncTransformMembers();
+
+                me.isConfigEdited = true;
+                me.showroomEditor.attach(assetItem);
+            },
             load2d: function (data) {
                 const me = this;
 
@@ -231,23 +243,6 @@
 
                 me.showroomEditor.import(item).then(me.onModelItemLoad);
             },
-            onModelItemDataLoad: function (assetItem) {
-                const me = this;
-
-                me.isConfigEdited = true;
-                me.showroomEditor.attach(assetItem);
-            },
-            onModelItemLoad: function (assetItem) {
-                const me = this;
-
-                const box3 = assetItem.getBox3();
-                const scale = 1 / (box3.max.y - box3.min.y);
-
-                assetItem.object3D.scale.set(scale, scale, scale);
-                assetItem.syncTransformMembers();
-
-                me.onModelItemDataLoad(assetItem);
-            },
             onApplyModel: function (dataArr) {
                 const me = this;
 
@@ -264,7 +259,7 @@
                     } else if (data.data) {
                         const assetEditorData = JSON.parse(data.data);
 
-                        me.showroomEditor.import(assetEditorData.itemArray[0]).then(me.onModelItemDataLoad);
+                        me.showroomEditor.import(assetEditorData.itemArray[0]).then(me.onModelItemLoad);
 
                     } else {
                         me.load3d(data);

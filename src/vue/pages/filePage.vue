@@ -153,14 +153,3 @@
         }
     }
 </script>
-
-<style lang="scss" scoped>
-    .table-field {
-        overflow-y: auto;
-    }
-
-    .table-field table {
-        table-layout: fixed;
-        min-width: 768px;
-    }
-</style>
