@@ -72,7 +72,7 @@
             'input-cube-texture': inputCubeTextureVue
         },
         props: {
-            index: {type: Number},
+            id: {type: String},
             material: {type: THREE.Material},
             assetItem: {type: AssetItem}
         },
@@ -174,7 +174,7 @@
                         reflectivity: me.mtlReflectivity
                     });
     
-                    me.assetItem.setMaterialOption(materialOption, me.index);
+                    me.assetItem.setMaterialOption(materialOption, me.id);
     
                     me.$emit('control', 'material');
                 }
@@ -258,7 +258,7 @@
                     me.loadTextureList(assetItem);
                     me.loadCubeTextureList(assetItem);
 
-                    const materialOption = assetItem.materialOptions[me.index] || new MaterialOption();
+                    const materialOption = assetItem.materialOptions[me.id] || new MaterialOption();
 
                     me.setMtlData(materialOption);
                 }

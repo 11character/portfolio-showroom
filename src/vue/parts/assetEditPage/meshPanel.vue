@@ -2,21 +2,57 @@
     <div class="field">
         <div :id="accordionId" class="accordion">
             <!-- mesh -->
-            <div v-for="(mesh, i) in meshArr" :key="i" class="card">
-                <div class="card-header">
-                    <h2 class="mb-0">
-                        <button :data-target="'#' + accordionId + '-' + i" class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
-                            <span>{{ mesh.name || 'No name' }}</span>
-                        </button>
-                    </h2>
-                </div>
-
-                <div :id="accordionId + '-' + i" :data-parent="'#' + accordionId" :class="{'show': (i == 0)}" class="collapse">
-                    <div class="card-body bg-dark">
-                        <material-panel :index="i" :material="mesh.material" :asset-item="assetItem" @control="onControl"></material-panel>
+            <template v-for="(mesh, i) in meshArr">
+                <!-- allay material -->
+                <template v-if="Array.isArray(mesh.material)">
+                    <div v-for="(material, j) in mesh.material" :key="i + '-' + j" class="card">
+                        <div class="card-header">
+                            <h2 class="mb-0">
+                                <button :data-target="'#' + accordionId + '-' + i + '-' + j" class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                                    <span>{{ mesh.name || 'noname' }}.{{ mesh.material[j].name || 'noname' }}</span>
+                                </button>
+                            </h2>
+                        </div>
+                    
+                        <div :id="accordionId + '-' + i + '-' + j" :data-parent="'#' + accordionId" :class="{'show': (i == 0)}" class="collapse">
+                            <div class="card-body bg-dark">
+                                <material-panel
+                                    :id="i + '-' + j"
+                                    :material="material"
+                                    :asset-item="assetItem"
+                                    @control="onControl">
+                                </material-panel>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </template>
+                <!-- END-allay material -->
+                
+                <!-- single material -->
+                <template v-else>
+                    <div :key="i" class="card">
+                        <div class="card-header">
+                            <h2 class="mb-0">
+                                <button :data-target="'#' + accordionId + '-' + i" class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                                    <span>{{ mesh.name || 'noname' }}.{{ mesh.material.name || 'noname' }}</span>
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div :id="accordionId + '-' + i" :data-parent="'#' + accordionId" :class="{'show': (i == 0)}" class="collapse">
+                            <div class="card-body bg-dark">
+                                <material-panel
+                                    :id="i + ''"
+                                    :material="mesh.material"
+                                    :asset-item="assetItem"
+                                    @control="onControl">
+                                </material-panel>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <!-- END-single material -->
+            </template>
             <!-- END-mesh -->
         </div>
     </div>

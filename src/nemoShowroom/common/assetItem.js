@@ -68,8 +68,8 @@ export default class AssetItem {
 
         this.materialOptions = {};
         if (obj.materialOptions) {
-            for (let index in obj.materialOptions) {
-                this.materialOptions[index] = new MaterialOption(obj.materialOptions[index]);
+            for (let id in obj.materialOptions) {
+                this.materialOptions[id] = new MaterialOption(obj.materialOptions[id]);
             }
         }
 
@@ -144,7 +144,7 @@ export default class AssetItem {
         };
     }
 
-    setMaterialOption(obj = {}, index = 0) {
+    setMaterialOption(obj = {}, id = '0') {
         const me = this;
 
         const materialOption = new MaterialOption(obj);
@@ -153,12 +153,30 @@ export default class AssetItem {
 
         // traverse 로 검색되는 순서를 인덱스로 사용한다.
         me.object3D.traverse(function (obj) {
-            if (obj.isMesh && obj.material && i == index) {
+            if (obj.isMesh && obj.material) {
                 const mtl = obj.material;
 
-                for (let key in materialOption) {
-                    if (mtl.hasOwnProperty(key)) {
-                        me.__setMtlValue(key, mtl, materialOption[key]);
+                let targetMtl = null;
+
+                // material이 배열인 경우.
+                if (Array.isArray(mtl)) {
+                    for (let j = 0; j < mtl.length; j++) {
+                        if (id == i + '-' + j) {
+                            targetMtl = mtl[j];
+                            break;
+                        }
+                    }
+
+                // 단일 material.
+                } else if (id == i + '') {
+                    targetMtl = mtl;
+                }
+
+                if (targetMtl) {
+                    for (let key in materialOption) {
+                        if (targetMtl.hasOwnProperty(key)) {
+                            me.__setMtlValue(key, targetMtl, materialOption[key]);
+                        }
                     }
                 }
 
@@ -166,14 +184,14 @@ export default class AssetItem {
             }
         });
 
-        me.materialOptions[index] = materialOption;
+        me.materialOptions[id] = materialOption;
     }
 
     setMaterialOptions(options = {}) {
         const me = this;
 
-        for (let index in options) {
-            me.setMaterialOption(options[index], index);
+        for (let id in options) {
+            me.setMaterialOption(options[id], id);
         }
     }
 
@@ -188,15 +206,34 @@ export default class AssetItem {
         me.object3D.traverse(function (obj) {
             if (obj.isMesh && obj.material) {
                 const mtl = obj.material;
-                const mtlOption = new MaterialOption();
 
-                for (let key in mtl) {
-                    if (mtlOption.hasOwnProperty(key)) {
-                        me.__setMtlOptionValue(key, mtlOption, mtl[key]);
+                // material이 배열인 경우.
+                if (Array.isArray(mtl)) {
+                    for (let j = 0; j < mtl.length; j++) {
+                        const mtlOption = new MaterialOption();
+                        const childrenMtl = mtl[j];
+
+                        for (let key in childrenMtl) {
+                            if (mtlOption.hasOwnProperty(key)) {
+                                me.__setMtlOptionValue(key, mtlOption, childrenMtl[key]);
+                            }
+                        }
+
+                        options[i + '-' + j] = mtlOption;
                     }
-                }
 
-                options[i] = mtlOption;
+                // 단일 material.
+                } else {
+                    const mtlOption = new MaterialOption();
+
+                    for (let key in mtl) {
+                        if (mtlOption.hasOwnProperty(key)) {
+                            me.__setMtlOptionValue(key, mtlOption, mtl[key]);
+                        }
+                    }
+
+                    options[i + ''] = mtlOption;
+                }
 
                 i++;
             }

@@ -7,8 +7,8 @@ export default class MaterialButton {
 
         this.materialOptions = {};
         if (obj.materialOptions) {
-            for (let index in obj.materialOptions) {
-                this.materialOptions[index] = new MaterialOption(obj.materialOptions[index]);
+            for (let id in obj.materialOptions) {
+                this.materialOptions[id] = new MaterialOption(obj.materialOptions[id]);
             }
         }
     }

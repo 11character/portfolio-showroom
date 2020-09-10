@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="button-item">
-                    <button @click="onClickOpen(button)" type="button" class="modal-btn" tabindex="-1">{{ button.name || 'Noname' }}</button>
+                    <button @click="onClickOpen(button)" type="button" class="modal-btn" tabindex="-1">{{ button.name || 'noname' }}</button>
                 </div>
             </div>
         </div>
