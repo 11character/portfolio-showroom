@@ -34,7 +34,8 @@ import {
     faArrowLeft,
     faArrowRight,
     faPaintBrush,
-    faLink
+    faLink,
+    faGlobe
 } from '@fortawesome/free-solid-svg-icons';
 
 FaLibrary.add(faSyncAlt);
@@ -56,6 +57,7 @@ FaLibrary.add(faArrowLeft);
 FaLibrary.add(faArrowRight);
 FaLibrary.add(faPaintBrush);
 FaLibrary.add(faLink);
+FaLibrary.add(faGlobe);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
@@ -67,9 +69,23 @@ Vue.use(VueRouter);
 const viewPageVue = () => import('./vue/pages/viewPage.vue');
 const assetViewPageVue = () => import('./vue/pages/assetViewPage.vue');
 
+// 비공개 뷰 페이지는 index.js 를 사용한다.
 const router = new VueRouter({
     routes: [
-        {path: '/view/:id', name: 'view', component: viewPageVue, props: true},
+        {path: '/view/:id', name: 'view', component: viewPageVue, props: function (route) {
+            return {
+                id: route.params.id,
+                lang: 'ko'
+            };
+        }},
+        {path: '/view/:id/:lang', name: 'view-lang', component: viewPageVue, props: function (route) {
+            const lang = (route.params.lang || '').toLowerCase();
+
+            return {
+                id: route.params.id,
+                lang: lang == 'ko' ? 'ko' : 'en'
+            };
+        }},
         {path: '/asset-view/:id', name: 'asset-view', component: assetViewPageVue, props: true}
     ]
 });

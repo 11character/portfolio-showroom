@@ -1,7 +1,7 @@
 <template>
     <div class="root-field font-neuemachina">
         <div ref="top" class="top">
-            <top-menu :showroom="showroom" ref="topMenu"></top-menu>
+            <top-menu :showroom="showroom" :lang="lang" ref="topMenu"></top-menu>
         </div>
 
         <div :class="centerStyle" ref="center">
@@ -52,8 +52,14 @@
             </div>
         </div>
 
-        <div ref="bottom" class="bottom">
-            <div class="content">(주)예술고래 상회</div>
+        <div ref="bottom" class="bottom disable-user-select">
+            <div class="content">
+                <div class="text">(주)예술고래 상회</div>
+
+                <div @click="onClickLang" class="lang-button">
+                    <font-awesome-icon :icon="['fas', 'globe']"></font-awesome-icon>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -81,7 +87,7 @@
             'item-material-list': itemMaterialListVue,
             'move-button': moveButtonVue
         },
-        props: ['id'],
+        props: ['id', 'lang'],
         data: function () {
             const me = this;
 
@@ -269,6 +275,13 @@
                     bgnEl.pause();
                     bgnEl.currentTime = 0;
                 }
+            },
+            onClickLang: function () {
+                const me = this;
+
+                const lang = me.lang == 'ko' ? 'en' : 'ko';
+
+                me.$router.push({name: 'view-lang', params:{id: me.id, lang: lang}});
             }
         }
     }
@@ -448,17 +461,26 @@
     .bottom {
         width: 100%;
         height: 37px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-end;
         padding: 0px 18px;
 
         .content {
-            width:100%;
-            height: 10px;
+            width: 100%;
+            height: 100%;
+            margin-top:30px;
             padding-top: 8px;
             border-top: 1px solid #000000;
-            font-size: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .text {
+                font-size: 0.6rem;
+            }
+
+            .lang-button {
+                padding: 0rem 1rem;
+                cursor: pointer;
+            }
         }
     }
 

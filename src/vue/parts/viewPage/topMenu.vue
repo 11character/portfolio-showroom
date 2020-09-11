@@ -4,7 +4,8 @@
 
         <div class="top-buttons font-neuemachina">
             <div :hidden="!isShowText" ref="textField" class="text-field">
-                <pre class="font-neuemachina">{{ showroom.contentKo }}</pre>
+                <pre v-if="lang == 'ko'" class="font-neuemachina">{{ showroom.contentKo }}</pre>
+                <pre v-else class="font-neuemachina">{{ showroom.contentEn }}</pre>
             </div>
 
             <template v-if="isShowSmallButton">
@@ -61,10 +62,8 @@
 
     export default {
         props: {
-            showroom: {
-                type: Showroom,
-                default: new Showroom()
-            }
+            showroom: {type: Showroom, default: new Showroom()},
+            lang: {type: String, default: 'ko'}
         },
         data: function () {
             const me = this;
