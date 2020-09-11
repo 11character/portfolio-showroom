@@ -19,7 +19,7 @@
             <div ref="viewField" class="font-neuemachina"></div>
 
             <div class="control-field">
-                <asset-panel :editor="assetEditor" :asset-item="assetItem" @control="onControl"></asset-panel>
+                <asset-panel :editor="assetEditor" :asset-item="assetEditor.assetItem" @control="onControl"></asset-panel>
             </div>
         </div>
     </div>
@@ -29,7 +29,6 @@
     import * as ApiUrl from '../../class/apiUrl';
     import Utils from '../../class/utils';
     import ModelFileInfo from '../../class/modelFileInfo';
-    import AssetItem from '../../nemoShowroom/common/assetItem';
 
     import topNavVue from '../parts/topNav.vue';
     import loadingVue from '../parts/loading.vue';
@@ -49,7 +48,6 @@
                 disabled: true,
                 isConfigEdited: false,
                 modelFileInfo: new ModelFileInfo(),
-                assetItem: null,
                 assetEditor: new NemoAssetEditor({
                     width: 100,
                     height: 100
@@ -111,10 +109,9 @@
             $(window).off('resize.assetedit.page').off('beforeunload.assetedit.page');
         },
         methods: {
-            onModelItemLoad: function (assetItem) {
+            onModelItemLoad: function () {
                 const me = this;
 
-                me.assetItem = me.assetEditor.assetItem;
                 me.disabled = false;
             },
             load2d: function (data) {
@@ -123,6 +120,7 @@
                 Utils.sizeFromImageUrl(data.url).then(function (info) {
                     const item = {
                         name: data.name,
+                        description: data.description,
                         type: 'image',
                         itemUrl: data.url,
                         width: info.width / 500,
@@ -137,6 +135,7 @@
 
                 const item = {
                     name: data.name,
+                    description: data.description,
                     type: data.ext,
                     itemUrl: data.url
                 };
@@ -159,10 +158,7 @@
                 const me = this;
 
                 if (modelFileInfo.data) {
-                    me.assetEditor.openJson(modelFileInfo.data).then(function (assetItem) {
-                        me.assetItem = assetItem;
-                        me.disabled = false;
-                    });
+                    me.assetEditor.openJson(modelFileInfo.data).then(me.onModelItemLoad);
 
                 } else {
                     me.loadModel(modelFileInfo);
@@ -190,6 +186,8 @@
             onClickSave: function () {
                 const me = this;
 
+                me.modelFileInfo.name = me.assetEditor.assetItem.name;
+                me.modelFileInfo.description = me.assetEditor.assetItem.description;
                 me.modelFileInfo.data = me.assetEditor.exportJson();
 
                 Utils.apiRequest(ApiUrl.MODEL_FILE_UPDATE, me.modelFileInfo, 'post').then(function () {

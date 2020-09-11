@@ -37,7 +37,7 @@
                     jColor.text('');
 
                 } else {
-                    jColor.text('None');
+                    jColor.text('none');
                 }
             }
         },

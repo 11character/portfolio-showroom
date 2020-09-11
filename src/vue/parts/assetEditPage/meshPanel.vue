@@ -14,7 +14,7 @@
                             </h2>
                         </div>
                     
-                        <div :id="accordionId + '-' + i + '-' + j" :data-parent="'#' + accordionId" :class="{'show': (i == 0)}" class="collapse">
+                        <div :id="accordionId + '-' + i + '-' + j" :data-parent="'#' + accordionId" :class="{'show': (i == 0) && (j == 0)}" class="collapse">
                             <div class="card-body bg-dark">
                                 <material-panel
                                     :id="i + '-' + j"

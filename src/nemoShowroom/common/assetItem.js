@@ -26,6 +26,7 @@ export default class AssetItem {
         this.id = Utils.randomString();
 
         this.name = obj.name || '';
+        this.description = obj.description || '';
         this.type = obj.type || StaticVariable.ITEM_TYPE_NONE;
         this.itemUrl = obj.itemUrl || '';
         this.content = obj.content || '';
@@ -108,6 +109,7 @@ export default class AssetItem {
 
         return {
             name: me.name,
+            description: me.description,
             type: me.type,
             itemUrl: me.itemUrl,
             content: me.content,

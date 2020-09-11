@@ -83,6 +83,7 @@
                 Utils.sizeFromImageUrl(data.url).then(function (info) {
                     const item = {
                         name: data.name,
+                        description: data.description,
                         type: 'image',
                         itemUrl: data.url,
                         width: info.width / 500,
@@ -97,6 +98,7 @@
 
                 const item = {
                     name: data.name,
+                    description: data.description,
                     type: data.ext,
                     itemUrl: data.url
                 };

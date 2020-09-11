@@ -5,7 +5,11 @@
         </div>
 
         <div class="item-row">
-            <input-text v-model="name" label="Asset name"></input-text>
+            <input-text v-model="name" label="Name"></input-text>
+        </div>
+
+        <div class="item-row">
+            <input-text v-model="description" label="Description"></input-text>
         </div>
 
         <div class="item-row">
@@ -64,7 +68,8 @@
         data: function () {
             return {
                 lockEvent: false,
-                name: ''
+                name: '',
+                description: ''
             };
         },
         watch: {
@@ -80,6 +85,15 @@
                     me.assetItem.name = name;
 
                     me.onControl('assetName');
+                }
+            },
+            description: function (description) {
+                const me = this;
+
+                if (!me.lockEvent) {
+                    me.assetItem.description = description;
+
+                    me.onControl('assetDescription');
                 }
             }
         },
