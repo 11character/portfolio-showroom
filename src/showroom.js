@@ -32,7 +32,9 @@ import {
     faArrowUp,
     faArrowDown,
     faArrowLeft,
-    faArrowRight
+    faArrowRight,
+    faPaintBrush,
+    faLink
 } from '@fortawesome/free-solid-svg-icons';
 
 FaLibrary.add(faSyncAlt);
@@ -52,6 +54,8 @@ FaLibrary.add(faArrowUp);
 FaLibrary.add(faArrowDown);
 FaLibrary.add(faArrowLeft);
 FaLibrary.add(faArrowRight);
+FaLibrary.add(faPaintBrush);
+FaLibrary.add(faLink);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

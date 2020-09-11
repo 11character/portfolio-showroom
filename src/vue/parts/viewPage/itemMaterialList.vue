@@ -1,7 +1,13 @@
 <template>
     <div class="item-material-list-field disable-user-select">
         <div class="item-material-list">
-            <img v-for="(button, i) in buttonArray" :key="i" :src="button.url" :alt="button.name" @click="onClickMaterial(button)" class="texture-button">
+            <div v-for="(button, i) in buttonArray" :key="i" class="texture-button">
+                <img v-if="button.url" :src="button.url" :alt="i" @click="onClickMaterial(button)" class="texture-button-img">
+
+                <div v-else @click="onClickMaterial(button)" class="texture-button-none-img">
+                    <font-awesome-icon :icon="['fas', 'paint-brush']"></font-awesome-icon>&nbsp;{{ i + 1 }}
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -62,14 +68,29 @@
             padding: 0rem 1rem;
 
             .texture-button {
-                display: block;
                 width: 90px;
                 min-width: 90px;
                 height: 90px;
                 border-radius: 50%;
-                margin: 8px 8px;
-                float: left;
+                margin: 8px 16px;
+                background-color: #000000;
                 cursor: pointer;
+
+                .texture-button-img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                }
+
+                .texture-button-none-img {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: #ffffff;
+                    font-size: 1.5rem;
+                }
             }
 
             .texture-button:hover {

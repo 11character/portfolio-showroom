@@ -2,7 +2,11 @@
     <div class="item-link-list-field">
         <div class="item-link-list">
             <div v-for="(button, i) in buttonArray" :key="i" class="link-button">
-                <img :src="button.url" :alt="button.name" @click="onClickLink(button.link)">
+                <img v-if="button.url" :src="button.url" :alt="button.name" @click="onClickLink(button.link)">
+
+                <div v-else @click="onClickLink(button.link)" class="none-img">
+                    <font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon>&nbsp;{{ i + 1 }}
+                </div>
             </div>
         </div>
     </div>
@@ -55,9 +59,16 @@
                 cursor: pointer;
 
                 img {
-                    display: block;
                     width: 100%;
                     height: 100%;
+                }
+
+                .none-img {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                 }
             }
         }
