@@ -21,7 +21,7 @@
 
     <title>showroom</title>
 </head>
-<body>
+<body style="overflow: hidden">
     <div id="root">
         <router-view></router-view>
     </div>

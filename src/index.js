@@ -83,32 +83,14 @@ Vue.use(VueRouter);
 const homePageVue = () => import('./vue/pages/homePage.vue');
 const filePageVue = () => import('./vue/pages/filePage.vue');
 const editPageVue = () => import('./vue/pages/editPage.vue');
-const viewPageVue = () => import('./vue/pages/viewPage.vue');
 const assetEditPageVue = () => import('./vue/pages/assetEditPage.vue');
-const assetViewPageVue = () => import('./vue/pages/assetViewPage.vue');
 
 const router = new VueRouter({
     routes: [
         {path: '/', name: 'home', component: homePageVue, props: false},
         {path: '/file', name: 'file', component: filePageVue, props: false},
         {path: '/edit/:id', name: 'edit', component: editPageVue, props: true},
-        {path: '/asset-edit/:id', name: 'asset-edit', component: assetEditPageVue, props: true},
-        {path: '/asset-view/:id', name: 'asset-view', component: assetViewPageVue, props: true},
-        // 공개 뷰 페이지는 showroom.js 를 사용한다.
-        {path: '/view/:id', name: 'view', component: viewPageVue, props: function (route) {
-            return {
-                id: route.params.id,
-                lang: 'ko'
-            };
-        }},
-        {path: '/view/:id/:lang', name: 'view-lang', component: viewPageVue, props: function (route) {
-            const lang = (route.params.lang || '').toLowerCase();
-
-            return {
-                id: route.params.id,
-                lang: lang == 'ko' ? 'ko' : 'en'
-            };
-        }}
+        {path: '/asset-edit/:id', name: 'asset-edit', component: assetEditPageVue, props: true}
     ]
 });
 

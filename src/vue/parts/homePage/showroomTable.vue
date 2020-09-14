@@ -89,10 +89,10 @@
             me.dataTable.on('click', '.l-btn', function () {
                 const data = me.dataTable.row($(this).parents('tr')).data();
 
-                const url = window.location.href.substring(0, window.location.href.lastIndexOf('#'));
-                const viewRoute = me.$router.resolve({name: 'view', params:{id: data['SEQ_ID']}}).route;
+                const urlSplitArr = window.location.href.split('/');
+                const url = urlSplitArr.slice(0, urlSplitArr.length - 2).join('/');
 
-                window.location.href = url + 'showroom.php#' + viewRoute.fullPath;
+                window.location.href = url + '/showroom.php#/view/' + data['SEQ_ID'];
             });
 
             me.dataTable.on('click', '.e-btn', function () {

@@ -130,13 +130,12 @@
             open: function (modelFileInfo) {
                 const me = this;
 
-                const url = window.location.href.substring(0, window.location.href.lastIndexOf('#'));
-                const assetViewRoute = me.$router.resolve({name: 'asset-view', params: {id: modelFileInfo.seqId}}).route;
+                const urlSplitArr = window.location.href.split('/');
+                const url = urlSplitArr.slice(0, urlSplitArr.length - 2).join('/');
 
+                me.linkUrl = url + '/showroom.php#/asset-view/' + modelFileInfo.seqId;
                 me.disabled = true;
                 me.isShowMaterialList = false;
-
-                me.linkUrl = url + 'showroom.php#' + assetViewRoute.fullPath;
 
                 $(me.$el).modal('show');
 

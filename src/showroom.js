@@ -69,7 +69,6 @@ Vue.use(VueRouter);
 const viewPageVue = () => import('./vue/pages/viewPage.vue');
 const assetViewPageVue = () => import('./vue/pages/assetViewPage.vue');
 
-// 비공개 뷰 페이지는 index.js 를 사용한다.
 const router = new VueRouter({
     routes: [
         {path: '/view/:id', name: 'view', component: viewPageVue, props: function (route) {
