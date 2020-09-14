@@ -1,3 +1,4 @@
+export const PAGE_TEXT = './api/page-text.php';
 export const SHOWROOM_LIST = './api/showroom-list.php';
 export const SHOWROOM_DATA = './api/showroom-data.php';
 export const SHOWROOM_CREATE = './api/showroom-create.php';

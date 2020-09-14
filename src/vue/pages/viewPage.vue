@@ -54,7 +54,7 @@
 
         <div ref="bottom" class="bottom disable-user-select">
             <div class="content">
-                <div class="text">(주)예술고래 상회</div>
+                <div class="text">{{ pageText[lang].bottom }}</div>
 
                 <div @click="onClickLang" class="lang-button">
                     <font-awesome-icon :icon="['fas', 'globe']"></font-awesome-icon>
@@ -92,6 +92,7 @@
             const me = this;
 
             return {
+                pageText: window.PAGE_TEXT,
                 showroom: new Showroom(),
                 isMobile: false,
                 isPlayMusic: false,
