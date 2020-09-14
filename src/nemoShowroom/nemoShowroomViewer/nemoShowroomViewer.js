@@ -445,6 +445,22 @@ export default class NemoShowroomEditor {
         me.moveInfo.moveRight = bool;
     }
 
+    moveUpSwitch(bool) {
+        const me = this;
+
+        me.moveInfo.offDirection();
+
+        me.moveInfo.moveUp = bool;
+    }
+
+    moveDownSwitch(bool) {
+        const me = this;
+
+        me.moveInfo.offDirection();
+
+        me.moveInfo.moveDown = bool;
+    }
+
     __cameraLookDir(camera) {
         const vector3 = new THREE.Vector3(0, 0, -1);
 
