@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="file-page-field">
         <top-nav page-name="file"></top-nav>
 
         <!-- 업로드 모달 -->

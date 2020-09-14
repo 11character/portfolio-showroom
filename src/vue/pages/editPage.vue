@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="edit-page-field">
         <loading :hidden="!disabled"></loading>
 
         <top-nav separate-page="Edit"></top-nav>
@@ -413,100 +413,102 @@
 </script>
 
 <style lang="scss" scoped>
-    .editor-field {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-
-        -ms-user-select: none;
-        -moz-user-select: -moz-none;
-        -khtml-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-
-        /* nav ==================================================================================================== */
-        $nav-field-w: 120;
-
-        .nav-field {
-            border-top: solid 1px #8c8c8c;
-            min-width: $nav-field-w + px;
-            height: 100%;
-            background-color: #343a40;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        .nav-btn {
-            width: $nav-field-w + px;
-            height: $nav-field-w + px;
-            border-bottom: solid 1px #8c8c8c;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .nav-btn-sm {
-            width: $nav-field-w + px;
-            height: ($nav-field-w / 3) + px;
-            border-bottom: solid 1px #8c8c8c;
+    .edit-page-field {
+        .editor-field {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            -ms-user-select: none;
+            -moz-user-select: -moz-none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+
+            /* nav ==================================================================================================== */
+            $nav-field-w: 120;
+
+            .nav-field {
+                border-top: solid 1px #8c8c8c;
+                min-width: $nav-field-w + px;
+                height: 100%;
+                background-color: #343a40;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            .nav-btn {
+                width: $nav-field-w + px;
+                height: $nav-field-w + px;
+                border-bottom: solid 1px #8c8c8c;
+                text-align: center;
+                cursor: pointer;
+            }
+
+            .nav-btn-sm {
+                width: $nav-field-w + px;
+                height: ($nav-field-w / 3) + px;
+                border-bottom: solid 1px #8c8c8c;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            .nav-btn:hover {
+                background-color: #8c8c8c;
+            }
+
+            .nav-btn-img {
+                width: 40px;
+                height: 40px;
+                margin-top: 25px;
+                color: #ffffff;
+            }
+
+            .nav-btn-img-model-file {
+                width: 40px;
+                height: 45px;
+                margin-bottom: 10px;
+            }
+
+            .nav-btn-img-text {
+                width: 44px;
+                height: 27px;
+                margin-bottom: 23px;
+            }
+
+            .nav-btn-img-webpage {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 10px;
+            }
+
+            .nav-btn-img-youtube {
+                width: 40px;
+                height: 27px;
+                margin-bottom: 23px;
+            }
+
+            .nav-btn-font {
+                font-size: 17px;
+                color: #ffffff;
+            }
+            /* END-nav ==================================================================================================== */
+
+
+            /* control ==================================================================================================== */
+            $control-field-w: 300;
+
+            .control-field {
+                min-width: $control-field-w + px;
+                height: 100%;
+                background-color: #343a40;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+            /* END-control ==================================================================================================== */
         }
-
-        .nav-btn:hover {
-            background-color: #8c8c8c;
-        }
-
-        .nav-btn-img {
-            width: 40px;
-            height: 40px;
-            margin-top: 25px;
-            color: #ffffff;
-        }
-
-        .nav-btn-img-model-file {
-            width: 40px;
-            height: 45px;
-            margin-bottom: 10px;
-        }
-
-        .nav-btn-img-text {
-            width: 44px;
-            height: 27px;
-            margin-bottom: 23px;
-        }
-
-        .nav-btn-img-webpage {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 10px;
-        }
-
-        .nav-btn-img-youtube {
-            width: 40px;
-            height: 27px;
-            margin-bottom: 23px;
-        }
-
-        .nav-btn-font {
-            font-size: 17px;
-            color: #ffffff;
-        }
-        /* END-nav ==================================================================================================== */
-
-
-        /* control ==================================================================================================== */
-        $control-field-w: 300;
-
-        .control-field {
-            min-width: $control-field-w + px;
-            height: 100%;
-            background-color: #343a40;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-        /* END-control ==================================================================================================== */
     }
 </style>
 

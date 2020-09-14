@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="asset-edit-page-field">
         <loading :hidden="!disabled"></loading>
 
         <top-nav separate-page="Asset Edit"></top-nav>
@@ -216,70 +216,72 @@
 </script>
 
 <style lang="scss" scoped>
-    .editor-field {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-
-        -ms-user-select: none;
-        -moz-user-select: -moz-none;
-        -khtml-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-
-        /* nav ==================================================================================================== */
-        $nav-field-w: 120;
-
-        .nav-field {
-            border-top: solid 1px #8c8c8c;
-            min-width: $nav-field-w + px;
-            height: 100%;
-            background-color: #343a40;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        .nav-btn {
-            width: $nav-field-w + px;
-            height: $nav-field-w + px;
-            border-bottom: solid 1px #8c8c8c;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .nav-btn-sm {
-            width: $nav-field-w + px;
-            height: ($nav-field-w / 3) + px;
-            border-bottom: solid 1px #8c8c8c;
+    .asset-edit-page-field {
+        .editor-field {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            -ms-user-select: none;
+            -moz-user-select: -moz-none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+
+            /* nav ==================================================================================================== */
+            $nav-field-w: 120;
+
+            .nav-field {
+                border-top: solid 1px #8c8c8c;
+                min-width: $nav-field-w + px;
+                height: 100%;
+                background-color: #343a40;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            .nav-btn {
+                width: $nav-field-w + px;
+                height: $nav-field-w + px;
+                border-bottom: solid 1px #8c8c8c;
+                text-align: center;
+                cursor: pointer;
+            }
+
+            .nav-btn-sm {
+                width: $nav-field-w + px;
+                height: ($nav-field-w / 3) + px;
+                border-bottom: solid 1px #8c8c8c;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            .nav-btn:hover {
+                background-color: #8c8c8c;
+            }
+
+            .nav-btn-font {
+                font-size: 17px;
+                color: #ffffff;
+            }
+            /* END-nav ==================================================================================================== */
+
+
+            /* control ==================================================================================================== */
+            $control-field-w: 300;
+
+            .control-field {
+                min-width: $control-field-w + px;
+                max-width: $control-field-w + px;
+                height: 100%;
+                background-color: #343a40 ;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+            /* END-control ==================================================================================================== */
         }
-
-        .nav-btn:hover {
-            background-color: #8c8c8c;
-        }
-
-        .nav-btn-font {
-            font-size: 17px;
-            color: #ffffff;
-        }
-        /* END-nav ==================================================================================================== */
-
-
-        /* control ==================================================================================================== */
-        $control-field-w: 300;
-
-        .control-field {
-            min-width: $control-field-w + px;
-            max-width: $control-field-w + px;
-            height: 100%;
-            background-color: #343a40 ;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-        /* END-control ==================================================================================================== */
     }
 </style>
 

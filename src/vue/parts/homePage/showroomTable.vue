@@ -1,5 +1,5 @@
 <template>
-    <div class="table-filed">
+    <div class="showroom-table-field">
         <!-- 제거 모달 -->
         <confirm-modal @confirm="onConfirmDelete" ref="deleteModal">
             <template v-slot:message>
@@ -24,19 +24,19 @@
 
         <div ref="buttons" hidden>
             <div class="row">
-                <div class="col-4 px-1 pl-2">
+                <div class="col-lg-4 p-1 py-lg-0 pl-lg-2">
                     <button type="button" class="l-btn w-100 btn btn-sm btn-outline-primary">
                         <font-awesome-icon :icon="['fas', 'eye']"></font-awesome-icon>
                     </button>
                 </div>
 
-                <div class="col-4 px-1">
+                <div class="col-lg-4 p-1 py-lg-0">
                     <button type="button" class="e-btn w-100 btn btn-sm btn-outline-primary">
                         <font-awesome-icon :icon="['fas', 'edit']"></font-awesome-icon>
                     </button>
                 </div>
 
-                <div class="col-4 px-1 pr-2">
+                <div class="col-lg-4 p-1 py-lg-0 pr-lg-2">
                     <button type="button" class="d-btn w-100 btn btn-sm btn-outline-danger">
                         <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>
                     </button>
@@ -130,3 +130,9 @@
         }
     }
 </script>
+
+<style lang="scss" scoped>
+    .showroom-table-field {
+        overflow-x: auto;
+    }
+</style>

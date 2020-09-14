@@ -1,5 +1,5 @@
 <template>
-    <div class="root-field font-neuemachina">
+    <div class="asset-view-page-field font-neuemachina">
         <loading :hidden="!disabled" ref="loading"></loading>
 
         <div class="view-field" ref="viewField"></div>
@@ -146,7 +146,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .root-field {
+    .asset-view-page-field {
         .material-button-field {
             width: 80%;
             height: 120px;

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="home-page-field">
         <top-nav page-name="home"></top-nav>
 
         <!-- 생성 모달 -->

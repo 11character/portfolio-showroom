@@ -1,5 +1,5 @@
 <template>
-    <div class="root-field font-neuemachina">
+    <div class="view-page-field font-neuemachina">
         <div ref="top" class="top">
             <top-menu :showroom="showroom" :lang="lang" ref="topMenu"></top-menu>
         </div>
@@ -288,142 +288,94 @@
 </script>
 
 <style lang="scss" scoped>
-.root-field {
-    .disable-user-select {
-        cursor: default;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    .top {
-        width: 100%;
-        height: 108px;
-        position: fixed;
-        left: 0px;
-        top: 0px;
-        z-index: 4;
-    }
-
-    .center {
-        margin: 108px 18px 0px 18px;
-        width: 100%;
-        overflow: hidden;
-        position: relative;
-
-        .cover {
-            position: absolute;
-            z-index: 3;
+    .view-page-field {
+        .disable-user-select {
+            cursor: default;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        .view-field {
+        .top {
+            width: 100%;
+            height: 108px;
+            position: fixed;
             left: 0px;
             top: 0px;
+            z-index: 4;
+        }
 
-            .view-button {
+        .center {
+            margin: 108px 18px 0px 18px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+
+            .cover {
                 position: absolute;
-                padding: 0rem 1rem;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                color: #ffffff;
-                background-color: #000000;
-                border: 1px solid #ffffff;
-                z-index: 2;
+                z-index: 3;
             }
 
-            .music-button {
-                width: 120px;
-                height: 45px;
-                font-size: 0.5rem 1.2rem;
-                padding: 0.5rem 1rem;
-                font-weight: bold;
-                left: 18px;
-                top: 100%;
-                margin-top: -63px;
+            .view-field {
+                left: 0px;
+                top: 0px;
 
-                .content {
-                    text-align: center;
-                    overflow: hidden;
-                    white-space:nowrap;
-                    word-wrap:normal;
-                    text-overflow:ellipsis;
-
-                    audio {
-                        display: none;
-                    }
-                }
-            }
-
-            .music-button:hover {
-                color: #000000;
-                border: 1px solid #000000;
-                background-color: #ffffff;
-            }
-
-            .object-button {
-                width: 210px;
-                height: 45px;
-                font-size: 0.5rem 1.2rem;
-                padding: 0.5rem 1rem;
-                font-weight: bold;
-                left: 100%;
-                top: 100%;
-                margin-left: -228px;
-                margin-top: -63px;
-
-                .content {
-                    overflow: hidden;
-                    white-space:nowrap;
-                    word-wrap:normal;
-                    text-overflow:ellipsis;
-                }
-
-                .icon {
-                    text-align: right;
-                }
-            }
-
-            .object-button:hover {
-                color: #000000;
-                border: 1px solid #000000;
-                background-color: #ffffff;
-            }
-
-            .list-field {
-                position: absolute;
-                height: 245px;
-                overflow-y: auto;
-                font-weight: bold;
-                color: #000000;
-                background-color: #ffffff;
-                border: 1px solid #000000;
-                z-index: 2;
-
-                .text-header {
-                    width: 100%;
-                    height: 42px;
+                .view-button {
+                    position: absolute;
                     padding: 0rem 1rem;
                     display: flex;
-                    justify-content: space-between;
                     align-items: center;
-                    font-size: 1.2rem;
+                    justify-content: space-between;
+                    color: #ffffff;
+                    background-color: #000000;
+                    border: 1px solid #ffffff;
+                    z-index: 2;
+                }
+
+                .music-button {
+                    width: 120px;
+                    height: 45px;
+                    font-size: 0.5rem 1.2rem;
+                    padding: 0.5rem 1rem;
                     font-weight: bold;
-                    border-bottom: 1px solid #000000;
-                    cursor: default;
-                    -webkit-touch-callout: none;
-                    -webkit-user-select: none;
-                    -khtml-user-select: none;
-                    -moz-user-select: none;
-                    -ms-user-select: none;
-                    user-select: none;
-                    display: flex;
+                    left: 18px;
+                    top: 100%;
+                    margin-top: -63px;
 
                     .content {
-                        width: 90%;
+                        text-align: center;
+                        overflow: hidden;
+                        white-space:nowrap;
+                        word-wrap:normal;
+                        text-overflow:ellipsis;
+
+                        audio {
+                            display: none;
+                        }
+                    }
+                }
+
+                .music-button:hover {
+                    color: #000000;
+                    border: 1px solid #000000;
+                    background-color: #ffffff;
+                }
+
+                .object-button {
+                    width: 210px;
+                    height: 45px;
+                    font-size: 0.5rem 1.2rem;
+                    padding: 0.5rem 1rem;
+                    font-weight: bold;
+                    left: 100%;
+                    top: 100%;
+                    margin-left: -228px;
+                    margin-top: -63px;
+
+                    .content {
                         overflow: hidden;
                         white-space:nowrap;
                         word-wrap:normal;
@@ -431,68 +383,116 @@
                     }
 
                     .icon {
-                        width: 10%;
                         text-align: right;
                     }
                 }
 
-                .product-body {
-                    width: 100%;
-                    height: 200px;
+                .object-button:hover {
+                    color: #000000;
+                    border: 1px solid #000000;
+                    background-color: #ffffff;
+                }
+
+                .list-field {
+                    position: absolute;
+                    height: 245px;
+                    overflow-y: auto;
+                    font-weight: bold;
+                    color: #000000;
+                    background-color: #ffffff;
+                    border: 1px solid #000000;
+                    z-index: 2;
+
+                    .text-header {
+                        width: 100%;
+                        height: 42px;
+                        padding: 0rem 1rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        border-bottom: 1px solid #000000;
+                        cursor: default;
+                        -webkit-touch-callout: none;
+                        -webkit-user-select: none;
+                        -khtml-user-select: none;
+                        -moz-user-select: none;
+                        -ms-user-select: none;
+                        user-select: none;
+                        display: flex;
+
+                        .content {
+                            width: 90%;
+                            overflow: hidden;
+                            white-space:nowrap;
+                            word-wrap:normal;
+                            text-overflow:ellipsis;
+                        }
+
+                        .icon {
+                            width: 10%;
+                            text-align: right;
+                        }
+                    }
+
+                    .product-body {
+                        width: 100%;
+                        height: 200px;
+                    }
+                }
+
+                .material-button-field {
+                    position: absolute;
+                    z-index: 1;
                 }
             }
-
-            .material-button-field {
-                position: absolute;
-                z-index: 1;
-            }
         }
-    }
 
-    .center-full {
-        position: fixed;
-        left:0px;
-        top: 0px;
-        margin: 0px;
-        width: 100vw;
-        height: 100vh;
-    }
+        .center-full {
+            position: fixed;
+            left:0px;
+            top: 0px;
+            margin: 0px;
+            width: 100vw;
+            height: 100vh;
+        }
 
-    .bottom {
-        width: 100%;
-        height: 37px;
-        padding: 0px 18px;
-
-        .content {
+        .bottom {
             width: 100%;
-            height: 100%;
-            margin-top:30px;
-            padding-top: 8px;
-            border-top: 1px solid #000000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            height: 37px;
+            padding: 0px 18px;
 
-            .text {
-                font-size: 0.6rem;
-            }
+            .content {
+                width: 100%;
+                height: 100%;
+                margin-top:30px;
+                padding-top: 8px;
+                border-top: 1px solid #000000;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
 
-            .lang-button {
-                padding: 0rem 1rem;
-                cursor: pointer;
+                .text {
+                    font-size: 0.6rem;
+                }
+
+                .lang-button {
+                    padding: 0rem 1rem;
+                    cursor: pointer;
+                }
             }
         }
-    }
 
-    .move-control-field {
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -91px;
-        margin-top: -197px;
-        z-index: 1;
+        .move-control-field {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -91px;
+            margin-top: -197px;
+            z-index: 1;
+        }
     }
-}
 </style>
 
 <style lang="scss">
