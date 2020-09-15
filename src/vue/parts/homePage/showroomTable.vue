@@ -130,9 +130,3 @@
         }
     }
 </script>
-
-<style lang="scss" scoped>
-    .showroom-table-field {
-        overflow-x: auto;
-    }
-</style>

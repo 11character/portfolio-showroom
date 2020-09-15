@@ -134,9 +134,3 @@
         }
     }
 </script>
-
-<style lang="scss" scoped>
-    .file-table-field {
-        overflow-x: auto;
-    }
-</style>
