@@ -295,6 +295,8 @@
 
                 const viewer = me.showroomViewer;
 
+                viewer.moveStop();
+
                 if (info.distance > 30) {
                     const deg = Utils.r2d(info.angle);
 
@@ -326,9 +328,6 @@
                     } else {
                         viewer.moveForwardSwitch(true);
                     }
-
-                } else {
-                    viewer.moveStop();
                 }
             },
             onControlHover: function (y) {
@@ -336,14 +335,13 @@
 
                 const viewer = me.showroomViewer;
 
+                viewer.moveStop();
+
                 if (y > 30) {
                     viewer.moveUpSwitch(true);
 
                 } else if (y < -30) {
                     viewer.moveDownSwitch(true);
-
-                } else {
-                    viewer.moveStop();
                 }
             }
         }
