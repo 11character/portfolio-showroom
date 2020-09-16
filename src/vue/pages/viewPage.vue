@@ -8,8 +8,12 @@
             <cover :hidden="hiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
             <div ref="viewField" class="view-field">
-                <div v-if="isMobile && !isShowMaterialList" class="move-control-field">
-                    <move-button :viewer="showroomViewer"></move-button>
+                <div v-if="isMobile && !isShowMaterialList" class="move-left-control">
+                    <move-control @control="onControlMove"></move-control>
+                </div>
+
+                <div v-if="isMobile && !isShowMaterialList" class="move-right-control">
+                    <hover-control @control="onControlHover"></hover-control>
                 </div>
 
                 <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button disable-user-select">
@@ -73,7 +77,8 @@
     import coverVue from '../parts/viewPage/cover.vue';
     import itemLinkListVue from '../parts/viewPage/itemLinkList.vue';
     import itemMaterialListVue from '../parts/viewPage/itemMaterialList.vue';
-    import moveButtonVue from '../parts/viewPage/moveButton.vue';
+    import moveControlVue from '../parts/viewPage/moveControl.vue';
+    import hoverControlVue from '../parts/viewPage/hoverControl.vue';
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
@@ -85,7 +90,8 @@
             'cover': coverVue,
             'item-link-list': itemLinkListVue,
             'item-material-list': itemMaterialListVue,
-            'move-button': moveButtonVue
+            'move-control': moveControlVue,
+            'hover-control': hoverControlVue
         },
         props: ['id', 'lang'],
         data: function () {
@@ -283,6 +289,62 @@
                 const lang = me.lang == 'ko' ? 'en' : 'ko';
 
                 me.$router.push({name: 'view-lang', params:{id: me.id, lang: lang}});
+            },
+            onControlMove: function (info) {
+                const me = this;
+
+                const viewer = me.showroomViewer;
+
+                if (info.distance > 30) {
+                    const deg = Utils.r2d(info.angle);
+
+                    if (22.5 < deg && deg <= 67.5) {
+                        viewer.moveForwardSwitch(true);
+                        viewer.moveRightSwitch(true);
+
+                    } else if (67.5 < deg && deg <= 112.5) {
+                        viewer.moveRightSwitch(true);
+
+                    } else if (112.5 < deg && deg <= 157.5) {
+                        viewer.moveRightSwitch(true);
+                        viewer.moveBackwardSwitch(true);
+
+                    } else if (157.5 < deg && deg <= 202.5) {
+                        viewer.moveBackwardSwitch(true);
+
+                    } else if (202.5 < deg && deg <= 247.5) {
+                        viewer.moveBackwardSwitch(true);
+                        viewer.moveLeftSwitch(true);
+
+                    } else if (247.5 < deg && deg <= 292.5) {
+                        viewer.moveLeftSwitch(true);
+
+                    } else if (292.5 < deg && deg <= 337.5) {
+                        viewer.moveLeftSwitch(true);
+                        viewer.moveForwardSwitch(true);
+
+                    } else {
+                        viewer.moveForwardSwitch(true);
+                    }
+
+                } else {
+                    viewer.moveStop();
+                }
+            },
+            onControlHover: function (y) {
+                const me = this;
+
+                const viewer = me.showroomViewer;
+
+                if (y > 30) {
+                    viewer.moveUpSwitch(true);
+
+                } else if (y < -30) {
+                    viewer.moveDownSwitch(true);
+
+                } else {
+                    viewer.moveStop();
+                }
             }
         }
     }
@@ -485,12 +547,20 @@
             }
         }
 
-        .move-control-field {
+        .move-left-control {
             position: absolute;
+            left: 36px;
             top: 100%;
-            left: 50%;
-            margin-left: -91px;
-            margin-top: -197px;
+            margin-top: -220px;
+            z-index: 1;
+        }
+
+        .move-right-control {
+            position: absolute;
+            left: 100%;
+            top: 100%;
+            margin-left: -86px;
+            margin-top: -220px;
             z-index: 1;
         }
     }

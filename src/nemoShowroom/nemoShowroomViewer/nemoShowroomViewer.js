@@ -416,49 +416,49 @@ export default class NemoShowroomEditor {
     moveForwardSwitch(bool) {
         const me = this;
 
-        me.moveInfo.offDirection();
-
+        me.moveInfo.moveBackward = false;
         me.moveInfo.moveForward = bool;
     }
 
     moveBackwardSwitch(bool) {
         const me = this;
 
-        me.moveInfo.offDirection();
-
+        me.moveInfo.moveForward = false;
         me.moveInfo.moveBackward = bool;
     }
 
     moveLeftSwitch(bool) {
         const me = this;
 
-        me.moveInfo.offDirection();
-
+        me.moveInfo.moveRight = false;
         me.moveInfo.moveLeft = bool;
     }
 
     moveRightSwitch(bool) {
         const me = this;
 
-        me.moveInfo.offDirection();
-
+        me.moveInfo.moveLeft = false;
         me.moveInfo.moveRight = bool;
     }
 
     moveUpSwitch(bool) {
         const me = this;
 
-        me.moveInfo.offDirection();
-
+        me.moveInfo.moveDown = false;
         me.moveInfo.moveUp = bool;
     }
 
     moveDownSwitch(bool) {
         const me = this;
 
-        me.moveInfo.offDirection();
-
+        me.moveInfo.moveUp = false;
         me.moveInfo.moveDown = bool;
+    }
+
+    moveStop() {
+        const me = this;
+
+        me.moveInfo.offDirection();
     }
 
     __cameraLookDir(camera) {

@@ -39,19 +39,18 @@ export default class MouseRaycaster {
     getPointerXY(event, pixelRatio = window.devicePixelRatio) {
         const me = this;
 
+        const position = event.target.getBoundingClientRect();
+
         let offsetX;
         let offsetY;
 
         if (event.changedTouches && event.changedTouches[0]) {
-            const position = event.target.getBoundingClientRect();
-
-            // 터치는 offetX, offsetY를 제공하지 않는다.
             offsetX = (event.changedTouches[0].pageX - position.x) * pixelRatio;
             offsetY = (event.changedTouches[0].pageY - position.y) * pixelRatio;
 
         } else {
-            offsetX = event.offsetX * pixelRatio;
-            offsetY = event.offsetY * pixelRatio;
+            offsetX = (event.pageX - position.x) * pixelRatio;
+            offsetY = (event.pageY - position.y) * pixelRatio;
         }
 
         return {
