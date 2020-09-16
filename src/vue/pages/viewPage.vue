@@ -549,7 +549,7 @@
 
         .move-left-control {
             position: absolute;
-            left: 36px;
+            left: 18px;
             top: 100%;
             margin-top: -220px;
             z-index: 1;
@@ -559,7 +559,7 @@
             position: absolute;
             left: 100%;
             top: 100%;
-            margin-left: -86px;
+            margin-left: -48px;
             margin-top: -220px;
             z-index: 1;
         }

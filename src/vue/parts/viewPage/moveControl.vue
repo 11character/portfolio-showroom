@@ -41,8 +41,8 @@
                 const zeroX = me.width / 2;
                 const zeroY = me.height / 2;
 
-                const left = zeroX + x - 20;
-                const top = zeroY - y - 20;
+                const left = zeroX + x - 15;
+                const top = zeroY - y - 15;
 
                 jPointer.css('left', left).css('top', top);
             },
@@ -133,8 +133,8 @@
         user-select: none;
 
         .control-pointer {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             position: absolute;
             background-color: #ffffff;

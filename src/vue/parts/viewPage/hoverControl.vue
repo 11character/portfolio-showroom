@@ -35,7 +35,7 @@
                 const jPointer = $(me.$refs.pointer);
 
                 const zeroY = me.height / 2;
-                const top = zeroY - y - 20;
+                const top = zeroY - y - 15;
 
                 jPointer.css('top', top);
             },
@@ -89,9 +89,9 @@
 
 <style lang="scss" scoped>
     .hover-control-field {
-        width: 40px;
+        width: 30px;
         height: 120px;
-        border-radius: 40px;
+        border-radius: 15px;
         position: relative;
         background-color: rgba(0, 0, 0, 0.5);
 
@@ -102,8 +102,8 @@
         user-select: none;
 
         .control-pointer {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             left: 0px;
             border-radius: 50%;
             position: absolute;
