@@ -98,6 +98,8 @@ const vue = new Vue({
 import Utils from './class/utils';
 import * as ApiUrl from './class/apiUrl';
 
+window.PAGE_TEXT = {ko: {}, en: {}};
+
 Utils.apiRequest(ApiUrl.PAGE_TEXT).then(function (data) {
     if (data.code == 0) {
         window.PAGE_TEXT = data.data;
