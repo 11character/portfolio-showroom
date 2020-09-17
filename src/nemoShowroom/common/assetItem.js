@@ -32,7 +32,6 @@ export default class AssetItem {
         this.content = obj.content || '';
         this.width = obj.width || 0;
         this.height = obj.height || 0;
-        this.link = obj.link || '';
         this.backgroundLoading = !!obj.backgroundLoading;
 
         this.object3D = obj.object3D;
@@ -115,7 +114,6 @@ export default class AssetItem {
             content: me.content,
             width: me.width,
             height: me.height,
-            link: me.link,
             backgroundLoading: me.backgroundLoading,
 
             zeroScale: me.zeroScale,

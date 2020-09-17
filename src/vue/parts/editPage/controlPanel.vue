@@ -70,7 +70,7 @@
                             </div>
 
                             <div class="control-row control-row-flex">
-                                <input-checkbox v-model="backgroundLoading" label="Background loding"></input-checkbox>
+                                <input-checkbox v-model="backgroundLoading" label="Background loading"></input-checkbox>
                             </div>
 
                             <div v-if="!assetItem.isLight && !assetItem.isStartPoint" class="control-row control-row-flex">
@@ -129,30 +129,26 @@
                                 <input-number v-model.number="animationEndTime" :step="1000" label="Animation time ( ms )"></input-number>
                             </div>
 
-                            <div v-if="assetItem.type != 'youtube' && !assetItem.isLight && !assetItem.isStartPoint" class="control-row">
-                                <input-text v-model.trim="link" label="Link"></input-text>
-                            </div>
-
                             <!-- 조명 -->
                             <template v-if="assetItem.isLight">
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightAngle" :min="1" :max="180" :step="1" :label="'Light angle'"></input-slider>
+                                    <input-slider v-model.number="lightAngle" :min="1" :max="180" :step="1" label="Light angle"></input-slider>
                                 </div>
 
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightIntensity" :min="0" :max="2" :step="0.1" :label="'Light intensity'"></input-slider>
+                                    <input-slider v-model.number="lightIntensity" :min="0" :max="2" :step="0.1" label="Light intensity"></input-slider>
                                 </div>
 
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightPenumbra" :min="0" :max="1" :step="0.1" :label="'Light penumbra'"></input-slider>
+                                    <input-slider v-model.number="lightPenumbra" :min="0" :max="1" :step="0.1" label="Light penumbra"></input-slider>
                                 </div>
 
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightDistance" :min="0" :max="100" :step="1" :label="'Light distance'"></input-slider>
+                                    <input-slider v-model.number="lightDistance" :min="0" :max="100" :step="1" label="Light distance"></input-slider>
                                 </div>
 
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightDecay" :min="0" :max="1" :step="0.1" :label="'Light decay'"></input-slider>
+                                    <input-slider v-model.number="lightDecay" :min="0" :max="1" :step="0.1" label="Light decay"></input-slider>
                                 </div>
 
                                 <div class="control-row">
@@ -490,7 +486,6 @@
                 me.rotationY = parseFloat(Utils.r2d(assetItem.rotation.y).toFixed(3));
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
-                me.link = assetItem.link;
                 me.backgroundLoading = assetItem.backgroundLoading;
                 me.isClickTarget = assetItem.isClickTarget;
                 me.isTransparent = assetItem.isTransparent;
