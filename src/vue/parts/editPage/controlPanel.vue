@@ -47,7 +47,7 @@
                         <a class="nav-link" data-toggle="tab" href=".tab-2">Material</a>
                     </li>
 
-                    <li class="nav-item">
+                    <li v-if="!isSystemModel" class="nav-item">
                         <a class="nav-link" data-toggle="tab" href=".tab-3">Buttons</a>
                     </li>
                 </ul>
@@ -69,11 +69,11 @@
                                 </button>
                             </div>
 
-                            <div class="control-row control-row-flex">
+                            <div v-if="!isSystemModel" class="control-row control-row-flex">
                                 <input-checkbox v-model="backgroundLoading" label="Background loading"></input-checkbox>
                             </div>
 
-                            <div v-if="!assetItem.isLight && !assetItem.isStartPoint" class="control-row control-row-flex">
+                            <div v-if="!isSystemModel" class="control-row control-row-flex">
                                 <input-checkbox v-model="isClickTarget" label="Click"></input-checkbox>
 
                                 <template v-if="'html,image,youtube'.indexOf(assetItem.type) == -1">
@@ -219,6 +219,7 @@
             return {
                 lockEvent: false,
                 StaticVariable: StaticVariable,
+                isSystemModel: false,
                 is3dModel: false,
                 contentType: '',
                 assetItem: new AssetItem(),
@@ -438,6 +439,7 @@
                 $(me.$refs.firstTabBtn).tab('show');
 
                 me.is3dModel = StaticVariable.ITEM_3D_TYPES.indexOf(assetItem.type) > -1;
+                me.isSystemModel = StaticVariable.ITEM_SYSTEM_TYPES.indexOf(assetItem.type) > -1;
                 me.assetItem = assetItem;
 
                 me.setItemData(me.assetItem);

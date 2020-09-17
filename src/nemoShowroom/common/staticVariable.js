@@ -109,6 +109,16 @@ export const ITEM_TYPE_START_POINT = 'startPoint';
 export const ITEM_3D_TYPES = [ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_STL, ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_DAE].join(' ');
 
 /**
+ * 2D 타입.
+ */
+export const ITEM_2D_TYPES = [ITEM_TYPE_HTML, ITEM_TYPE_YOUTUBE, ITEM_TYPE_IMAGE, ITEM_TYPE_TEXT].join(' ');
+
+/**
+ * 설정용 타입.
+ */
+export const ITEM_SYSTEM_TYPES = [ITEM_TYPE_SPOT_LIGHT, ITEM_TYPE_START_POINT].join(' ');
+
+/**
  * 대상 복제시 리로드 할 타입.
  */
 export const CLONE_RELOAD_TYPE = ITEM_TYPE_3D_FBX;
