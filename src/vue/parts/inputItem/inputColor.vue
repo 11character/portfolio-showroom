@@ -18,7 +18,7 @@
     export default {
         props: {
             label: {type: String, default: ''},
-            value: {type: THREE.Color, default: new THREE.Color('rgba(255, 255, 255, 1)')}
+            value: {type: THREE.Color, default: 'rgba(255, 255, 255, 1)'}
         },
         data: function () {
             return {
@@ -44,7 +44,7 @@
         mounted: function () {
             const me = this;
 
-            window.pickr = me.colorPickr = Pickr.create({
+            me.colorPickr = Pickr.create({
                 el: me.$refs.colorBox,
                 useAsButton: true,
                 theme: 'monolith',

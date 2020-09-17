@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="row w-100">
                         <div class="col-12">
-                            <button type="button" class="text-page-color w-100 btn btn-outline-secondary">배경색</button>
+                            <input-color v-model="bgColor" label="배경색"></input-color>
                         </div>
 
                         <div class="col-12 mt-3 font-neuemachina">
@@ -38,22 +38,33 @@
     import * as ApiUrl from '../../../class/apiUrl';
     import Utils from '../../../class/utils';
 
+    import InputColorVue from '../inputItem/inputColor.vue';
+
     import 'summernote/dist/summernote-bs4';
     import 'summernote/dist/summernote-bs4.css';
 
-    import Pickr from '@simonwep/pickr';
     import '@simonwep/pickr/dist/themes/monolith.min.css';
 
     /**
     * template event : apply
     */
     export default {
+        components: {
+            'input-color': InputColorVue
+        },
         data: function () {
             return {
                 disabled: false,
-                colorPickr: null,
+                bgColor: 'rgba(255, 255, 255, 1)',
                 jTextEditor: null
             };
+        },
+        watch: {
+            bgColor: function (color) {
+                const me = this;
+
+                $(me.$el).find('.note-editable').css('backgroundColor', color);
+            }
         },
         mounted: function () {
             const me = this;
@@ -71,42 +82,12 @@
             });
             // END-Text editor ====================================================================================================
 
-            // Color picker ====================================================================================================
-            me.colorPickr = Pickr.create({
-                el: '.text-page-color',
-                useAsButton: true,
-                theme: 'monolith',
-                default: '#ffffff',
-                components: {
-                    preview: true,
-                    opacity: true,
-                    hue: true,
-                    interaction: {
-                        hex: true,
-                        rgba: true,
-                        input: true
-                    }
-                }
-            }).on('change', function (color) {
-                $(me.$el).find('.note-editable').css('backgroundColor', color.toHEXA());
-
-            }).on('show', function (instance) {
-                const color = '#ffffff';
-
-                $(me.$el).find('.note-editable').css('backgroundColor', color);
-                instance.setColor(color);
-            });
-            // END-Color picker ====================================================================================================
-
             $(me.$el).on('hidden.bs.modal', function () {
                 me.jTextEditor.summernote('code', '');
             });
         },
         beforeDestroy: function () {
             const me = this;
-
-            me.colorPickr.destroy();
-            me.colorPickr = null;
 
             me.jTextEditor.summernote('destroy');
             me.jTextEditor = null;
@@ -132,7 +113,7 @@
 
                 const data = {
                     html: me.jTextEditor.summernote('code'),
-                    backgroundColor: me.colorPickr.getColor().toHEXA()
+                    backgroundColor: me.bgColor
                 };
 
                 me.$emit('apply', data);
