@@ -1,8 +1,8 @@
 <template>
     <div class="top-menu">
-        <div class="logo"></div>
+        <!-- <div class="logo"></div> -->
 
-        <div class="top-buttons font-neuemachina">
+        <div class="top-buttons">
             <div :hidden="!isShowText" ref="textField" class="text-field">
                 <pre v-if="lang == 'ko'" class="font-neuemachina">{{ showroom.contentKo }}</pre>
                 <pre v-else class="font-neuemachina">{{ showroom.contentEn }}</pre>
@@ -31,9 +31,11 @@
             </template>
 
             <template v-else>
-                <div @click="onClickLink" class="top-button">
+                <div @click="onClickLink" class="top-button font-neuemachina-ultrabold">
                     <div class="content">
-                        <span>Enter to Art Shop</span>
+                        <span>Selective Art Shop</span>
+                        <br>
+                        <span>Enter to Art Shop - Enter to Art Shop - Ent</span>
                     </div>
                 </div>
 
@@ -192,7 +194,6 @@
                 height: 100%;
                 padding: 0.5rem 1rem;
                 font-size: 1.2rem;
-                font-weight: bold;
                 background-color: #ffffff;
                 border-top: 1px solid #000000;
                 border-left: 1px solid #000000;
@@ -230,7 +231,6 @@
                 height: 45px;
                 padding: 0rem 1rem;
                 font-size: 1.2rem;
-                font-weight: bold;
                 color: #ffffff;
                 background-color: #000000;
                 border-top: 1px solid #ffffff;
@@ -278,7 +278,6 @@
             pre {
                 width: 100%;
                 white-space: pre-wrap;
-                font-weight: bold;
                 color: #ffffff;
             }
         }

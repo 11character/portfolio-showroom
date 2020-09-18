@@ -1,8 +1,63 @@
 <template>
-    <div class="view-page-field font-neuemachina">
-        <div ref="top" class="top">
-            <top-menu :showroom="showroom" :lang="lang" ref="topMenu"></top-menu>
+    <div class="view-page-field">
+        <div class="logo"></div>
+
+        <div class="showroom-button-field">
+            <div :hidden="!isShowText" ref="textField" class="text-field">
+                <pre v-if="lang == 'ko'" class="font-neuemachina">{{ showroom.contentKo }}</pre>
+                <pre v-else class="font-neuemachina">{{ showroom.contentEn }}</pre>
+            </div>
+
+            <template v-if="isShowSmallButton">
+                <div @click="onClickShowroomLink" class="showroom-button-sm disable-user-select">
+                    <div class="content">
+                        <span>Enter to Art Shop</span>
+                    </div>
+                </div>
+
+                <div @click="onClickShowroomText" class="showroom-button-sm disable-user-select">
+                    <div class="content">
+                        <span>Selected Text</span>
+                    </div>
+
+                    <div v-if="isShowText" class="icon">
+                        <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
+                    </div>
+
+                    <div v-else class="icon">
+                        <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
+                    </div>
+                </div>
+            </template>
+
+            <template v-else>
+                <div @click="onClickShowroomLink" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                    <div class="content">
+                        <span>Selective Art Shop</span>
+                        <br>
+                        <span>Enter to Art Shop - Enter to Art Shop - Ent</span>
+                    </div>
+                </div>
+
+                <div @click="onClickShowroomText" ref="textButton" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                    <div class="content">
+                        <span>Selected Text:</span>
+                        <br>
+                        <span>Introduction / Artist Statement</span>
+                    </div>
+
+                    <div v-if="isShowText" class="icon">
+                        <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
+                    </div>
+
+                    <div v-else class="icon">
+                        <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
+                    </div>
+                </div>
+            </template>
         </div>
+
+        <div ref="top" class="top"></div>
 
         <div :class="centerStyle" ref="center">
             <cover :hidden="hiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
@@ -16,16 +71,19 @@
                     <hover-control @control="onControlHover"></hover-control>
                 </div>
 
-                <div v-if="showroom.bgmUrl" @click="onClickMusic" class="view-button music-button disable-user-select">
-                    <div class="content">
+                <!-- 배경음악 -->
+                <div v-if="showroom.bgmUrl" :class="{'music-button-active': isPlayMusic}" @click="onClickMusic" class="view-button music-button disable-user-select">
+                    <div class="content font-neuemachina-ultrabold">
                         <span v-if="isPlayMusic">Music On</span>
                         <span v-else>Music Off</span>
                         <audio ref="bgm"></audio>
                     </div>
                 </div>
+                <!-- END-배경음악 -->
 
+                <!-- 연관상품 -->
                 <div @click="onClickShowList" ref="workButton" class="view-button object-button disable-user-select">
-                    <div class="content">
+                    <div class="content font-neuemachina-ultrabold">
                         <span>Available Product</span>
                     </div>
 
@@ -35,8 +93,8 @@
                 </div>
 
                 <div :hidden="!isShowList" ref="listField" class="list-field">
-                    <div @click="onClickHideList" class="text-header disable-user-select">
-                        <div class="content">
+                    <div @click="onClickHideList" class="list-header disable-user-select">
+                        <div class="content font-neuemachina-ultrabold">
                             <span>Available Product List</span>
                         </div>
 
@@ -49,6 +107,7 @@
                         <item-link-list :asset-item="selectedItem"></item-link-list>
                     </div>
                 </div>
+                <!-- END-연관상품 -->
 
                 <div :hidden="!isShowMaterialList" ref="materialButtonField" class="material-button-field">
                     <item-material-list :asset-item="selectedItem"></item-material-list>
@@ -100,6 +159,8 @@
             return {
                 pageText: window.PAGE_TEXT,
                 showroom: new Showroom(),
+                isShowText: false,
+                isShowSmallButton: false,
                 isMobile: false,
                 isPlayMusic: false,
                 isShowList: false,
@@ -194,7 +255,7 @@
 
                 if (!me.centerStyle['center-full']) {
                     width = width - 36;
-                    height = height - jTop.outerHeight() - jBottom.outerHeight() - 36;
+                    height = height - jTop.outerHeight() - jBottom.outerHeight() - 20;
                 }
 
                 jCenter.width(width).height(height);
@@ -225,6 +286,53 @@
                 const me = this;
 
                 me.isShowMaterialList = false;
+            },
+            showText: function () {
+                const me = this;
+
+                me.isShowSmallButton = false;
+
+                setTimeout(function () {
+                    const jButton = $(me.$refs.textButton);
+                    const jText = $(me.$refs.textField);
+                    const jWindow = $(window);
+
+                    const position = jButton.position();
+
+                    const width = jButton.width();
+                    const top = jButton.outerHeight();
+                    const left = position.left;
+
+                    jText.width(width).css('top', top + 'px').css('left', left + 'px');
+
+                    me.isShowText = true;
+                }, 100);
+            },
+            hideText: function () {
+                const me = this;
+
+                me.isShowText = false;
+
+                if (me.isSmallMode) {
+                    me.isShowSmallButton = true;
+                }
+            },
+            onClickShowroomText: function () {
+                const me = this;
+
+                if (me.isShowText) {
+                    me.hideText();
+
+                } else {
+                    me.showText();
+                }
+            },
+            onClickShowroomLink: function () {
+                const me = this;
+
+                if (me.showroom.link) {
+                    window.open(me.showroom.link);
+                }
             },
             onClickShowList: function () {
                 const me = this;
@@ -261,10 +369,10 @@
 
                 $(window).trigger('resize.view.page');
 
-                me.$refs.topMenu.hideText();
-                me.$refs.topMenu.smallMode();
-
+                me.isSmallMode = true;
                 me.hiddenCover = true;
+
+                me.hideText();
             },
             onClickMusic: function () {
                 const me = this;
@@ -350,6 +458,10 @@
 
 <style lang="scss" scoped>
     .view-page-field {
+        width: 100vw;
+        height: 100vh;
+        background-color: #000000;
+
         .disable-user-select {
             cursor: default;
             -webkit-touch-callout: none;
@@ -360,17 +472,108 @@
             user-select: none;
         }
 
+        .logo {
+            width: 97px;
+            height: 60px;
+            position: fixed;
+            left: 18px;
+            top: 18px;
+            z-index: 4;
+            background-image: url('../../../public/img/logo-n.png');
+            background-position: center;
+            background-size: 100%;
+        }
+
+        .showroom-button-field {
+            position: fixed;
+            left: 100%;
+            top: 18px;
+            margin-left: -976px;
+            padding-right: 18px;
+            z-index: 4;
+            display: flex;
+            justify-content: flex-end;
+
+            .showroom-button {
+                width: 470px;
+                margin-right: 18px;
+                padding: 0.5rem 1rem;
+                color: #ffffff;
+                background-color: #000000;
+                border: 1px solid #ffffff;
+                display: flex;
+                justify-content: space-between;
+                cursor: pointer;
+
+                .icon {
+                    width: 10%;
+                    text-align: right;
+                }
+            }
+
+            .showroom-button:last-child {
+                margin-right: 0px;
+            }
+
+            .showroom-button-sm {
+                width:50%;
+                max-width: 250px;
+                height: 45px;
+                padding: 0rem 1rem;
+                font-size: 1.2rem;
+                color: #ffffff;
+                background-color: #000000;
+                border-top: 1px solid #ffffff;
+                border-left: 1px solid #ffffff;
+                border-bottom: 1px solid #ffffff;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+
+                .content {
+                    overflow: hidden;
+                    white-space:nowrap;
+                    word-wrap:normal;
+                    text-overflow:ellipsis;
+                }
+
+                .icon {
+                    width: 10%;
+                    text-align: right;
+                }
+            }
+
+            .showroom-button-sm:last-child {
+                border-right: 1px solid #ffffff;
+            }
+
+            .text-field {
+                position: absolute;
+                height: 30vh;
+                min-height: 500px;
+                padding: 16px;
+                overflow-y: auto;
+                background-color: #000000;
+                border: 1px solid #ffffff;
+
+                pre {
+                    width: 100%;
+                    white-space: pre-wrap;
+                    color: #ffffff;
+                }
+            }
+        }
+
         .top {
             width: 100%;
-            height: 108px;
-            position: fixed;
+            height: 102px;
             left: 0px;
             top: 0px;
-            z-index: 4;
         }
 
         .center {
-            margin: 108px 18px 0px 18px;
+            margin: 0px 18px;
             width: 100%;
             overflow: hidden;
             position: relative;
@@ -394,6 +597,7 @@
                     background-color: #000000;
                     border: 1px solid #ffffff;
                     z-index: 2;
+                    cursor: pointer;
                 }
 
                 .music-button {
@@ -401,7 +605,6 @@
                     height: 45px;
                     font-size: 0.5rem 1.2rem;
                     padding: 0.5rem 1rem;
-                    font-weight: bold;
                     left: 18px;
                     top: 100%;
                     margin-top: -63px;
@@ -419,7 +622,7 @@
                     }
                 }
 
-                .music-button:hover {
+                .music-button-active {
                     color: #000000;
                     border: 1px solid #000000;
                     background-color: #ffffff;
@@ -430,7 +633,6 @@
                     height: 45px;
                     font-size: 0.5rem 1.2rem;
                     padding: 0.5rem 1rem;
-                    font-weight: bold;
                     left: 100%;
                     top: 100%;
                     margin-left: -228px;
@@ -448,12 +650,6 @@
                     }
                 }
 
-                .object-button:hover {
-                    color: #000000;
-                    border: 1px solid #000000;
-                    background-color: #ffffff;
-                }
-
                 .list-field {
                     position: absolute;
                     height: 245px;
@@ -464,7 +660,7 @@
                     border: 1px solid #000000;
                     z-index: 2;
 
-                    .text-header {
+                    .list-header {
                         width: 100%;
                         height: 42px;
                         padding: 0rem 1rem;
@@ -472,16 +668,7 @@
                         justify-content: space-between;
                         align-items: center;
                         font-size: 1.2rem;
-                        font-weight: bold;
-                        border-bottom: 1px solid #000000;
-                        cursor: default;
-                        -webkit-touch-callout: none;
-                        -webkit-user-select: none;
-                        -khtml-user-select: none;
-                        -moz-user-select: none;
-                        -ms-user-select: none;
-                        user-select: none;
-                        display: flex;
+                        cursor: pointer;
 
                         .content {
                             width: 90%;
@@ -527,9 +714,10 @@
             .content {
                 width: 100%;
                 height: 100%;
-                margin-top:30px;
+                margin-top:18px;
                 padding-top: 8px;
-                border-top: 1px solid #000000;
+                color: #ffffff;
+                border-top: 1px solid #ffffff;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;

@@ -1,5 +1,5 @@
 <template>
-    <div ref="coverField" class="cover-field font-neuemachina">
+    <div ref="coverField" class="cover-field">
         <div class="button-field">
             <div v-if="percent < 100" class="progress border border-dark rounded-0">
                 <div ref="bar" class="progress-bar"></div>
@@ -9,7 +9,7 @@
         </div>
 
         <div class="loading-text-field">
-            <div class="loading-text-list" v-if="percent < 100">
+            <div class="loading-text-list font-neuemachina-light" v-if="percent < 100">
                 <div class="loading-text">Please Wait</div>
 
                 <div v-if="percent > 15" class="loading-text">It will be open soon</div>
@@ -69,6 +69,9 @@
         background-position: center;
         background-size: 100%;
         background-color: #bdbdbd;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
         .disable-user-select {
             cursor: default;
@@ -83,12 +86,13 @@
         .button-field {
             width: 100%;
             height: 50px;
+            margin-top: 35px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
 
             .progress {
-                width: 100%;
+                width: 50%;
                 height: 10px;
 
                 .progress-bar {
@@ -100,6 +104,7 @@
                 padding: 0rem 1rem;
                 background-color: #000000;
                 color: #ffffff;
+                font-size: 2rem;
                 cursor: default;
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
@@ -108,22 +113,16 @@
                 -ms-user-select: none;
                 user-select: none;
             }
-
-            .btn-enter:hover {
-                background-color: #ffffff;
-                color: #000000;
-                border: 1px solid #000000;
-            }
         }
 
         .loading-text-field {
-            margin-top: 100px;
             width: 100%;
+            margin-bottom: 35px;
             display: flex;
             justify-content: flex-end;
 
             .loading-text-list {
-                width: 220px;
+                width: 500px;
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
@@ -131,6 +130,7 @@
                 .loading-text {
                     display: inline-block;
                     padding: 0rem 1rem;
+                    font-size: 2rem;
                 }
 
                 .loading-text:nth-child(odd) {
