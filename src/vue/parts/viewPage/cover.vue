@@ -121,16 +121,28 @@
             display: flex;
             justify-content: flex-end;
 
+            @media screen and (max-width: 950px) {
+                justify-content: center;
+                margin-bottom: 25%;
+            }
+
             .loading-text-list {
                 width: 500px;
                 display: flex;
-                flex-direction: column;
-                align-items: flex-start;
+                flex-wrap: wrap;
+
+                @media screen and (max-width: 950px) {
+                    justify-content: center;
+                }
 
                 .loading-text {
                     display: inline-block;
                     padding: 0rem 1rem;
                     font-size: 2rem;
+
+                    @media screen and (max-width: 950px) {
+                        font-size: 1.5rem;
+                    }
                 }
 
                 .loading-text:nth-child(odd) {

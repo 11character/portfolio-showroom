@@ -1,73 +1,86 @@
 <template>
     <div class="view-page-field">
-        <div class="logo"></div>
 
-        <div :class="{'showroom-button-field': true, 'showroom-button-field-sm': isSmallButton}">
-            <!-- 설명 텍스트 -->
-            <div :hidden="!isShowText" ref="textField" class="text-field">
-                <pre v-if="lang == 'ko'" class="font-neuemachina">{{ showroom.contentKo }}</pre>
-                <pre v-else class="font-neuemachina">{{ showroom.contentEn }}</pre>
+        <template v-if="isSmallWindow">
+            <div class="menu-button">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
             </div>
-            <!-- END-설명 텍스트 -->
 
-            <!-- PC, 시작화면 -->
-            <template v-if="!isSmallButton">
-                <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomLink" class="showroom-button disable-user-select font-neuemachina-ultrabold">
-                    <div class="content">
-                        <span>Selective Art Shop</span>
-                        <br>
-                        <span>Enter to Art Shop - Enter to Art Shop - Ent</span>
-                    </div>
+            <div class="logo logo-sm"></div>
+        </template>
+
+        <template v-if="!isSmallWindow">
+            <div class="logo"></div>
+
+            <div :class="{'showroom-button-field-sm': isSmallButton}" class="showroom-button-field">
+                <!-- 설명 텍스트 -->
+                <div :hidden="!isShowText" ref="textField" class="text-field">
+                    <pre v-if="lang == 'ko'" class="font-neuemachina">{{ showroom.contentKo }}</pre>
+                    <pre v-else class="font-neuemachina">{{ showroom.contentEn }}</pre>
                 </div>
+                <!-- END-설명 텍스트 -->
 
-                <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomText" ref="textButton" class="showroom-button disable-user-select font-neuemachina-ultrabold">
-                    <div class="content">
-                        <span>Selected Text:</span>
-                        <br>
-                        <span>Introduction / Artist Statement</span>
+                <!-- 시작화면 -->
+                <template v-if="!isSmallButton">
+                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomLink" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                        <div class="content">
+                            <span>Selective Art Shop</span>
+                            <br>
+                            <span>Enter to Art Shop - Enter to Art Shop - Ent</span>
+                        </div>
                     </div>
 
-                    <div v-if="isShowText" class="icon">
-                        <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
+                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomText" ref="textButton" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                        <div class="content">
+                            <span>Selected Text:</span>
+                            <br>
+                            <span>Introduction / Artist Statement</span>
+                        </div>
+
+                        <div v-if="isShowText" class="icon">
+                            <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
+                        </div>
+
+                        <div v-else class="icon">
+                            <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
+                        </div>
+                    </div>
+                </template>
+                <!-- END-시작화면 -->
+
+                <!-- 전체화면 -->
+                <template v-if="isSmallButton">
+                    <div @click="onClickShowroomLink" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
+                        <div class="content">
+                            <span>Enter to Art Shop</span>
+                        </div>
                     </div>
 
-                    <div v-else class="icon">
-                        <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
-                    </div>
-                </div>
-            </template>
-            <!-- END-PC, 시작화면 -->
+                    <div @click="onClickShowroomText" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
+                        <div class="content">
+                            <span>Selected Text</span>
+                        </div>
 
-            <!-- PC, 풀스크린 -->
-            <template v-if="isSmallButton">
-                <div @click="onClickShowroomLink" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
-                    <div class="content">
-                        <span>Enter to Art Shop</span>
-                    </div>
-                </div>
+                        <div v-if="isShowText" class="icon">
+                            <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
+                        </div>
 
-                <div @click="onClickShowroomText" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
-                    <div class="content">
-                        <span>Selected Text</span>
+                        <div v-else class="icon">
+                            <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
+                        </div>
                     </div>
-
-                    <div v-if="isShowText" class="icon">
-                        <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
-                    </div>
-
-                    <div v-else class="icon">
-                        <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
-                    </div>
-                </div>
-            </template>
-            <!-- END-PC, 풀스크린 -->
-        </div>
+                </template>
+                <!-- END-전체화면 -->
+            </div>
+        </template>
 
         <div ref="top" class="top">
             <div class="line"></div>
         </div>
 
-        <div :class="centerStyle" ref="center">
+        <div :class="{'center-full': isFullScreen, 'margin-x-0': isSmallWindow}" ref="center" class="center">
             <cover :hidden="isHiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
             <div ref="viewField" class="view-field">
@@ -80,7 +93,7 @@
                 </div>
 
                 <!-- 배경음악 -->
-                <div v-if="showroom.bgmUrl" :class="{'music-button-active': isPlayMusic}" @click="onClickMusic" class="view-button music-button disable-user-select">
+                <div v-if="!isSmallWindow && showroom.bgmUrl" :class="{'music-button-active': isPlayMusic}" @click="onClickMusic" class="music-button disable-user-select">
                     <div class="content font-neuemachina-ultrabold">
                         <span v-if="isPlayMusic">Music On</span>
                         <span v-else>Music Off</span>
@@ -90,13 +103,15 @@
                 <!-- END-배경음악 -->
 
                 <!-- 연관상품 -->
-                <div @click="onClickShowList" ref="workButton" class="view-button object-button disable-user-select">
-                    <div class="content font-neuemachina-ultrabold">
-                        <span>Available Product</span>
-                    </div>
+                <div @click="onClickShowList" ref="productButton" class="object-button disable-user-select">
+                    <div class="button-content-field">
+                        <div class="content font-neuemachina-ultrabold">
+                            <span>Available Product</span>
+                        </div>
 
-                    <div class="icon">
-                        <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
+                        <div class="icon">
+                            <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
+                        </div>
                     </div>
                 </div>
 
@@ -127,9 +142,7 @@
             <div class="content">
                 <div class="text">{{ pageText[lang].bottom }}</div>
 
-                <div @click="onClickLang" class="lang-button">
-                    <font-awesome-icon :icon="['fas', 'globe']"></font-awesome-icon>
-                </div>
+                <div @click="onClickLang" class="lang-button">KR / ENG</div>
             </div>
         </div>
     </div>
@@ -140,7 +153,6 @@
     import Utils from '../../class/utils';
     import Showroom from '../../class/showroom';
 
-    import topMenuVue from '../parts/viewPage/topMenu.vue';
     import coverVue from '../parts/viewPage/cover.vue';
     import itemLinkListVue from '../parts/viewPage/itemLinkList.vue';
     import itemMaterialListVue from '../parts/viewPage/itemMaterialList.vue';
@@ -153,7 +165,6 @@
 
     export default {
         components: {
-            'top-menu': topMenuVue,
             'cover': coverVue,
             'item-link-list': itemLinkListVue,
             'item-material-list': itemMaterialListVue,
@@ -170,6 +181,7 @@
                 isShowText: false,
                 isSmallButton: false,
                 isFullScreen: false,
+                isSmallWindow: false,
                 isMobile: false,
                 isPlayMusic: false,
                 isShowList: false,
@@ -200,11 +212,7 @@
                     onLoad: function () {
                         me.loadingPercent = 100;
                     }
-                }),
-                centerStyle: {
-                    'center': true,
-                    'center-full': false
-                }
+                })
             };
         },
         mounted: function () {
@@ -217,8 +225,7 @@
             me.$refs.viewField.appendChild(me.showroomViewer.rootEl);
 
             $(window).on('resize.view.page', function () {
-                me.onClickHideList();
-                me.onClickHideMaterialButton();
+                me.isSmallWindow = $(window).width() < 950;
 
                 me.onResizeViewer();
             });
@@ -253,6 +260,10 @@
             onResizeViewer: function () {
                 const me = this;
 
+                me.hideText();
+                me.onClickHideList();
+                me.onClickHideMaterialButton();
+
                 const jWin = $(window);
                 const jTop = $(me.$refs.top);
                 const jCenter = $(me.$refs.center);
@@ -262,8 +273,11 @@
                 let width = jWin.width();
                 let height = jWin.height();
 
-                if (!me.centerStyle['center-full']) {
+                if (!me.isFullScreen && !me.isSmallWindow) {
                     width = width - 36;
+                }
+
+                if (!me.isFullScreen) {
                     height = height - jTop.outerHeight() - jBottom.outerHeight() - 20;
                 }
 
@@ -346,19 +360,17 @@
             onClickShowList: function () {
                 const me = this;
 
-                const jButton = $(me.$refs.workButton);
+                const jButton = $(me.$refs.productButton);
                 const jListField = $(me.$refs.listField);
-                const jWindow = $(window);
-
                 const position = jButton.offset();
-                const top = position.top - jListField.outerHeight() + jButton.outerHeight();
+                const top = position.top - jListField.height() + jButton.height();
 
-                // topMenu.vue의 버튼 크기와 맞춤. (창 넓이의 32.3%)
-                let width = (jWindow.width() * 0.323);
-                let left = position.left - width - 2 + jButton.outerWidth();
+                // 전시장 설명 큰 버튼 폭에 맞춤.
+                let width = 497;
+                let left = position.left + jButton.width() - width - 1;
 
-                if (jWindow.width() < 1160) {
-                    width = jWindow.width() - 36;
+                if (me.isSmallWindow) {
+                    width = jButton.width();
                     left = 18;
                 }
 
@@ -374,15 +386,11 @@
             onClickCover: function () {
                 const me = this;
 
-                me.centerStyle['center-full'] = true;
-
-                $(window).trigger('resize.view.page');
-
-                me.hideText();
-
                 me.isHiddenCover = true;
                 me.isFullScreen = true;
                 me.isSmallButton = true;
+
+                me.onResizeViewer();
             },
             onClickMusic: function () {
                 const me = this;
@@ -472,6 +480,11 @@
         height: 100vh;
         background-color: #000000;
 
+        .margin-x-0 {
+            margin-left: 0px !important;
+            margin-right: 0px !important;
+        }
+
         .disable-user-select {
             cursor: default;
             -webkit-touch-callout: none;
@@ -490,8 +503,40 @@
             top: 18px;
             z-index: 4;
             background-image: url('../../../public/img/logo-n.png');
+            background-repeat: no-repeat;
             background-position: center;
             background-size: 100%;
+        }
+
+        .logo-sm {
+            width: 87px;
+            height: 54px;
+            top: 18px;
+            left: 100%;
+            margin-left: -105px;
+        }
+
+        .menu-button {
+            height: 90px;
+            position: fixed;
+            left: 18px;
+            top: 0px;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .bar {
+                width: 30px;
+                height: 2px;
+                margin-bottom: 10px;
+                background-color: #ffffff;
+            }
+
+            .bar:last-child {
+                margin-bottom: 0px;
+            }
         }
 
         .showroom-button-field {
@@ -581,9 +626,18 @@
             left: 0px;
             top: 0px;
 
+            @media screen and (max-width: 950px) {
+                height: 90px;
+                padding: 0px;
+            }
+
             .line {
                 width: 100%;
                 border-top: 1px solid #ffffff;
+
+                @media screen and (max-width: 950px) {
+                    display: none;
+                }
             }
         }
 
@@ -602,27 +656,22 @@
                 left: 0px;
                 top: 0px;
 
-                .view-button {
+                .music-button {
+                    width: 120px;
+                    height: 45px;
                     position: absolute;
-                    padding: 0rem 1rem;
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
                     color: #ffffff;
                     background-color: #000000;
                     border: 1px solid #ffffff;
-                    z-index: 2;
-                    cursor: pointer;
-                }
-
-                .music-button {
-                    width: 120px;
-                    height: 45px;
-                    font-size: 0.5rem 1.2rem;
                     padding: 0.5rem 1rem;
                     left: 18px;
                     top: 100%;
                     margin-top: -63px;
+                    cursor: pointer;
+                    z-index: 2;
 
                     .content {
                         text-align: center;
@@ -646,22 +695,43 @@
                 .object-button {
                     width: 210px;
                     height: 45px;
-                    font-size: 0.5rem 1.2rem;
-                    padding: 0.5rem 1rem;
+                    position: absolute;
                     left: 100%;
                     top: 100%;
                     margin-left: -228px;
                     margin-top: -63px;
+                    cursor: pointer;
+                    z-index: 2;
 
-                    .content {
-                        overflow: hidden;
-                        white-space:nowrap;
-                        word-wrap:normal;
-                        text-overflow:ellipsis;
+                    @media screen and (max-width: 950px) {
+                        width: 100%;
+                        left: 0px;
+                        margin-left: 0px;
+                        padding: 0px 18px;
                     }
 
-                    .icon {
-                        text-align: right;
+                    .button-content-field {
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #ffffff;
+                        background-color: #000000;
+                        border: 1px solid #ffffff;
+                        padding: 0.5rem 1rem;
+
+                        @media screen and (max-width: 950px) {
+                            .content {
+                                width: 100%;
+                                text-align: center;
+                                font-size: 1.2rem;
+                            }
+
+                            .icon {
+                                display: none;
+                            }
+                        }
                     }
                 }
 
@@ -725,6 +795,10 @@
             height: 37px;
             padding: 0px 18px;
 
+            @media screen and (max-width: 950px) {
+                padding: 0px;
+            }
+
             .content {
                 width: 100%;
                 height: 100%;
@@ -734,13 +808,9 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-
-                .text {
-                    font-size: 0.6rem;
-                }
+                font-size: 0.8rem;
 
                 .lang-button {
-                    padding: 0rem 1rem;
                     cursor: pointer;
                 }
             }
