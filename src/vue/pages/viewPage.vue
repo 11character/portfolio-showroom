@@ -2,36 +2,17 @@
     <div class="view-page-field">
         <div class="logo"></div>
 
-        <div class="showroom-button-field">
+        <div :class="{'showroom-button-field': true, 'showroom-button-field-sm': isSmallButton}">
+            <!-- 설명 텍스트 -->
             <div :hidden="!isShowText" ref="textField" class="text-field">
                 <pre v-if="lang == 'ko'" class="font-neuemachina">{{ showroom.contentKo }}</pre>
                 <pre v-else class="font-neuemachina">{{ showroom.contentEn }}</pre>
             </div>
+            <!-- END-설명 텍스트 -->
 
-            <template v-if="isShowSmallButton">
-                <div @click="onClickShowroomLink" class="showroom-button-sm disable-user-select">
-                    <div class="content">
-                        <span>Enter to Art Shop</span>
-                    </div>
-                </div>
-
-                <div @click="onClickShowroomText" class="showroom-button-sm disable-user-select">
-                    <div class="content">
-                        <span>Selected Text</span>
-                    </div>
-
-                    <div v-if="isShowText" class="icon">
-                        <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
-                    </div>
-
-                    <div v-else class="icon">
-                        <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
-                    </div>
-                </div>
-            </template>
-
-            <template v-else>
-                <div @click="onClickShowroomLink" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+            <!-- PC, 시작화면 -->
+            <template v-if="!isSmallButton">
+                <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomLink" class="showroom-button disable-user-select font-neuemachina-ultrabold">
                     <div class="content">
                         <span>Selective Art Shop</span>
                         <br>
@@ -39,7 +20,7 @@
                     </div>
                 </div>
 
-                <div @click="onClickShowroomText" ref="textButton" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomText" ref="textButton" class="showroom-button disable-user-select font-neuemachina-ultrabold">
                     <div class="content">
                         <span>Selected Text:</span>
                         <br>
@@ -55,12 +36,39 @@
                     </div>
                 </div>
             </template>
+            <!-- END-PC, 시작화면 -->
+
+            <!-- PC, 풀스크린 -->
+            <template v-if="isSmallButton">
+                <div @click="onClickShowroomLink" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
+                    <div class="content">
+                        <span>Enter to Art Shop</span>
+                    </div>
+                </div>
+
+                <div @click="onClickShowroomText" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
+                    <div class="content">
+                        <span>Selected Text</span>
+                    </div>
+
+                    <div v-if="isShowText" class="icon">
+                        <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
+                    </div>
+
+                    <div v-else class="icon">
+                        <font-awesome-icon :icon="['fas', 'plus-square']"></font-awesome-icon>
+                    </div>
+                </div>
+            </template>
+            <!-- END-PC, 풀스크린 -->
         </div>
 
-        <div ref="top" class="top"></div>
+        <div ref="top" class="top">
+            <div class="line"></div>
+        </div>
 
         <div :class="centerStyle" ref="center">
-            <cover :hidden="hiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
+            <cover :hidden="isHiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
             <div ref="viewField" class="view-field">
                 <div v-if="isMobile && !isShowMaterialList" class="move-left-control">
@@ -141,7 +149,7 @@
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
-    import isMobile from 'is-mobile';
+    import checkMobile from 'is-mobile';
 
     export default {
         components: {
@@ -160,12 +168,13 @@
                 pageText: window.PAGE_TEXT,
                 showroom: new Showroom(),
                 isShowText: false,
-                isShowSmallButton: false,
+                isSmallButton: false,
+                isFullScreen: false,
                 isMobile: false,
                 isPlayMusic: false,
                 isShowList: false,
                 isShowMaterialList: false,
-                hiddenCover: false,
+                isHiddenCover: false,
                 loadingPercent: 0,
                 selectedItem: null,
                 showroomViewer: new NemoShowroomViewer({
@@ -201,7 +210,7 @@
         mounted: function () {
             const me = this;
 
-            me.isMobile = isMobile();
+            me.isMobile = checkMobile();
 
             // 뷰어 객체는 mounted 실행시 초기화 하여 자식 컴포넌트에 넘겨주려고 하면 오류가 발생한다.
             // data 초기화 후에 에디터의 위치를 이동하는 식으로 처리한다.
@@ -290,7 +299,7 @@
             showText: function () {
                 const me = this;
 
-                me.isShowSmallButton = false;
+                me.isSmallButton = false;
 
                 setTimeout(function () {
                     const jButton = $(me.$refs.textButton);
@@ -313,8 +322,8 @@
 
                 me.isShowText = false;
 
-                if (me.isSmallMode) {
-                    me.isShowSmallButton = true;
+                if (me.isFullScreen) {
+                    me.isSmallButton = true;
                 }
             },
             onClickShowroomText: function () {
@@ -369,10 +378,11 @@
 
                 $(window).trigger('resize.view.page');
 
-                me.isSmallMode = true;
-                me.hiddenCover = true;
-
                 me.hideText();
+
+                me.isHiddenCover = true;
+                me.isFullScreen = true;
+                me.isSmallButton = true;
             },
             onClickMusic: function () {
                 const me = this;
@@ -488,14 +498,14 @@
             position: fixed;
             left: 100%;
             top: 18px;
-            margin-left: -976px;
+            margin-left: -830px;
             padding-right: 18px;
             z-index: 4;
             display: flex;
             justify-content: flex-end;
 
             .showroom-button {
-                width: 470px;
+                width: 397px;
                 margin-right: 18px;
                 padding: 0.5rem 1rem;
                 color: #ffffff;
@@ -515,28 +525,22 @@
                 margin-right: 0px;
             }
 
+            .showroom-button-n {
+                color:#000000;
+                background-color: #ffffff;
+                border-color: #000000;
+            }
+
             .showroom-button-sm {
-                width:50%;
-                max-width: 250px;
-                height: 45px;
-                padding: 0rem 1rem;
-                font-size: 1.2rem;
+                width: 183px;
+                margin-right: 18px;
+                padding: 0.5rem 1rem;
                 color: #ffffff;
                 background-color: #000000;
-                border-top: 1px solid #ffffff;
-                border-left: 1px solid #ffffff;
-                border-bottom: 1px solid #ffffff;
+                border: 1px solid #ffffff;
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
                 cursor: pointer;
-
-                .content {
-                    overflow: hidden;
-                    white-space:nowrap;
-                    word-wrap:normal;
-                    text-overflow:ellipsis;
-                }
 
                 .icon {
                     width: 10%;
@@ -545,7 +549,7 @@
             }
 
             .showroom-button-sm:last-child {
-                border-right: 1px solid #ffffff;
+                margin-right: 0px;
             }
 
             .text-field {
@@ -565,11 +569,22 @@
             }
         }
 
+        .showroom-button-field-sm {
+            margin-left: -402px;
+        }
+
         .top {
             width: 100%;
-            height: 102px;
+            height: 120px;
+            padding: 0px 18px;
+            padding-top: 102px;
             left: 0px;
             top: 0px;
+
+            .line {
+                width: 100%;
+                border-top: 1px solid #ffffff;
+            }
         }
 
         .center {
@@ -707,7 +722,6 @@
         }
 
         .bottom {
-            width: 100%;
             height: 37px;
             padding: 0px 18px;
 
@@ -715,7 +729,6 @@
                 width: 100%;
                 height: 100%;
                 margin-top:18px;
-                padding-top: 8px;
                 color: #ffffff;
                 border-top: 1px solid #ffffff;
                 display: flex;
