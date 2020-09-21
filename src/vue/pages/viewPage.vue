@@ -2,17 +2,17 @@
     <div class="view-page-field">
 
         <template v-if="isSmallWindow">
-            <div class="menu-button">
+            <div :class="{'menu-button-view-mode': isFullScreen}" class="menu-button">
                 <div class="bar"></div>
                 <div class="bar"></div>
                 <div class="bar"></div>
             </div>
 
-            <div class="logo logo-sm"></div>
+            <div :class="{'logo-view-mode': isFullScreen}" class="logo logo-sm"></div>
         </template>
 
         <template v-if="!isSmallWindow">
-            <div class="logo"></div>
+            <div :class="{'logo-view-mode': isFullScreen}" class="logo"></div>
 
             <div :class="{'showroom-button-field-sm': isSmallButton}" class="showroom-button-field">
                 <!-- 설명 텍스트 -->
@@ -516,6 +516,10 @@
             margin-left: -105px;
         }
 
+        .logo-view-mode {
+            background-image: url('../../../public/img/logo.png');
+        }
+
         .menu-button {
             height: 90px;
             position: fixed;
@@ -529,7 +533,7 @@
 
             .bar {
                 width: 30px;
-                height: 2px;
+                height: 3px;
                 margin-bottom: 10px;
                 background-color: #ffffff;
             }
@@ -537,6 +541,10 @@
             .bar:last-child {
                 margin-bottom: 0px;
             }
+        }
+
+        .menu-button-view-mode .bar {
+            background-color: #000000;
         }
 
         .showroom-button-field {
@@ -725,7 +733,7 @@
                             .content {
                                 width: 100%;
                                 text-align: center;
-                                font-size: 1.2rem;
+                                font-size: 1.5rem;
                             }
 
                             .icon {
