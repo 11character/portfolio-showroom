@@ -1,19 +1,17 @@
 <template>
     <div class="view-page-field">
 
+        <div :class="{'logo-view-mode': isFullScreen, 'logo-sm': isSmallWindow}" class="logo"></div>
+
         <template v-if="isSmallWindow">
             <div :class="{'menu-button-view-mode': isFullScreen}" class="menu-button">
                 <div class="bar"></div>
                 <div class="bar"></div>
                 <div class="bar"></div>
             </div>
-
-            <div :class="{'logo-view-mode': isFullScreen}" class="logo logo-sm"></div>
         </template>
 
         <template v-if="!isSmallWindow">
-            <div :class="{'logo-view-mode': isFullScreen}" class="logo"></div>
-
             <div :class="{'showroom-button-field-sm': isSmallButton}" class="showroom-button-field">
                 <!-- 설명 텍스트 -->
                 <div :hidden="!isShowText" ref="textField" class="text-field">
@@ -512,8 +510,7 @@
             width: 87px;
             height: 54px;
             top: 18px;
-            left: 100%;
-            margin-left: -105px;
+            left: 18px;
         }
 
         .logo-view-mode {
@@ -521,10 +518,12 @@
         }
 
         .menu-button {
+            width: 45px;
             height: 90px;
             position: fixed;
-            left: 18px;
+            left: 100%;
             top: 0px;
+            margin-left: -63px;
             z-index: 4;
             display: flex;
             flex-direction: column;
@@ -532,7 +531,7 @@
             align-items: center;
 
             .bar {
-                width: 30px;
+                width: 100%;
                 height: 3px;
                 margin-bottom: 10px;
                 background-color: #ffffff;
