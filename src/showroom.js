@@ -93,15 +93,3 @@ const vue = new Vue({
     router: router,
     el: '#root'
 });
-
-// 페이지에 사용되는 텍스트 불러오기.
-import Utils from './class/utils';
-import * as ApiUrl from './class/apiUrl';
-
-window.PAGE_TEXT = {ko: {}, en: {}};
-
-Utils.apiRequest(ApiUrl.PAGE_TEXT).then(function (data) {
-    if (data.code == 0) {
-        window.PAGE_TEXT = data.data;
-    }
-});

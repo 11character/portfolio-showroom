@@ -194,8 +194,8 @@
 
         <div ref="bottom" class="bottom disable-user-select">
             <div class="content">
-                <div class="text">{{ pageText[lang].bottom }}</div>
-
+                <div class="text">{{ pageText[lang].bottom1 }}</div>
+                <div class="text">{{ pageText[lang].bottom2 }}</div>
                 <div @click="onClickLang" class="lang-button">KR / ENG</div>
             </div>
         </div>
@@ -230,7 +230,7 @@
             const me = this;
 
             return {
-                pageText: window.PAGE_TEXT,
+                pageText: {ko: {}, en: {}},
                 showroom: new Showroom(),
                 isShowMenu: false,
                 isShowInfo: false,
@@ -273,6 +273,8 @@
         mounted: function () {
             const me = this;
 
+            me.loadPageText();
+
             me.isMobile = checkMobile();
 
             // 뷰어 객체는 mounted 실행시 초기화 하여 자식 컴포넌트에 넘겨주려고 하면 오류가 발생한다.
@@ -312,6 +314,15 @@
             $(window).off('resize.view.page');
         },
         methods: {
+            loadPageText: function () {
+                const me = this;
+
+                Utils.apiRequest(ApiUrl.PAGE_TEXT).then(function (data) {
+                    if (data.code == 0) {
+                        me.pageText = data.data;
+                    }
+                });
+            },
             onClickMenuOpen: function () {
                 const me = this;
 
@@ -979,12 +990,8 @@
         }
 
         .bottom {
-            height: 37px;
+            height: 40px;
             padding: 0px 18px;
-
-            @media screen and (max-width: 950px) {
-                padding: 0px;
-            }
 
             .content {
                 width: 100%;
@@ -996,6 +1003,21 @@
                 justify-content: space-between;
                 align-items: center;
                 font-size: 0.8rem;
+
+                @media screen and (max-width: 950px) {
+                    border: none;
+                    margin-top: 0px;
+                    flex-wrap: wrap;
+                    font-size: 0.5rem;
+                }
+
+                .text {
+                    padding-right: 1rem;
+
+                    @media screen and (max-width: 950px) {
+                        padding: 0px;
+                    }
+                }
 
                 .lang-button {
                     cursor: pointer;
