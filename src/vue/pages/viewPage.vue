@@ -3,26 +3,81 @@
 
         <div :class="{'logo-view-mode': isFullScreen, 'logo-sm': isSmallWindow}" class="logo"></div>
 
+        <!-- small window -->
         <template v-if="isSmallWindow">
-            <div :class="{'menu-button-view-mode': isFullScreen}" class="menu-button">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
+            <div :class="{'menu-open-view-mode': isFullScreen}" @click="onClickMenuOpen" class="menu-open-button disable-user-select">
+                <div class="box">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
             </div>
-        </template>
 
+            <!-- 메뉴모달 -->
+            <div :hidden="!isShowMenu" class="menu-field">
+                <!-- 상단 -->
+                <div ref="menuTop" class="menu-top">
+                    <div class="menu-top-logo"></div>
+
+                    <div @click="onClickHideMenu" class="menu-close-button disable-user-select">
+                        <div class="box">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END-상단 -->
+
+                <!-- 내용 -->
+                <div :hidden="isShowInfo" class="menu-center disable-user-select">
+                    <div @click="onClickShopLink" class="menu-item">
+                        <div class="content font-neuemachina-ultrabold">
+                            <span>Shop</span>
+                        </div>
+                    </div>
+
+                    <div @click="onClickShowroomInfo" class="menu-item">
+                        <div class="content font-neuemachina-ultrabold">
+                            <span>Info</span>
+                        </div>
+                    </div>
+
+                    <div v-if="showroom.bgmUrl" :class="{'menu-item-n': !isPlayMusic}" @click="onClickMusic" class="menu-item">
+                        <!-- 배경음악 -->
+                        <div class="content font-neuemachina-ultrabold">
+                            <span v-if="isPlayMusic">Music On</span>
+                            <span v-else>Music Off</span>
+                            <audio ref="bgm"></audio>
+                        </div>
+                        <!-- END-배경음악 -->
+                    </div>
+                </div>
+                <!-- END-내용 -->
+
+                <!-- 설명 텍스트 -->
+                <div :hidden="!isShowInfo" ref="menuInfoField" class="menu-info-field font-neuemachina">
+                    <pre v-if="lang == 'ko'">{{ showroom.contentKo }}</pre>
+                    <pre v-else>{{ showroom.contentEn }}</pre>
+                </div>
+                <!-- END-설명 텍스트 -->
+            </div>
+            <!-- END-메뉴모달 -->
+        </template>
+        <!-- END-small window -->
+
+        <!-- default window -->
         <template v-if="!isSmallWindow">
             <div :class="{'showroom-button-field-sm': isSmallButton}" class="showroom-button-field">
                 <!-- 설명 텍스트 -->
-                <div :hidden="!isShowText" ref="textField" class="text-field">
-                    <pre v-if="lang == 'ko'" class="font-neuemachina">{{ showroom.contentKo }}</pre>
-                    <pre v-else class="font-neuemachina">{{ showroom.contentEn }}</pre>
+                <div :hidden="!isShowInfo" ref="infoField" class="info-field font-neuemachina">
+                    <pre v-if="lang == 'ko'">{{ showroom.contentKo }}</pre>
+                    <pre v-else>{{ showroom.contentEn }}</pre>
                 </div>
                 <!-- END-설명 텍스트 -->
 
                 <!-- 시작화면 -->
                 <template v-if="!isSmallButton">
-                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomLink" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShopLink" class="showroom-button disable-user-select font-neuemachina-ultrabold">
                         <div class="content">
                             <span>Selective Art Shop</span>
                             <br>
@@ -30,14 +85,14 @@
                         </div>
                     </div>
 
-                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomText" ref="textButton" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomInfo" ref="textButton" class="showroom-button disable-user-select font-neuemachina-ultrabold">
                         <div class="content">
                             <span>Selected Text:</span>
                             <br>
                             <span>Introduction / Artist Statement</span>
                         </div>
 
-                        <div v-if="isShowText" class="icon">
+                        <div v-if="isShowInfo" class="icon">
                             <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
                         </div>
 
@@ -50,18 +105,18 @@
 
                 <!-- 전체화면 -->
                 <template v-if="isSmallButton">
-                    <div @click="onClickShowroomLink" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
+                    <div @click="onClickShopLink" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
                         <div class="content">
                             <span>Enter to Art Shop</span>
                         </div>
                     </div>
 
-                    <div @click="onClickShowroomText" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
+                    <div @click="onClickShowroomInfo" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
                         <div class="content">
                             <span>Selected Text</span>
                         </div>
 
-                        <div v-if="isShowText" class="icon">
+                        <div v-if="isShowInfo" class="icon">
                             <font-awesome-icon :icon="['fas', 'minus-square']"></font-awesome-icon>
                         </div>
 
@@ -73,6 +128,7 @@
                 <!-- END-전체화면 -->
             </div>
         </template>
+        <!-- END-default window -->
 
         <div ref="top" class="top">
             <div class="line"></div>
@@ -101,7 +157,7 @@
                 <!-- END-배경음악 -->
 
                 <!-- 연관상품 -->
-                <div @click="onClickShowList" ref="productButton" class="object-button disable-user-select">
+                <div @click="onClickShowList" ref="productButton" class="product-button disable-user-select">
                     <div class="button-content-field">
                         <div class="content font-neuemachina-ultrabold">
                             <span>Available Product</span>
@@ -176,7 +232,8 @@
             return {
                 pageText: window.PAGE_TEXT,
                 showroom: new Showroom(),
-                isShowText: false,
+                isShowMenu: false,
+                isShowInfo: false,
                 isSmallButton: false,
                 isFullScreen: false,
                 isSmallWindow: false,
@@ -255,10 +312,27 @@
             $(window).off('resize.view.page');
         },
         methods: {
+            onClickMenuOpen: function () {
+                const me = this;
+
+                $(me.$refs.menuInfoField).height($(window).height() - $(me.$refs.menuTop).height());
+
+                me.isShowMenu = true;
+            },
+            onClickHideMenu: function () {
+                const me = this;
+
+                if (me.isShowInfo) {
+                    me.hideInfo();
+                }
+
+                me.isShowMenu = false;
+            },
             onResizeViewer: function () {
                 const me = this;
 
-                me.hideText();
+                me.hideInfo();
+                me.onClickHideMenu();
                 me.onClickHideList();
                 me.onClickHideMaterialButton();
 
@@ -308,47 +382,52 @@
 
                 me.isShowMaterialList = false;
             },
-            showText: function () {
+            showInfo: function () {
                 const me = this;
 
-                me.isSmallButton = false;
+                if (me.isSmallWindow) {
+                    me.isShowInfo = true;
 
-                setTimeout(function () {
-                    const jButton = $(me.$refs.textButton);
-                    const jText = $(me.$refs.textField);
-                    const jWindow = $(window);
+                } else {
+                    me.isSmallButton = false;
 
-                    const position = jButton.position();
+                    setTimeout(function () {
+                        const jButton = $(me.$refs.textButton);
+                        const jText = $(me.$refs.infoField);
+                        const jWindow = $(window);
 
-                    const width = jButton.width();
-                    const top = jButton.outerHeight();
-                    const left = position.left;
+                        const position = jButton.position();
 
-                    jText.width(width).css('top', top + 'px').css('left', left + 'px');
+                        const width = jButton.width();
+                        const top = jButton.outerHeight();
+                        const left = position.left;
 
-                    me.isShowText = true;
-                }, 100);
+                        jText.width(width).css('top', top + 'px').css('left', left + 'px');
+
+                        me.isShowInfo = true;
+                    }, 100);
+                }
             },
-            hideText: function () {
+            hideInfo: function () {
                 const me = this;
 
-                me.isShowText = false;
+                me.isShowInfo = false;
 
                 if (me.isFullScreen) {
                     me.isSmallButton = true;
                 }
             },
-            onClickShowroomText: function () {
+            onClickShowroomInfo: function () {
                 const me = this;
 
-                if (me.isShowText) {
-                    me.hideText();
+                if (me.isShowInfo) {
+                    me.hideInfo();
 
                 } else {
-                    me.showText();
+                    me.showInfo();
                 }
             },
-            onClickShowroomLink: function () {
+            onClickShopLink: function () {
                 const me = this;
 
                 if (me.showroom.link) {
@@ -517,7 +596,7 @@
             background-image: url('../../../public/img/logo.png');
         }
 
-        .menu-button {
+        .menu-open-button {
             width: 45px;
             height: 90px;
             position: fixed;
@@ -526,40 +605,141 @@
             margin-left: -63px;
             z-index: 4;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
 
-            .bar {
-                width: 100%;
-                height: 3px;
-                margin-bottom: 10px;
-                background-color: #ffffff;
-            }
+            .box {
+                width: 45px;
+                height: 45px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                cursor: pointer;
 
-            .bar:last-child {
-                margin-bottom: 0px;
+                .bar {
+                    width: 100%;
+                    height: 2px;
+                    background-color: #ffffff;
+                }
             }
         }
 
-        .menu-button-view-mode .bar {
+        .menu-open-view-mode .box .bar {
+            height: 3px;
             background-color: #000000;
+        }
+
+        .menu-field {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            z-index: 5;
+            background-color: #ffffff;
+
+            .menu-top {
+                width: 100%;
+                height: 90px;
+                position: relative;
+                border-bottom: 2px solid #000000;
+
+                .menu-top-logo {
+                    width: 87px;
+                    height: 54px;
+                    position: absolute;
+                    top: 18px;
+                    left: 18px;
+                    background-image: url('../../../public/img/logo.png');
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 100%;
+                }
+
+                .menu-close-button {
+                    width: 45px;
+                    height: 90px;
+                    position: absolute;
+                    left: 100%;
+                    top: 0px;
+                    margin-left: -63px;
+                    display: flex;
+                    align-items: center;
+
+                    .box {
+                        width: 45px;
+                        height: 45px;
+                        position: relative;
+                        cursor: pointer;
+
+                        .bar {
+                            width: 100%;
+                            height: 3px;
+                            position: absolute;
+                            left: 0px;
+                            top: 22px;
+                            background-color: #000000;
+                        }
+
+                        .bar:first-child {
+                            transform: rotate(45deg);
+                        }
+
+                        .bar:last-child {
+                            transform: rotate(-45deg);
+                        }
+                    }
+                }
+            }
+
+            .menu-center {
+                padding: 18px;
+
+                .menu-item {
+                    width: 100%;
+                    text-align: center;
+                    font-size: 2rem;
+                    margin-bottom: 18px;
+                    border: 5px solid #000000;
+                }
+
+                .menu-item:last-child {
+                    margin-bottom: 0px;
+                }
+
+                .menu-item-n {
+                    color: #ffffff;
+                    background-color: #000000;
+                }
+            }
+
+            .menu-info-field {
+                overflow-y: auto;
+                padding: 18px;
+                background-color: #000000;
+
+                pre {
+                    width: 100%;
+                    white-space: pre-wrap;
+                    color: #ffffff;
+                    padding-bottom: 18px;
+                }
+            }
         }
 
         .showroom-button-field {
             position: fixed;
             left: 100%;
             top: 18px;
-            margin-left: -830px;
+            margin-left: -838px;
             padding-right: 18px;
             z-index: 4;
             display: flex;
             justify-content: flex-end;
 
             .showroom-button {
-                width: 397px;
+                width: 401px;
                 margin-right: 18px;
-                padding: 0.5rem 1rem;
+                padding: 9px 18px;
                 color: #ffffff;
                 background-color: #000000;
                 border: 1px solid #ffffff;
@@ -584,9 +764,9 @@
             }
 
             .showroom-button-sm {
-                width: 183px;
+                width: 187px;
                 margin-right: 18px;
-                padding: 0.5rem 1rem;
+                padding: 9px 18px;
                 color: #ffffff;
                 background-color: #000000;
                 border: 1px solid #ffffff;
@@ -604,11 +784,11 @@
                 margin-right: 0px;
             }
 
-            .text-field {
+            .info-field {
                 position: absolute;
                 height: 30vh;
                 min-height: 500px;
-                padding: 16px;
+                padding: 18px;
                 overflow-y: auto;
                 background-color: #000000;
                 border: 1px solid #ffffff;
@@ -622,7 +802,7 @@
         }
 
         .showroom-button-field-sm {
-            margin-left: -402px;
+            margin-left: -410px;
         }
 
         .top {
@@ -664,19 +844,19 @@
                 top: 0px;
 
                 .music-button {
-                    width: 120px;
+                    width: 124px;
                     height: 45px;
+                    padding: 0px 18px;
                     position: absolute;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    color: #ffffff;
-                    background-color: #000000;
-                    border: 1px solid #ffffff;
-                    padding: 0.5rem 1rem;
                     left: 18px;
                     top: 100%;
                     margin-top: -63px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    color: #ffffff;
+                    background-color: #000000;
+                    border: 1px solid #ffffff;
                     cursor: pointer;
                     z-index: 2;
 
@@ -699,13 +879,13 @@
                     background-color: #ffffff;
                 }
 
-                .object-button {
-                    width: 210px;
+                .product-button {
+                    width: 214px;
                     height: 45px;
                     position: absolute;
                     left: 100%;
                     top: 100%;
-                    margin-left: -228px;
+                    margin-left: -232px;
                     margin-top: -63px;
                     cursor: pointer;
                     z-index: 2;
@@ -720,13 +900,13 @@
                     .button-content-field {
                         width: 100%;
                         height: 100%;
+                        padding: 0px 18px;
                         display: flex;
-                        align-items: center;
                         justify-content: space-between;
+                        align-items: center;
                         color: #ffffff;
                         background-color: #000000;
                         border: 1px solid #ffffff;
-                        padding: 0.5rem 1rem;
 
                         @media screen and (max-width: 950px) {
                             .content {
@@ -755,7 +935,7 @@
                     .list-header {
                         width: 100%;
                         height: 42px;
-                        padding: 0rem 1rem;
+                        padding: 0px 18px;
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
