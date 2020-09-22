@@ -93,9 +93,11 @@
 
             .progress {
                 width: 50%;
-                height: 10px;
+                height: 18px;
+                border: 2px solid #000000 !important;
 
                 .progress-bar {
+                    height: 100%;
                     background-color: #000000;
                 }
             }
@@ -129,10 +131,11 @@
             .loading-text-list {
                 width: 500px;
                 display: flex;
-                flex-wrap: wrap;
+                flex-direction: column;
+                align-items: flex-start;
 
                 @media screen and (max-width: 950px) {
-                    justify-content: center;
+                    align-items: center;
                 }
 
                 .loading-text {
