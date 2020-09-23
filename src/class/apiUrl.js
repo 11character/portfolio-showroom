@@ -13,3 +13,5 @@ export const MODEL_FILE_DELETE = './api/model-file-delete.php';
 export const TEXTURE_LIST = './api/texture-list.php';
 export const CUBE_TEXTURE_LIST = './api/cube-texture-list.php';
 export const THUMBNAIL_LIST = './api/thumbnail-list.php';
+export const MAIN_SHOWROOM_DATA = './api/main-showroom-data.php';
+export const MAIN_SHOWROOM_UPDATE = './api/main-showroom-update.php';

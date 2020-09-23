@@ -35,7 +35,8 @@ import {
     faArrowRight,
     faPaintBrush,
     faLink,
-    faGlobe
+    faGlobe,
+    faStore
 } from '@fortawesome/free-solid-svg-icons';
 
 FaLibrary.add(faSyncAlt);
@@ -58,6 +59,7 @@ FaLibrary.add(faArrowRight);
 FaLibrary.add(faPaintBrush);
 FaLibrary.add(faLink);
 FaLibrary.add(faGlobe);
+FaLibrary.add(faStore);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
@@ -68,6 +70,7 @@ Vue.use(VueRouter);
 
 const viewPageVue = () => import('./vue/pages/viewPage.vue');
 const assetViewPageVue = () => import('./vue/pages/assetViewPage.vue');
+const emptyPageVue = () => import('./vue/pages/emptyViewPage.vue');
 
 const router = new VueRouter({
     routes: [
@@ -85,7 +88,8 @@ const router = new VueRouter({
                 lang: lang == 'ko' ? 'ko' : 'en'
             };
         }},
-        {path: '/asset-view/:id', name: 'asset-view', component: assetViewPageVue, props: true}
+        {path: '/asset-view/:id', name: 'asset-view', component: assetViewPageVue, props: true},
+        {path: '/empty', name: 'empty', component: emptyPageVue}
     ]
 });
 

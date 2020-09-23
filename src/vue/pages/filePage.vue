@@ -129,7 +129,7 @@
 
                         }).done(function (data) {
                             if (data.code == 0) {
-                                me.$refs.fileTable.tableReload();
+                                me.$refs.fileTable.reloadTable();
 
                                 $(me.$refs.uploadModal.$el).modal('hide');
 

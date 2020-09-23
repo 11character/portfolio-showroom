@@ -84,7 +84,8 @@ SET
     BGM_URL = :BGM_URL,
     CONTENT_KO = :CONTENT_KO,
     CONTENT_EN = :CONTENT_EN,
-    DATA = :DATA
+    DATA = :DATA,
+    U_DATE = CURRENT_TIMESTAMP
 WHERE
     SEQ_ID = :SEQ_ID
 EOD;
@@ -168,7 +169,8 @@ SET
     URL = :URL,
     SIZE = :SIZE,
     DESCRIPTION = :DESCRIPTION,
-    DATA = :DATA
+    DATA = :DATA,
+    U_DATE = CURRENT_TIMESTAMP
 WHERE
     SEQ_ID = :SEQ_ID
 EOD;
@@ -179,5 +181,37 @@ DELETE FROM
     TB_MODEL_FILE
 WHERE
     SEQ_ID = :SEQ_ID
+EOD;
+
+// 페이지 변수 조회.
+$sql_select_tb_page_variable_from_name = <<<EOD
+SELECT
+    VALUE
+FROM
+    TB_PAGE-VARIABLE
+WHERE
+    NAME = :NAME
+EOD;
+
+// 페이지 변수 업데이트.
+$sql_update_tb_page_variable = <<<EOD
+UPDATE
+    TB_PAGE_VARIABLE
+SET
+    VALUE = :VALUE,
+    U_DATE = CURRENT_TIMESTAMP
+WHERE
+    NAME = :NAME
+EOD;
+
+// 기본 전시장 데이터 조회.
+$sql_select_main_showroom = <<< EOD
+SELECT
+    B.*
+FROM
+    TB_PAGE_VARIABLE A
+    JOIN TB_SHOWROOM B ON B.SEQ_ID = A.VALUE
+WHERE
+    A.NAME = "MAIN_SHOWROOM"
 EOD;
 ?>

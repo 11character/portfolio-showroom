@@ -1,5 +1,15 @@
 <template>
     <div class="showroom-table-field">
+        <!-- 기본 전시장 선택 모달 -->
+        <confirm-modal @confirm="onConfirmMainShowroom" ref="mainShowroomModal">
+            <template v-slot:message>
+                <div class="h4 my-5 text-center">
+                    <span>기본 전시장으로 선택합니까?</span>
+                </div>
+            </template>
+        </confirm-modal>
+        <!-- END-기본 전시장 선택 모달 -->
+
         <!-- 제거 모달 -->
         <confirm-modal @confirm="onConfirmDelete" ref="deleteModal">
             <template v-slot:message>
@@ -13,6 +23,7 @@
         <table class="file-table table table-bordered table-striped">
             <thead>
                 <tr>
+                    <th></th>
                     <th>ID</th>
                     <th>이름</th>
                     <th>설명</th>
@@ -22,10 +33,20 @@
             </thead>
         </table>
 
-        <div ref="buttons" hidden>
+        <div ref="selectButton" hidden>
+            <div class="row">
+                <div class="col-12 px-1 py-lg-0 px-lg-2">
+                    <button type="button" class="s-btn w-100 btn btn-sm btn-outline-primary">
+                        <font-awesome-icon :icon="['fas', 'store']"></font-awesome-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div ref="editButtons" hidden>
             <div class="row">
                 <div class="col-lg-4 p-1 py-lg-0 pl-lg-2">
-                    <button type="button" class="l-btn w-100 btn btn-sm btn-outline-primary">
+                    <button type="button" class="v-btn w-100 btn btn-sm btn-outline-primary">
                         <font-awesome-icon :icon="['fas', 'eye']"></font-awesome-icon>
                     </button>
                 </div>
@@ -53,6 +74,9 @@
 
     import confirmModalVue from '../../parts/confirmModal.vue';
 
+    /**
+     * template event : mainShowroom
+     */
     export default {
         components: {
             'confirm-modal': confirmModalVue
@@ -66,7 +90,8 @@
         mounted: function () {
             const me = this;
 
-            const buttonsHtml = me.$refs.buttons.innerHTML;
+            const selectButtonHtml = me.$refs.selectButton.innerHTML;
+            const editButtonsHtml = me.$refs.editButtons.innerHTML;
 
             me.dataTable = $('.file-table').DataTable({
                 ajax: {
@@ -78,15 +103,24 @@
                 pagingType: 'numbers',
                 buttons: ['copy'],
                 columns: [
+                    {width: '5%', data: null, className:'text-center', orderable:false, defaultContent: selectButtonHtml},
                     {width: '5%', data: 'SEQ_ID', className:'text-center'},
                     {width: '20%', data: 'NAME', className:'text-center'},
-                    {width: '40%', data: 'DESCRIPTION', className:'text-center'},
+                    {width: '35%', data: 'DESCRIPTION', className:'text-center'},
                     {width: '20%', data: 'C_DATE', className:'text-center'},
-                    {width: '15%', data: null, className:'text-center', orderable:false, defaultContent: buttonsHtml}
+                    {width: '15%', data: null, className:'text-center', orderable:false, defaultContent: editButtonsHtml}
                 ]
             });
 
-            me.dataTable.on('click', '.l-btn', function () {
+            me.dataTable.on('click', '.s-btn', function () {
+                const data = me.dataTable.row($(this).parents('tr')).data();
+
+                me.showroom = new Showroom(Utils.snakeObjToCamelObj(data));
+
+                me.$refs.mainShowroomModal.open();
+            });
+
+            me.dataTable.on('click', '.v-btn', function () {
                 const data = me.dataTable.row($(this).parents('tr')).data();
 
                 const urlSplitArr = window.location.href.split('/');
@@ -110,10 +144,19 @@
             });
         },
         methods: {
-            tableReload: function () {
+            reloadTable: function () {
                 const me = this;
 
                 me.dataTable.ajax.reload();
+            },
+            onConfirmMainShowroom: function (bool) {
+                const me = this;
+
+                if (bool) {
+                    Utils.apiRequest(ApiUrl.MAIN_SHOWROOM_UPDATE, {id: me.showroom.seqId}, 'post').then(function () {
+                        me.$emit('mainShowroom', me.showroom);
+                    });
+                }
             },
             onConfirmDelete: function (bool) {
                 const me = this;
@@ -123,10 +166,17 @@
                         return Promise.resolve();
 
                     }).then(function () {
-                        me.tableReload();
+                        me.reloadTable();
                     });
                 }
             }
         }
     }
 </script>
+
+<style lang="scss">
+    // 테이블은 외부 라이브러리라 스코프 없이 설정
+    .dataTables_wrapper.dt-bootstrap4.no-footer > .row:nth-child(2) > div {
+        overflow-x: auto;
+    }
+</style>

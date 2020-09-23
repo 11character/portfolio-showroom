@@ -27,10 +27,10 @@
             </thead>
         </table>
 
-        <div ref="buttons" hidden>
+        <div ref="editButtons" hidden>
             <div class="row">
                 <div class="col-lg-4 p-1 py-lg-0 pl-lg-2">
-                    <button type="button" class="l-btn w-100 btn btn-sm btn-outline-primary">
+                    <button type="button" class="v-btn w-100 btn btn-sm btn-outline-primary">
                         <font-awesome-icon :icon="['fas', 'eye']"></font-awesome-icon>
                     </button>
                 </div>
@@ -73,7 +73,7 @@
         mounted: function () {
             const me = this;
 
-            const buttonsHtml = me.$refs.buttons.innerHTML;
+            const editButtonsHtml = me.$refs.editButtons.innerHTML;
 
             me.dataTable = $('.file-table').DataTable({
                 ajax: {
@@ -89,11 +89,11 @@
                     {width: '20%', data: 'NAME', className:'text-center'},
                     {width: '32%', data: 'DESCRIPTION', className:'text-center'},
                     {width: '20%', data: 'C_DATE', className:'text-center'},
-                    {width: '15%', data: null, className:'text-center', orderable:false, defaultContent: buttonsHtml}
+                    {width: '15%', data: null, className:'text-center', orderable:false, defaultContent: editButtonsHtml}
                 ]
             });
 
-            me.dataTable.on('click', '.l-btn', function () {
+            me.dataTable.on('click', '.v-btn', function () {
                 const data = me.dataTable.row($(this).parents('tr')).data();
 
                 me.$refs.viewModal.open(new ModelFileInfo(Utils.snakeObjToCamelObj(data)));
@@ -114,7 +114,7 @@
             });
         },
         methods: {
-            tableReload: function () {
+            reloadTable: function () {
                 const me = this;
 
                 me.dataTable.ajax.reload();
@@ -127,10 +127,17 @@
                         return Promise.resolve();
 
                     }).then(function () {
-                        me.tableReload();
+                        me.reloadTable();
                     });
                 }
             }
         }
     }
 </script>
+
+<style lang="scss">
+    // 테이블은 외부 라이브러리라 스코프 없이 설정
+    .dataTables_wrapper.dt-bootstrap4.no-footer > .row:nth-child(2) > div {
+        overflow-x: auto;
+    }
+</style>

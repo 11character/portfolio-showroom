@@ -40,7 +40,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .item-link-list-field {
         width: 100%;
         height: 100%;

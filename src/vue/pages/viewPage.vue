@@ -287,7 +287,16 @@
                 me.onResizeViewer();
             });
 
-            Utils.apiRequest(ApiUrl.SHOWROOM_DATA, {seqId: me.id}).then(function (data) {
+            let promise;
+
+            if (me.id == 0) {
+                promise = Utils.apiRequest(ApiUrl.MAIN_SHOWROOM_DATA);
+            } else {
+
+                promise = Utils.apiRequest(ApiUrl.SHOWROOM_DATA, {seqId: me.id});
+            }
+
+            promise.then(function (data) {
                 // 뷰어의 위치가 변경되기를 기다렸다가 처리.
                 setTimeout(function () {
                     $(window).trigger('resize.view.page');
@@ -299,8 +308,9 @@
                         setTimeout(function () {
                             me.showroomViewer.openJson(me.showroom.data || '{}');
                         }, 50);
+
                     } else {
-                        alert('해당 정보가 없습니다.');
+                        me.$router.replace({name: 'empty'});
                     }
                 }, 50);
             });

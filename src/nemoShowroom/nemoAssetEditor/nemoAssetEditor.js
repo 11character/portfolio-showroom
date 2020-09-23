@@ -445,11 +445,11 @@ export default class NemoShowroomEditor extends EditorInterface {
     destroy() {
         const me = this;
 
+        me.stop();
+
         if (me.rootEl.parentElement) {
             me.rootEl.parentElement.removeChild(me.rootEl);
         }
-
-        me.stop();
 
         me.scene.traverse(function (object3D) {
             if (object3D.geometry) {

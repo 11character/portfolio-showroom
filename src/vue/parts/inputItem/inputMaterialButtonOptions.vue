@@ -162,7 +162,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .input-material-options {
         width: 100%;
         min-height: 100px;
