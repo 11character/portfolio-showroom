@@ -95,6 +95,7 @@
 
             .texture-button:hover {
                 border: 3px solid #ffffff;
+                background-color: transparent;
                 border-width: 3px;
             }
 

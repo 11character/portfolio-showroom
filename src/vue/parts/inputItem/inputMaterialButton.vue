@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button @click="onClickClose" type="button" class="btn btn-secondary">Cancel</button>
+                        <button @click="onClickClose" type="button" class="btn btn-secondary">Close</button>
                     </div>
                 </div>
             </div>

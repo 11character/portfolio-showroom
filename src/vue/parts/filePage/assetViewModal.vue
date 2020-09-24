@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" tabindex="-1" data-backdrop="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-body">
@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button @click="onClickClose" type="button" class="btn btn-secondary">Cancel</button>
+                    <button @click="onClickClose" type="button" class="btn btn-secondary">Close</button>
                 </div>
             </div>
         </div>
