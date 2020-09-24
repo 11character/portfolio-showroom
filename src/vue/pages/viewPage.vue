@@ -81,7 +81,9 @@
                         <div class="content">
                             <span>Selective Art Shop</span>
                             <br>
-                            <span>Enter to Art Shop - Enter to Art Shop - Ent</span>
+                            <text-slider class="text-slider">
+                                <span>Enter to Art Shop&nbsp;&nbsp;-</span>
+                            </text-slider>
                         </div>
                     </div>
 
@@ -212,6 +214,7 @@
     import itemMaterialListVue from '../parts/viewPage/itemMaterialList.vue';
     import moveControlVue from '../parts/viewPage/moveControl.vue';
     import hoverControlVue from '../parts/viewPage/hoverControl.vue';
+    import textSliderVue from '../parts/textSlider.vue';
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
@@ -223,7 +226,8 @@
             'item-link-list': itemLinkListVue,
             'item-material-list': itemMaterialListVue,
             'move-control': moveControlVue,
-            'hover-control': hoverControlVue
+            'hover-control': hoverControlVue,
+            'text-slider': textSliderVue
         },
         props: ['id', 'lang'],
         data: function () {
@@ -771,9 +775,17 @@
                 cursor: pointer;
                 font-size: 1.1rem;
 
-                .icon {
-                    width: 10%;
-                    text-align: right;
+                .content {
+                    width: 100%;
+
+                    .icon {
+                        width: 10%;
+                        text-align: right;
+                    }
+
+                    .text-slider {
+                        width: 100%;
+                    }
                 }
             }
 
