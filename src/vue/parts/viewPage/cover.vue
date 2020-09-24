@@ -1,14 +1,14 @@
 <template>
     <div ref="coverField" class="cover-field">
-        <div class="button-field">
+        <div ref="progressField" class="progress-field">
             <div v-if="percent < 100" class="progress border border-dark rounded-0">
                 <div ref="bar" class="progress-bar"></div>
             </div>
 
-            <div v-else @click="onClickEnter" class="btn-enter disable-user-select">Enter to Exhibition</div>
+            <div v-else @click="onClickEnter" class="btn-enter disable-user-select font-neuemachina-light">Enter to Exhibition</div>
         </div>
 
-        <div class="loading-text-field">
+        <div ref="textField" class="loading-text-field">
             <div class="loading-text-list font-neuemachina-light" v-if="percent < 100">
                 <div class="loading-text">Please Wait</div>
 
@@ -50,9 +50,42 @@
                 const me = this;
 
                 $(me.$refs.bar).css('width', val + '%');
+
+                me.loadingTextMargin();
             }
         },
+        mounted: function () {
+            const me = this;
+
+            $(window).on('resize.cover.page', function () {
+                me.loadingTextMargin();
+            });
+
+            me.loadingTextMargin();
+        },
+        beforeDestroy: function () {
+            $(window).off('resize.cover.page');
+        },
         methods: {
+            loadingTextMargin: function () {
+                const me = this;
+
+                const jTextField = $(me.$refs.textField);
+
+                if ($(window).width() < 1040) {
+                    const coverH = $(me.$refs.coverField).height();
+                    const progressFieldH = $(me.$refs.progressField).outerHeight() + 35;
+                    const textFieldH = jTextField.outerHeight();
+
+                    let marginBottom = (coverH - progressFieldH) / 2;
+                    marginBottom -= (textFieldH / 2);
+
+                    jTextField.css('marginBottom', marginBottom + 'px');
+
+                } else {
+                    jTextField.attr('style', '');
+                }
+            },
             onClickEnter: function () {
                 const me = this;
 
@@ -83,9 +116,8 @@
             user-select: none;
         }
 
-        .button-field {
+        .progress-field {
             width: 100%;
-            height: 50px;
             margin-top: 35px;
             display: flex;
             justify-content: center;
@@ -95,6 +127,13 @@
                 width: 50%;
                 height: 18px;
                 border: 2px solid #000000 !important;
+
+                @media screen and (max-width: 1040px) {
+                    width: 100%;
+                    height: 14px;
+                    border-left: none !important;
+                    border-right: none !important;
+                }
 
                 .progress-bar {
                     height: 100%;
@@ -107,13 +146,10 @@
                 background-color: #000000;
                 color: #ffffff;
                 font-size: 2rem;
-                cursor: default;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
+
+                @media screen and (max-width: 1040px) {
+                    font-size: 1.5rem;
+                }
             }
         }
 
@@ -123,9 +159,8 @@
             display: flex;
             justify-content: flex-end;
 
-            @media screen and (max-width: 950px) {
+            @media screen and (max-width: 1040px) {
                 justify-content: center;
-                margin-bottom: 25%;
             }
 
             .loading-text-list {
@@ -134,7 +169,7 @@
                 flex-direction: column;
                 align-items: flex-start;
 
-                @media screen and (max-width: 950px) {
+                @media screen and (max-width: 1040px) {
                     align-items: center;
                 }
 
@@ -143,7 +178,7 @@
                     padding: 0rem 1rem;
                     font-size: 2rem;
 
-                    @media screen and (max-width: 950px) {
+                    @media screen and (max-width: 1040px) {
                         font-size: 1.5rem;
                     }
                 }
@@ -155,7 +190,7 @@
 
                 .loading-text:nth-child(even) {
                     background-color: #ffffff;
-                    border: 1px solid #000000;
+                    border: 2px solid #000000;
                 }
             }
         }

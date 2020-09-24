@@ -157,7 +157,7 @@
                 <!-- END-배경음악 -->
 
                 <!-- 연관상품 -->
-                <div @click="onClickShowList" ref="productButton" class="product-button disable-user-select">
+                <div @click="onClickShowProduct" ref="productButton" class="product-button disable-user-select">
                     <div class="button-content-field">
                         <div class="content font-neuemachina-ultrabold">
                             <span>Available Product</span>
@@ -169,8 +169,8 @@
                     </div>
                 </div>
 
-                <div :hidden="!isShowList" ref="listField" class="list-field">
-                    <div @click="onClickHideList" class="list-header disable-user-select">
+                <div :hidden="!isShowProduct" ref="productField" class="product-field disable-user-select">
+                    <div @click="onClickHideList" class="product-header">
                         <div class="content font-neuemachina-ultrabold">
                             <span>Available Product List</span>
                         </div>
@@ -239,7 +239,7 @@
                 isSmallWindow: false,
                 isMobile: false,
                 isPlayMusic: false,
-                isShowList: false,
+                isShowProduct: false,
                 isShowMaterialList: false,
                 isHiddenCover: false,
                 loadingPercent: 0,
@@ -282,7 +282,7 @@
             me.$refs.viewField.appendChild(me.showroomViewer.rootEl);
 
             $(window).on('resize.view.page', function () {
-                me.isSmallWindow = $(window).width() < 950;
+                me.isSmallWindow = $(window).width() < 1040;
 
                 me.onResizeViewer();
             });
@@ -371,7 +371,7 @@
                 }
 
                 if (!me.isFullScreen) {
-                    height = height - jTop.outerHeight() - jBottom.outerHeight() - 20;
+                    height = height - jTop.outerHeight() - jBottom.outerHeight();
                 }
 
                 jCenter.width(width).height(height);
@@ -381,15 +381,17 @@
             onClickShowMaterialButton: function () {
                 const me = this;
 
-                const jButtonField = $(me.$refs.materialButtonField);
                 const jWindow = $(window);
+                const jButtonField = $(me.$refs.materialButtonField);
 
                 let width = 700;
-                let top = jWindow.height() - 138;
+                let top = jWindow.height() - 141;
 
                 if (jWindow.width() < 1160) {
+                    const jProductButton = $(me.$refs.productButton);
+
                     width = jWindow.width() - 36;
-                    top = top - 63;
+                    top = top - jProductButton.outerHeight();
                 }
 
                 let left = (jWindow.width() - width) / 2;
@@ -455,13 +457,13 @@
                     window.open(me.showroom.link);
                 }
             },
-            onClickShowList: function () {
+            onClickShowProduct: function () {
                 const me = this;
 
                 const jButton = $(me.$refs.productButton);
-                const jListField = $(me.$refs.listField);
+                const jProductField = $(me.$refs.productField);
                 const position = jButton.offset();
-                const top = position.top - jListField.height() + jButton.height();
+                const top = position.top - jProductField.outerHeight() + jButton.outerHeight();
 
                 // 전시장 설명 큰 버튼 폭에 맞춤.
                 let width = 497;
@@ -472,14 +474,14 @@
                     left = 18;
                 }
 
-                jListField.width(width).css('top', top + 'px').css('left', left + 'px');
+                jProductField.width(width).css('top', top + 'px').css('left', left + 'px');
 
-                me.isShowList = true;
+                me.isShowProduct = true;
             },
             onClickHideList: function () {
                 const me = this;
 
-                me.isShowList = false;
+                me.isShowProduct = false;
             },
             onClickCover: function () {
                 const me = this;
@@ -618,18 +620,18 @@
         }
 
         .menu-open-button {
-            width: 45px;
+            width: 35px;
             height: 90px;
             position: fixed;
             left: 100%;
             top: 0px;
-            margin-left: -63px;
+            margin-left: -53px;
             z-index: 4;
             display: flex;
             align-items: center;
 
             .box {
-                width: 45px;
+                width: 35px;
                 height: 45px;
                 display: flex;
                 flex-direction: column;
@@ -677,18 +679,18 @@
                 }
 
                 .menu-close-button {
-                    width: 45px;
+                    width: 35px;
                     height: 90px;
                     position: absolute;
                     left: 100%;
                     top: 0px;
-                    margin-left: -63px;
+                    margin-left: -53px;
                     display: flex;
                     align-items: center;
 
                     .box {
-                        width: 45px;
-                        height: 45px;
+                        width: 35px;
+                        height: 35px;
                         position: relative;
                         cursor: pointer;
 
@@ -697,7 +699,7 @@
                             height: 3px;
                             position: absolute;
                             left: 0px;
-                            top: 22px;
+                            top: 17px;
                             background-color: #000000;
                         }
 
@@ -720,7 +722,7 @@
                     text-align: center;
                     font-size: 2rem;
                     margin-bottom: 18px;
-                    border: 5px solid #000000;
+                    border: 3px solid #000000;
                 }
 
                 .menu-item:last-child {
@@ -751,22 +753,23 @@
             position: fixed;
             left: 100%;
             top: 18px;
-            margin-left: -838px;
+            margin-left: -916px;
             padding-right: 18px;
             z-index: 4;
             display: flex;
             justify-content: flex-end;
 
             .showroom-button {
-                width: 401px;
+                width: 440px;
                 margin-right: 18px;
                 padding: 9px 18px;
                 color: #ffffff;
                 background-color: #000000;
-                border: 1px solid #ffffff;
+                border: 2px solid #ffffff;
                 display: flex;
                 justify-content: space-between;
                 cursor: pointer;
+                font-size: 1.1rem;
 
                 .icon {
                     width: 10%;
@@ -785,12 +788,12 @@
             }
 
             .showroom-button-sm {
-                width: 187px;
+                width: 189px;
                 margin-right: 18px;
                 padding: 9px 18px;
                 color: #ffffff;
                 background-color: #000000;
-                border: 1px solid #ffffff;
+                border: 2px solid #000000;
                 display: flex;
                 justify-content: space-between;
                 cursor: pointer;
@@ -812,7 +815,7 @@
                 padding: 18px;
                 overflow-y: auto;
                 background-color: #000000;
-                border: 1px solid #ffffff;
+                border: 2px solid #000000;
 
                 pre {
                     width: 100%;
@@ -823,7 +826,7 @@
         }
 
         .showroom-button-field-sm {
-            margin-left: -410px;
+            margin-left: -414px;
         }
 
         .top {
@@ -834,16 +837,16 @@
             left: 0px;
             top: 0px;
 
-            @media screen and (max-width: 950px) {
+            @media screen and (max-width: 1040px) {
                 height: 90px;
                 padding: 0px;
             }
 
             .line {
                 width: 100%;
-                border-top: 1px solid #ffffff;
+                border-top: 2px solid #ffffff;
 
-                @media screen and (max-width: 950px) {
+                @media screen and (max-width: 1040px) {
                     display: none;
                 }
             }
@@ -877,7 +880,7 @@
                     align-items: center;
                     color: #ffffff;
                     background-color: #000000;
-                    border: 1px solid #ffffff;
+                    border: 2px solid #000000;
                     cursor: pointer;
                     z-index: 2;
 
@@ -896,22 +899,22 @@
 
                 .music-button-active {
                     color: #000000;
-                    border: 1px solid #000000;
+                    border-color: #000000;
                     background-color: #ffffff;
                 }
 
                 .product-button {
-                    width: 214px;
+                    width: 216px;
                     height: 45px;
                     position: absolute;
                     left: 100%;
                     top: 100%;
-                    margin-left: -232px;
+                    margin-left: -234px;
                     margin-top: -63px;
                     cursor: pointer;
                     z-index: 2;
 
-                    @media screen and (max-width: 950px) {
+                    @media screen and (max-width: 1040px) {
                         width: 100%;
                         left: 0px;
                         margin-left: 0px;
@@ -927,9 +930,9 @@
                         align-items: center;
                         color: #ffffff;
                         background-color: #000000;
-                        border: 1px solid #ffffff;
+                        border: 2px solid #000000;
 
-                        @media screen and (max-width: 950px) {
+                        @media screen and (max-width: 1040px) {
                             .content {
                                 width: 100%;
                                 text-align: center;
@@ -943,17 +946,17 @@
                     }
                 }
 
-                .list-field {
+                .product-field {
                     position: absolute;
-                    height: 245px;
+                    height: 246px;
                     overflow-y: auto;
                     font-weight: bold;
                     color: #000000;
                     background-color: #ffffff;
-                    border: 1px solid #000000;
+                    border: 2px solid #000000;
                     z-index: 2;
 
-                    .list-header {
+                    .product-header {
                         width: 100%;
                         height: 42px;
                         padding: 0px 18px;
@@ -1000,13 +1003,11 @@
         }
 
         .bottom {
-            height: 40px;
-            padding: 0px 18px;
+            padding: 18px 18px;
 
             .content {
                 width: 100%;
-                height: 100%;
-                margin-top:18px;
+                // margin-top:18px;
                 color: #ffffff;
                 border-top: 1px solid #ffffff;
                 display: flex;
@@ -1014,17 +1015,19 @@
                 align-items: center;
                 font-size: 0.8rem;
 
-                @media screen and (max-width: 950px) {
+                @media screen and (max-width: 1040px) {
                     border: none;
-                    margin-top: 0px;
-                    flex-wrap: wrap;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: flex-end;
                     font-size: 0.5rem;
                 }
 
                 .text {
                     padding-right: 1rem;
 
-                    @media screen and (max-width: 950px) {
+                    @media screen and (max-width: 1040px) {
+                        width: 100%;
                         padding: 0px;
                     }
                 }
