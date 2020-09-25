@@ -1,6 +1,15 @@
 <template>
     <div class="item-material-list-field disable-user-select">
-        <div class="item-material-list">
+        <div @mousedown="onPointerDown"
+            @mousemove="onPointerMove"
+            @mouseup="onPointerUp"
+            @mouseleave="onPointerUp"
+            @touchstart="onPointerDown"
+            @touchmove="onPointerMove"
+            @touchend="onPointerUp"
+            ref="list"
+            class="item-material-list">
+
             <div v-for="(button, i) in buttonArray" :key="i" class="texture-button">
                 <img v-if="button.url" :src="button.url" :alt="i" @click="onClickMaterial(button)" class="texture-button-img">
 
@@ -20,7 +29,11 @@
         props: ['assetItem'],
         data: function () {
             return {
-                buttonArray: []
+                buttonArray: [],
+                isPointerDown: false,
+                buttonTimeout: null,
+                pointerX: 0,
+                scrollX: 0
             };
         },
         watch: {
@@ -33,10 +46,52 @@
             }
         },
         methods: {
+            onPointerDown: function (evt) {
+                const me = this;
+
+                if (evt.changedTouches && evt.changedTouches[0]) {
+                    me.pointerX = evt.changedTouches[0].pageX;
+
+                } else {
+                    me.pointerX = evt.pageX;
+                }
+
+                me.scrollX = $(me.$refs.list).scrollLeft();
+
+                me.isPointerDown = true;
+            },
+            onPointerMove: function (evt) {
+                const me = this;
+
+                clearTimeout(me.buttonTimeout);
+
+                if (me.isPointerDown) {
+                    let x;
+
+                    if (evt.changedTouches && evt.changedTouches[0]) {
+                        x = evt.changedTouches[0].pageX - me.pointerX;
+
+                    } else {
+                        x = (evt.pageX - me.pointerX);
+                    }
+
+                    const jList = $(me.$refs.list);
+                    const scrollLeft = me.scrollX - x;
+
+                    jList.scrollLeft(scrollLeft);
+                }
+            },
+            onPointerUp: function () {
+                const me = this;
+
+                me.isPointerDown = false;
+            },
             onClickMaterial: function (button) {
                 const me = this;
 
-                me.assetItem.setMaterialOptions(button.materialOptions);
+                me.buttonTimeout = setTimeout(function () {
+                    me.assetItem.setMaterialOptions(button.materialOptions);
+                });
             }
         }
     }
@@ -64,7 +119,7 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            overflow-x: auto;
+            overflow-x: hidden;
             padding: 0rem 1rem;
 
             .texture-button {
