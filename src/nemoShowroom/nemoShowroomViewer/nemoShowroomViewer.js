@@ -17,7 +17,7 @@ import Utils from '../../class/utils';
 
 const Promise = window.Promise;
 
-export default class NemoShowroomEditor {
+export default class NemoShowroomViewer {
     constructor (obj = {}) {
         const me = this;
 
@@ -32,7 +32,6 @@ export default class NemoShowroomEditor {
 
         // ---
         me.rootEl = Utils.createDivElement();
-        me.rootEl.tabIndex = 1;
         me.rootEl.style.backgroundColor = StaticVariable.STYLE_BACKGROUND_COLOR;
 
         // ---
@@ -139,7 +138,6 @@ export default class NemoShowroomEditor {
         me.intersectedItem = null;
 
         // ---
-        me.start();
         me.__initEvent();
     }
 
@@ -403,6 +401,9 @@ export default class NemoShowroomEditor {
 
         me.scene.remove.apply(me.scene, me.scene.children);
 
+        window.removeEventListener(me.__onKeydown);
+        window.removeEventListener(me.__onKeyup);
+
         setTimeout(function () {
 
             for (let key in me) {
@@ -603,6 +604,94 @@ export default class NemoShowroomEditor {
         return me.assetItemManager.getItemByObject3D(group);
     }
 
+    __onKeydown(evt) {
+        const me = this;
+
+        if (me.isRun) {
+            const key = evt.key.toLowerCase();
+
+            switch (key) {
+                // w
+                case 'w':
+                case 'arrowup':
+                    me.moveInfo.moveForward = true;
+                    break;
+
+                // a
+                case 'a':
+                case 'arrowleft':
+                    me.moveInfo.moveLeft = true;
+                    break;
+
+                // s
+                case 's':
+                case 'arrowdown':
+                    me.moveInfo.moveBackward = true;
+                    break;
+
+                // d
+                case 'd':
+                case 'arrowright':
+                    me.moveInfo.moveRight = true;
+                    break;
+
+                // r
+                case 'r':
+                    me.moveInfo.moveUp = true;
+                    break;
+
+                // f
+                case 'f':
+                    me.moveInfo.moveDown = true;
+                    break;
+            }
+        }
+    }
+
+    __onKeyup(evt) {
+        const me =  this;
+
+        const key = evt.key.toLowerCase();
+
+        if (me.isRun) {
+            switch (key) {
+                // w
+                case 'w':
+                case 'arrowup':
+                    me.moveInfo.moveForward = false;
+                    break;
+
+                // a
+                case 'a':
+                case 'arrowleft':
+                    me.moveInfo.moveLeft = false;
+                    break;
+
+                // s
+                case 's':
+                case 'arrowdown':
+                    me.moveInfo.moveBackward = false;
+                    break;
+
+                // d
+                case 'd':
+                case 'arrowright':
+                    me.moveInfo.moveRight = false;
+                    break;
+
+                // r
+                case 'r':
+                    me.moveInfo.moveUp = false;
+                    break;
+
+                // f
+                case 'f':
+                    me.moveInfo.moveDown = false;
+                    break;
+            }
+        }
+    }
+
     __initEvent() {
         const me = this;
 
@@ -690,72 +779,16 @@ export default class NemoShowroomEditor {
 
         me.rootEl.addEventListener('mouseleave', onPointerUp);
 
-        me.rootEl.addEventListener('keydown', function (evt) {
-            switch (evt.keyCode) {
-                // w
-                case 87:
-                    me.moveInfo.moveForward = true;
-                    break;
-
-                // a
-                case 65:
-                    me.moveInfo.moveLeft = true;
-                    break;
-
-                // s
-                case 83:
-                    me.moveInfo.moveBackward = true;
-                    break;
-
-                // d
-                case 68:
-                    me.moveInfo.moveRight = true;
-                    break;
-
-                // r
-                case 82:
-                    me.moveInfo.moveUp = true;
-                    break;
-
-                // f
-                case 70:
-                    me.moveInfo.moveDown = true;
-                    break;
-            }
+        window.addEventListener('keydown', function (evt) {
+            me.__onKeydown.call(me, evt);
         });
 
-        me.rootEl.addEventListener('keyup', function (evt) {
-            switch (evt.keyCode) {
-                // w
-                case 87:
-                    me.moveInfo.moveForward = false;
-                    break;
-
-                // a
-                case 65:
-                    me.moveInfo.moveLeft = false;
-                    break;
-
-                // s
-                case 83:
-                    me.moveInfo.moveBackward = false;
-                    break;
-
-                // d
-                case 68:
-                    me.moveInfo.moveRight = false;
-                    break;
-
-                // r
-                case 82:
-                    me.moveInfo.moveUp = false;
-                    break;
-
-                // f
-                case 70:
-                    me.moveInfo.moveDown = false;
-                    break;
-            }
+        window.addEventListener('keyup', function (evt) {
+            me.__onKeyup.call(me, evt);
         });
+
+        if (me.options.autoStart) {
+            me.start();
+        }
     }
 }

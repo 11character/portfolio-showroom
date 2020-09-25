@@ -146,6 +146,7 @@
                 background-color: #000000;
                 color: #ffffff;
                 font-size: 2rem;
+                cursor: pointer;
 
                 @media screen and (max-width: 1040px) {
                     font-size: 1.5rem;

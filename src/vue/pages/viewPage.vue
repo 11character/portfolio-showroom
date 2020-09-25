@@ -42,7 +42,7 @@
                         </div>
                     </div>
 
-                    <div v-if="showroom.bgmUrl" :class="{'menu-item-n': !isPlayMusic}" @click="onClickMusic" class="menu-item">
+                    <div v-if="showroom.bgmUrl" :class="{'menu-item-n': isPlayMusic}" @click="onClickMusic" class="menu-item">
                         <!-- 배경음악 -->
                         <div class="content font-neuemachina-ultrabold">
                             <span v-if="isPlayMusic">Music On</span>
@@ -251,6 +251,7 @@
                 showroomViewer: new NemoShowroomViewer({
                     width: 100,
                     height: 100,
+                    autoStart: false,
                     onClick: function (assetItem) {
                         me.selectedItem = assetItem;
 
@@ -311,7 +312,7 @@
                         // 크기가 변경된 이후에 처리.
                         setTimeout(function () {
                             me.showroomViewer.openJson(me.showroom.data || '{}');
-                        }, 50);
+                        }, 1000);
 
                     } else {
                         me.$router.replace({name: 'empty'});
@@ -494,23 +495,28 @@
                 me.isFullScreen = true;
                 me.isSmallButton = true;
 
+                me.onClickMusic();
                 me.onResizeViewer();
+
+                me.showroomViewer.start();
             },
             onClickMusic: function () {
                 const me = this;
 
                 const bgnEl = me.$refs.bgm;
 
-                if (!me.isPlayMusic && me.showroom.bgmUrl) {
-                    me.isPlayMusic = !me.isPlayMusic;
-
-                    bgnEl.src = me.showroom.bgmUrl;
-                    bgnEl.play();
-
-                } else {
-                    me.isPlayMusic = !me.isPlayMusic;
-                    bgnEl.pause();
-                    bgnEl.currentTime = 0;
+                if (me.showroom.bgmUrl) {
+                    if (!me.isPlayMusic) {
+                        me.isPlayMusic = !me.isPlayMusic;
+    
+                        bgnEl.src = me.showroom.bgmUrl;
+                        bgnEl.play();
+    
+                    } else {
+                        me.isPlayMusic = !me.isPlayMusic;
+                        bgnEl.pause();
+                        bgnEl.currentTime = 0;
+                    }
                 }
             },
             onClickLang: function () {
@@ -890,8 +896,8 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    color: #ffffff;
-                    background-color: #000000;
+                    color: #000000;
+                    background-color: #ffffff;
                     border: 2px solid #000000;
                     cursor: pointer;
                     z-index: 2;
@@ -910,9 +916,8 @@
                 }
 
                 .music-button-active {
-                    color: #000000;
-                    border-color: #000000;
-                    background-color: #ffffff;
+                    color: #ffffff;
+                    background-color: #000000;
                 }
 
                 .product-button {
