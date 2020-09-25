@@ -149,9 +149,12 @@
             }
 
             .texture-button:hover {
-                border: 3px solid #ffffff;
-                background-color: transparent;
-                border-width: 3px;
+                box-shadow: 0px 0px 10px #ffffff;
+                background-color: #ffffff;
+
+                .texture-button-none-img {
+                    color: #000000;
+                }
             }
 
             .texture-button:first-child {
