@@ -105,7 +105,10 @@ export default class NemoShowroomViewer {
         me.renderPass = new RenderPass(me.scene, me.camera);
 
         me.outlinePass = new OutlinePass( new THREE.Vector2(winW, winH), me.scene, me.camera);
-        me.outlinePass.edgeStrength = 10;
+        me.outlinePass.edgeStrength = 2;
+        me.outlinePass.edgeThickness = 3;
+        me.outlinePass.edgeGlow = 1;
+
 
         me.fxaaPass = new ShaderPass(FXAAShader);
         me.fxaaPass.material.uniforms['resolution'].value.x = 1 / (winW * pixelRatio);
