@@ -702,12 +702,9 @@ export default class NemoShowroomViewer {
         let pointerDownMouseY = 0;
         let pointerDownLon = 0;
         let pointerDownLat = 0;
-        let pointerDownTimeout;
         let intersectTimeout;
 
         function onPointerDown(evt) {
-            clearTimeout(pointerDownTimeout);
-
             isUserInteracting = true;
 
             const pointerXY = me.mouseRaycaster.getPointerXY(evt);
@@ -720,21 +717,18 @@ export default class NemoShowroomViewer {
             pointerDownLon = me.cameraLon;
             pointerDownLat = me.cameraLat;
 
-            pointerDownTimeout = setTimeout(function () {
-                switch(evt.button) {
-                    case 0:
-                        // 테두리 표시.
-                        me.intersectedItem = me.__intersect(evt);
-                        me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+            switch(evt.button) {
+                case 0:
+                    // 테두리 표시.
+                    me.intersectedItem = me.__intersect(evt);
+                    me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
 
-                        me.options.onClick(me.intersectedItem);
-                        break;
-                }
-            }, 100);
+                    me.options.onClick(me.intersectedItem);
+                    break;
+            }
         }
 
         function onPointerMove(evt) {
-            clearTimeout(pointerDownTimeout);
             clearTimeout(intersectTimeout);
 
             const pointerXY = me.mouseRaycaster.getPointerXY(evt);

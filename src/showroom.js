@@ -36,7 +36,9 @@ import {
     faPaintBrush,
     faLink,
     faGlobe,
-    faStore
+    faStore,
+    faChevronLeft,
+    faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 
 FaLibrary.add(faSyncAlt);
@@ -60,6 +62,8 @@ FaLibrary.add(faPaintBrush);
 FaLibrary.add(faLink);
 FaLibrary.add(faGlobe);
 FaLibrary.add(faStore);
+FaLibrary.add(faChevronLeft);
+FaLibrary.add(faChevronRight);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

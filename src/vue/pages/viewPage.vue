@@ -172,7 +172,7 @@
                 </div>
 
                 <div :hidden="!isShowProduct" ref="productField" class="product-field disable-user-select">
-                    <div @click="onClickHideList" class="product-header">
+                    <div @click="onClickHideProduct" class="product-header">
                         <div class="content font-neuemachina-ultrabold">
                             <span>Available Product List</span>
                         </div>
@@ -262,8 +262,11 @@
                             me.onClickHideMaterialButton();
                         }
 
-                        if (!assetItem || assetItem.linkButtonArray.length == 0) {
-                            me.onClickHideList();
+                        if (assetItem && assetItem.linkButtonArray.length) {
+                            me.onClickShowProduct();
+
+                        } else {
+                            me.onClickHideProduct();
                         }
                     },
                     onLoadProgress: function (count, total, assetItem) {
@@ -359,7 +362,7 @@
 
                 me.hideInfo();
                 me.onClickHideMenu();
-                me.onClickHideList();
+                me.onClickHideProduct();
                 me.onClickHideMaterialButton();
 
                 const jWin = $(window);
@@ -483,7 +486,7 @@
 
                 me.isShowProduct = true;
             },
-            onClickHideList: function () {
+            onClickHideProduct: function () {
                 const me = this;
 
                 me.isShowProduct = false;
@@ -508,10 +511,10 @@
                 if (me.showroom.bgmUrl) {
                     if (!me.isPlayMusic) {
                         me.isPlayMusic = !me.isPlayMusic;
-    
+
                         bgnEl.src = me.showroom.bgmUrl;
                         bgnEl.play();
-    
+
                     } else {
                         me.isPlayMusic = !me.isPlayMusic;
                         bgnEl.pause();
