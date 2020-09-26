@@ -131,16 +131,6 @@
         height: 100%;
         position: relative;
 
-        .disable-user-select {
-            cursor: default;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
         .item-move-button {
             width: 36px;
             height: 100%;

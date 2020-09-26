@@ -4,7 +4,7 @@
 
         <top-nav separate-page="Asset Edit"></top-nav>
 
-        <div ref="editorField" class="editor-field">
+        <div ref="editorField" class="editor-field disable-user-select">
 
             <nav class="nav-field">
                 <div @click="onClickSave" class="nav-btn nav-btn-sm">
@@ -221,12 +221,6 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-
-            -ms-user-select: none;
-            -moz-user-select: -moz-none;
-            -khtml-user-select: none;
-            -webkit-user-select: none;
-            user-select: none;
 
             /* nav ==================================================================================================== */
             $nav-field-w: 120;

@@ -106,16 +106,6 @@
         flex-direction: column;
         justify-content: space-between;
 
-        .disable-user-select {
-            cursor: default;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
         .progress-field {
             width: 100%;
             margin-top: 35px;

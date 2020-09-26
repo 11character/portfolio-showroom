@@ -104,15 +104,6 @@
         display: flex;
         justify-content: center;
 
-        .disable-user-select {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
         .item-material-list {
             height: 100%;
             margin: 0px auto;

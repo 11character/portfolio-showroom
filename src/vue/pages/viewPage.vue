@@ -600,16 +600,6 @@
             margin-right: 0px !important;
         }
 
-        .disable-user-select {
-            cursor: default;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
         .logo {
             width: 97px;
             height: 60px;

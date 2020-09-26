@@ -1,7 +1,7 @@
 <template>
     <div class="import-modal modal fade" tabindex="-1" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-content-model-file">
+            <div class="modal-content modal-content-model-file disable-user-select">
                 <div class="modal-head">
                     <p class="modal-title">
                         <img :src="'./img/icon-model-file.png'" class="modal-title-img modal-title-img-model-file"> Model

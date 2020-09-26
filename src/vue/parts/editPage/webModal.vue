@@ -1,7 +1,7 @@
 <template>
     <div class="import-modal modal fade" tabindex="-1" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-content-url">
+            <div class="modal-content modal-content-url disable-user-select">
                 <div class="modal-head">
                     <div class="modal-title">
                         <img :src="'img/icon-web.png'" class="modal-title-img modal-title-img-webpage"> Web Page

@@ -7,7 +7,7 @@
         @touchmove="onPointerMove"
         @touchstart="onPointerDown"
         @touchend="onPointerUp"
-        class="move-control-field">
+        class="move-control-field disable-user-select">
             <div ref="pointer" class="control-pointer"></div>
     </div>
 </template>
@@ -125,12 +125,6 @@
         border-radius: 60px;
         position: relative;
         background-color: rgba(0, 0, 0, 0.5);
-
-        -ms-user-select: none;
-        -moz-user-select: -moz-none;
-        -khtml-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
 
         .control-pointer {
             width: 32px;

@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark disable-user-select">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-content">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -60,13 +60,3 @@
         }
     }
 </script>
-
-<style lang="scss" scoped>
-    .navbar {
-        -ms-user-select: none;
-        -moz-user-select: -moz-none;
-        -khtml-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-    }
-</style>
