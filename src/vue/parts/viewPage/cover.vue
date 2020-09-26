@@ -104,8 +104,8 @@
         width: 100%;
         height: 100%;
         background-position: center;
-        background-size: 100%;
-        background-color: #bdbdbd;
+        background-size: contain;
+        background-color: #ffffff;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
