@@ -109,7 +109,6 @@ export default class NemoShowroomViewer {
         me.outlinePass.edgeThickness = 3;
         me.outlinePass.edgeGlow = 1;
 
-
         me.fxaaPass = new ShaderPass(FXAAShader);
         me.fxaaPass.material.uniforms['resolution'].value.x = 1 / (winW * pixelRatio);
         me.fxaaPass.material.uniforms['resolution'].value.y = 1 / (winH * pixelRatio);
@@ -465,6 +464,12 @@ export default class NemoShowroomViewer {
         me.moveInfo.offDirection();
     }
 
+    centerFocus(bool) {
+        const me = this;
+
+        me.options.centerFocus = bool;
+    }
+
     __cameraLookDir(camera) {
         const vector3 = new THREE.Vector3(0, 0, -1);
 
@@ -607,6 +612,24 @@ export default class NemoShowroomViewer {
         return me.assetItemManager.getItemByObject3D(group);
     }
 
+    __intersectXY(x, y) {
+        const me = this;
+
+        const intersectChild = me.mouseRaycaster.intersectXY(me.outlineObjArr, x, y);
+
+        let group = null;
+
+        if (intersectChild) {
+            intersectChild.traverseAncestors(function (object3D) {
+                if (object3D.parent && object3D.parent.name === StaticVariable.ITEM_OBJECT_FIELD_NAME) {
+                    group = object3D;
+                }
+            });
+        }
+
+        return me.assetItemManager.getItemByObject3D(group);
+    }
+
     __onKeydown(evt) {
         const me = this;
 
@@ -698,14 +721,13 @@ export default class NemoShowroomViewer {
     __initEvent() {
         const me = this;
 
-        const pixelRatio = window.devicePixelRatio;
-
         let isUserInteracting = false;
         let pointerDownMouseX = 0;
         let pointerDownMouseY = 0;
         let pointerDownLon = 0;
         let pointerDownLat = 0;
-        let intersectTimeout;
+        let mouseFocusTimeout;
+        let centerFocusTimeout;
 
         function onPointerDown(evt) {
             isUserInteracting = true;
@@ -732,14 +754,12 @@ export default class NemoShowroomViewer {
         }
 
         function onPointerMove(evt) {
-            clearTimeout(intersectTimeout);
-
-            const pointerXY = me.mouseRaycaster.getPointerXY(evt);
-            const x = pointerXY.x;
-            const y = pointerXY.y;
-
             // 화면 회전.
             if (isUserInteracting) {
+                const pointerXY = me.mouseRaycaster.getPointerXY(evt);
+                const x = pointerXY.x;
+                const y = pointerXY.y;
+
                 me.cameraLon = (pointerDownMouseX - x) * 0.05 + pointerDownLon;
                 me.cameraLat = (y - pointerDownMouseY) * 0.05 + pointerDownLat;
 
@@ -753,9 +773,24 @@ export default class NemoShowroomViewer {
                 me.camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
                 me.camera.lookAt(me.camera.target);
 
-            } else {
+                // 화면 가운데 포커스를 설정한 경우 테두리 표시.
+                if (me.options.centerFocus) {
+                    clearTimeout(centerFocusTimeout);
+
+                    centerFocusTimeout = setTimeout(function () {
+                        const centerX = (me.rootEl.clientWidth / 2) * window.devicePixelRatio;
+                        const centerY = (me.rootEl.clientHeight / 2) * window.devicePixelRatio;
+
+                        me.intersectedItem = me.__intersectXY(centerX, centerY);
+                        me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+                    }, 50);
+                }
+
+            } else if (!me.options.centerFocus) {
+                clearTimeout(mouseFocusTimeout);
+
                 // 테두리 표시.
-                intersectTimeout = setTimeout(function () {
+                mouseFocusTimeout = setTimeout(function () {
                     me.intersectedItem = me.__intersect(evt);
                     me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
                 }, 10);

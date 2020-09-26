@@ -19,11 +19,23 @@ export default class MouseRaycaster {
 
         const pointerXY = me.getPointerXY(event, pixelRatio);
 
-        const canvas = me.renderer.domElement;
-        const x = (pointerXY.x / canvas.width) * 2 - 1;
-        const y = -(pointerXY.y / canvas.height) * 2 + 1;
+        return me.intersectXY(object3DArr, pointerXY.x, pointerXY.y);
+    }
 
-        me.mouseVector.set(x, y);
+    /**
+     * X, Y 좌표값을 가지고 교차되는 가장 가까운 대상을 반환한다.
+     * @param {Array} object3DArr 검사 대상이 들어가 있는 배열.
+     * @param {Number} x X 좌표.
+     * @param {Number} y Y 좌표.
+     */
+    intersectXY(object3DArr, x, y) {
+        const me = this;
+
+        const canvas = me.renderer.domElement;
+        const pX = (x / canvas.width) * 2 - 1;
+        const pY = -(y / canvas.height) * 2 + 1;
+
+        me.mouseVector.set(pX, pY);
         me.raycaster.setFromCamera(me.mouseVector, me.camera);
 
         const arr = me.raycaster.intersectObjects(object3DArr, true);

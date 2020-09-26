@@ -4,6 +4,7 @@ export default class Options {
         this.width = obj.width || 800;
         this.height = obj.height || 600;
         this.autoStart = (typeof obj.autoStart == 'boolean') ? obj.autoStart : true;
+        this.centerFocus = !!obj.centerFocus;
 
         this.onClick = (typeof obj.onClick == 'function') ? obj.onClick : function () {};
         this.onLoadProgress = (typeof obj.onLoadProgress == 'function') ? obj.onLoadProgress : function () {};
