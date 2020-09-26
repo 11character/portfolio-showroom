@@ -513,7 +513,7 @@
                 if (me.showroom.bgmUrl) {
                     if (!me.isPlayMusic) {
                         me.isPlayMusic = !me.isPlayMusic;
-
+                        bgnEl.loop = true;
                         bgnEl.src = me.showroom.bgmUrl;
                         bgnEl.play();
 
