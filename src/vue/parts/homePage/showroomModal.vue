@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="showroom-modal-field">
         <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmCreate" ref="createModal">
             <template v-slot:message>
                 <div class="row">
@@ -24,14 +24,32 @@
                 </div>
 
                 <div class="row mt-3">
-                    <label class="col-12 form-label">이미지</label>
+                    <label class="col-12 form-label">
+                        <span>이미지</span>
+                        <span v-if="showroom.imgUrl">(사용중인 파일)</span>
+                    </label>
+
+                    <div v-if="showroom.imgUrl" class="col-12 mb-1">
+                        <div class="w-100 border img-view">
+                            <img :src="showroom.imgUrl" class="w-100">
+                        </div>
+                    </div>
+
                     <div class="col-12">
                         <input :disabled="disabled" ref="imgFile" type="file" class="w-100 border rounded" accept="image/*">
                     </div>
                 </div>
 
                 <div class="row mt-3">
-                    <label class="col-12 form-label">음악</label>
+                    <label class="col-12 form-label">
+                        <span>음악</span>
+                        <span v-if="showroom.bgmUrl">(사용중인 파일)</span>
+                    </label>
+                    
+                    <div v-if="showroom.bgmUrl" class="col-12 mb-1">
+                        <audio :src="showroom.bgmUrl" class="w-100" controls></audio>
+                    </div>
+
                     <div class="col-12">
                         <input :disabled="disabled" ref="bgmFile" type="file" class="w-100 border rounded" accept="audio/mpeg">
                     </div>
@@ -202,3 +220,12 @@
         }
     }
 </script>
+
+<style lang="scss" scoped>
+    .showroom-modal-field {
+        .img-view {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    }
+</style>
