@@ -49,25 +49,29 @@
             percent: function (val) {
                 const me = this;
 
-                $(me.$refs.bar).css('width', val + '%');
+                setTimeout(function () {
+                    me.textMargin();
+                }, 10);
 
-                me.loadingTextMargin();
+                $(me.$refs.bar).css('width', val + '%');
             }
         },
         mounted: function () {
             const me = this;
 
             $(window).on('resize.cover.page', function () {
-                me.loadingTextMargin();
+                me.textMargin();
             });
 
-            me.loadingTextMargin();
+            setTimeout(function () {
+                me.textMargin();
+            }, 100);
         },
         beforeDestroy: function () {
             $(window).off('resize.cover.page');
         },
         methods: {
-            loadingTextMargin: function () {
+            textMargin: function () {
                 const me = this;
 
                 const jTextField = $(me.$refs.textField);
