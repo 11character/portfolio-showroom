@@ -62,8 +62,6 @@ export default class AssetLoader {
     }
 
     __onLoad(assetItem) {
-        const me = this;
-
         const group = assetItem.object3D;
         const removeChildArr = [];
 
@@ -74,10 +72,12 @@ export default class AssetLoader {
                 object3D.rotation.order = 'YXZ';
             }
 
+            // 조명 객체가 섞여 있는 경우 제거한다.
             if (assetItem.type != StaticVariable.ITEM_TYPE_SPOT_LIGHT && object3D.isLight) {
                 removeChildArr.push(object3D);
             }
 
+            // 카메라 객체가 섞여 있는 경우 제거한다.
             if (object3D.isCamera) {
                 removeChildArr.push(object3D);
             }
@@ -87,6 +87,10 @@ export default class AssetLoader {
                 object3D.material.side = THREE.DoubleSide;
             }
         });
+
+        if (assetItem.type !== StaticVariable.ITEM_TYPE_HTML && assetItem.type !== StaticVariable.ITEM_TYPE_YOUTUBE) {
+            group.renderOrder = 1;
+        }
 
         for(let i = 0; i < removeChildArr.length; i++) {
             removeChildArr[i].parent.remove(removeChildArr[i]);
@@ -318,10 +322,8 @@ export default class AssetLoader {
 
         if (assetItem.isSprite) {
             const sm = new THREE.SpriteMaterial({
-                transparent: true,
-                opacity: 0,
-                color: 0x000000,
-                blending: THREE.NoBlending
+                transparent: false,
+                colorWrite: false
             });
 
             object3D = new THREE.Sprite(sm);
@@ -330,11 +332,8 @@ export default class AssetLoader {
         } else {
             const g = new THREE.PlaneGeometry(1, 1);
             const m = new THREE.MeshBasicMaterial({
-                transparent: true,
-                opacity: 0,
-                color: 0x000000,
-                blending: THREE.NoBlending,
-                side: THREE.DoubleSide
+                transparent: false,
+                colorWrite: false
             });
 
             object3D = new THREE.Mesh(g, m);

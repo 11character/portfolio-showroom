@@ -77,9 +77,14 @@ export const GRID_COLOR = new THREE.Color(0xffffff);
 export const FLOOR_COLOR = new THREE.Color(0x808080);
 
 /**
+ * 바닥 사이즈.
+ */
+export const FLOOR_SIZE = 2000;
+
+/**
  * 그리드 사이즈.
  */
-export const GRID_SIZE = 1000;
+export const GRID_SIZE = 2000;
 
 /**
  * 그리드 간격.

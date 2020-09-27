@@ -88,9 +88,11 @@ export default class NemoShowroomViewer {
         me.clock = new THREE.Clock();
 
         // ---
-        const floorGeo = new THREE.BoxBufferGeometry(2000, 0.1, 2000);
+        const floorGeo = new THREE.PlaneBufferGeometry(StaticVariable.FLOOR_SIZE, StaticVariable.FLOOR_SIZE);
         const floorMat = new THREE.MeshPhongMaterial({color: StaticVariable.FLOOR_COLOR});
         me.baseFloor = new THREE.Mesh(floorGeo, floorMat);
+        me.baseFloor.rotation.x = -(Math.PI / 2);
+        me.baseFloor.renderOrder = 1;
 
         // ---
         me.scene.add(me.camera);
