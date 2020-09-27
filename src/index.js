@@ -23,6 +23,8 @@ dtBs4(window, $);
 dtButtonBs4(window, $);
 dtSelectBs4(window, $);
 
+$.fn.DataTable.ext.pager.numbers_length = 12;
+
 // vue
 import Vue from 'vue/dist/vue.common.prod';
 
