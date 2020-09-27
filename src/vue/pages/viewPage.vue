@@ -139,7 +139,7 @@
         <div :class="{'center-full': isFullScreen, 'margin-x-0': isSmallWindow}" ref="center" class="center">
             <cover :hidden="isHiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
 
-            <div ref="viewField" class="view-field">
+            <div ref="viewField" class="view-field disable-user-select">
                 <div v-if="isMobile && !isShowMaterialList" class="move-left-control">
                     <move-control @control="onControlMove"></move-control>
                 </div>
@@ -149,7 +149,7 @@
                 </div>
 
                 <!-- 배경음악 -->
-                <div v-if="!isSmallWindow && showroom.bgmUrl" :class="{'music-button-active': isPlayMusic}" @click="onClickMusic" class="music-button disable-user-select">
+                <div v-if="!isSmallWindow && showroom.bgmUrl" :class="{'music-button-active': isPlayMusic}" @click="onClickMusic" class="music-button">
                     <div class="content font-neuemachina-ultrabold">
                         <span v-if="isPlayMusic">Music On</span>
                         <span v-else>Music Off</span>
@@ -159,7 +159,7 @@
                 <!-- END-배경음악 -->
 
                 <!-- 연관상품 -->
-                <div @click="onClickShowProduct" ref="productButton" class="product-button disable-user-select">
+                <div @click="onClickShowProduct" ref="productButton" class="product-button">
                     <div class="button-content-field">
                         <div class="content font-neuemachina-ultrabold">
                             <span>Available Product</span>
@@ -171,7 +171,7 @@
                     </div>
                 </div>
 
-                <div :hidden="!isShowProduct" ref="productField" class="product-field disable-user-select">
+                <div :hidden="!isShowProduct" ref="productField" class="product-field">
                     <div @click="onClickHideProduct" class="product-header">
                         <div class="content font-neuemachina-ultrabold">
                             <span>Available Product List</span>
@@ -324,6 +324,12 @@
                     }
                 }, 50);
             });
+
+            // 모바일 브라우저 확대, 축소, 어색한 조작 방지.
+            $(me.$el).on('touchmove.view.page', function (evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+            });
         },
         beforeDestroy: function () {
             const me = this;
@@ -332,6 +338,7 @@
             me.showroomViewer = null;
 
             $(window).off('resize.view.page');
+            $(me.$el).off('touchmove.view.page');
         },
         methods: {
             loadPageText: function () {

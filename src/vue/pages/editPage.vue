@@ -55,7 +55,7 @@
                 </div>
             </nav>
 
-            <div ref="viewField" class="font-neuemachina"></div>
+            <div ref="viewField"></div>
 
             <div class="control-field">
                 <control-panel @control="onControl" v-bind:editor="showroomEditor"></control-panel>
@@ -276,7 +276,7 @@
                 const scale = 0.025;
 
                 // 텍스트 에디터에서 출력값 마지막 라인 아래에 여백이 없도록 처리.
-                const content = '<div class="asset-text-item" data-type="text" style="word-wrap:break-word; overflow:hidden; background-color:' + backgroundColor + ';">' + html + '</div>';
+                const content = '<div class="asset-text-item font-neuemachina" data-type="text" style="word-wrap:break-word; overflow:hidden; background-color:' + backgroundColor + ';">' + html + '</div>';
 
                 const item = {
                     name: 'Text',

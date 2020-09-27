@@ -59,6 +59,9 @@
                 me.isPointerDown = true;
             },
             onPointerMove: function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+
                 const me = this;
 
                 if (me.isPointerDown) {
