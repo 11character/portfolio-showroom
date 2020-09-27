@@ -20,7 +20,7 @@
         </confirm-modal>
         <!-- END-제거 모달 -->
 
-        <table class="file-table table table-bordered table-striped">
+        <table ref="table" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th></th>
@@ -93,7 +93,7 @@
             const selectButtonHtml = me.$refs.selectButton.innerHTML;
             const editButtonsHtml = me.$refs.editButtons.innerHTML;
 
-            me.dataTable = $('.file-table').DataTable({
+            me.dataTable = $(me.$refs.table).DataTable({
                 ajax: {
                     url: ApiUrl.SHOWROOM_LIST,
                     dataSrc: 'data'
@@ -175,7 +175,7 @@
 </script>
 
 <style lang="scss">
-    // 테이블은 외부 라이브러리라 스코프 없이 설정
+    // 테이블은 외부 소스라서 스코프 없이 설정
     .dataTables_wrapper.dt-bootstrap4.no-footer > .row:nth-child(2) > div {
         overflow-x: auto;
     }
