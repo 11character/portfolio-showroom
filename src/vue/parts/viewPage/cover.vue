@@ -76,7 +76,7 @@
 
                 const jTextField = $(me.$refs.textField);
 
-                if ($(window).width() < 1040) {
+                if ($(window).width() < 1090) {
                     const coverH = $(me.$refs.coverField).height();
                     const progressFieldH = $(me.$refs.progressField).outerHeight() + 35;
                     const textFieldH = jTextField.outerHeight();
@@ -104,8 +104,8 @@
         width: 100%;
         height: 100%;
         background-position: center;
-        background-size: contain;
-        background-color: #ffffff;
+        background-color: #000000;
+        background-repeat: no-repeat;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -122,7 +122,7 @@
                 height: 18px;
                 border: 2px solid #000000 !important;
 
-                @media screen and (max-width: 1040px) {
+                @media screen and (max-width: 1090px) {
                     width: 100%;
                     height: 14px;
                     border-left: none !important;
@@ -142,7 +142,7 @@
                 font-size: 2rem;
                 cursor: pointer;
 
-                @media screen and (max-width: 1040px) {
+                @media screen and (max-width: 1090px) {
                     font-size: 1.5rem;
                 }
             }
@@ -154,7 +154,7 @@
             display: flex;
             justify-content: flex-end;
 
-            @media screen and (max-width: 1040px) {
+            @media screen and (max-width: 1090px) {
                 justify-content: center;
             }
 
@@ -164,7 +164,7 @@
                 flex-direction: column;
                 align-items: flex-start;
 
-                @media screen and (max-width: 1040px) {
+                @media screen and (max-width: 1090px) {
                     align-items: center;
                 }
 
@@ -173,7 +173,7 @@
                     padding: 0rem 1rem;
                     font-size: 2rem;
 
-                    @media screen and (max-width: 1040px) {
+                    @media screen and (max-width: 1090px) {
                         font-size: 1.5rem;
                     }
                 }

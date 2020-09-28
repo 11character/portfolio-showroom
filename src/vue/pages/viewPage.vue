@@ -82,7 +82,7 @@
                             <span>Selective Art Shop</span>
                             <br>
                             <text-slider class="text-slider">
-                                <span>Enter to Art Shop&nbsp;&nbsp;-</span>
+                                <span>Enter to Art Shop&nbsp;&nbsp;&nbsp;-</span>
                             </text-slider>
                         </div>
                     </div>
@@ -292,7 +292,7 @@
             me.$refs.viewField.appendChild(me.showroomViewer.rootEl);
 
             $(window).on('resize.view.page', function () {
-                me.isSmallWindow = $(window).width() < 1040;
+                me.isSmallWindow = $(window).width() < 1090;
 
                 me.onResizeViewer();
             });
@@ -767,23 +767,24 @@
             position: fixed;
             left: 100%;
             top: 18px;
-            margin-left: -916px;
+            margin-left: -964px;
             padding-right: 18px;
             z-index: 4;
             display: flex;
             justify-content: flex-end;
 
             .showroom-button {
-                width: 440px;
+                width: 464px;
+                height: 69px;
                 margin-right: 18px;
-                padding: 9px 18px;
+                padding: 6px 18px;
                 color: #ffffff;
                 background-color: #000000;
                 border: 2px solid #ffffff;
                 display: flex;
                 justify-content: space-between;
                 cursor: pointer;
-                font-size: 1.1rem;
+                font-size: 18px;
 
                 .content {
                     width: 100%;
@@ -859,7 +860,7 @@
             left: 0px;
             top: 0px;
 
-            @media screen and (max-width: 1040px) {
+            @media screen and (max-width: 1090px) {
                 height: 90px;
                 padding: 0px;
             }
@@ -868,7 +869,7 @@
                 width: 100%;
                 border-top: 2px solid #ffffff;
 
-                @media screen and (max-width: 1040px) {
+                @media screen and (max-width: 1090px) {
                     display: none;
                 }
             }
@@ -935,7 +936,7 @@
                     cursor: pointer;
                     z-index: 2;
 
-                    @media screen and (max-width: 1040px) {
+                    @media screen and (max-width: 1090px) {
                         width: 100%;
                         left: 0px;
                         margin-left: 0px;
@@ -953,7 +954,7 @@
                         background-color: #000000;
                         border: 2px solid #000000;
 
-                        @media screen and (max-width: 1040px) {
+                        @media screen and (max-width: 1090px) {
                             .content {
                                 width: 100%;
                                 text-align: center;
@@ -1036,7 +1037,7 @@
                 align-items: center;
                 font-size: 0.8rem;
 
-                @media screen and (max-width: 1040px) {
+                @media screen and (max-width: 1090px) {
                     border: none;
                     flex-direction: column;
                     justify-content: center;
@@ -1047,7 +1048,7 @@
                 .text {
                     padding-right: 1rem;
 
-                    @media screen and (max-width: 1040px) {
+                    @media screen and (max-width: 1090px) {
                         width: 100%;
                         padding: 0px;
                     }
