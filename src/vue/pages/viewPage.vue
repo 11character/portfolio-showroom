@@ -477,23 +477,25 @@
             onClickShowProduct: function () {
                 const me = this;
 
-                const jButton = $(me.$refs.productButton);
-                const jProductField = $(me.$refs.productField);
-                const position = jButton.offset();
-                const top = position.top - jProductField.outerHeight() + jButton.outerHeight();
+                if (me.selectedItem && me.selectedItem.linkButtonArray.length) {
+                    const jButton = $(me.$refs.productButton);
+                    const jProductField = $(me.$refs.productField);
+                    const position = jButton.offset();
+                    const top = position.top - jProductField.outerHeight() + jButton.outerHeight();
 
-                // 전시장 설명 큰 버튼 폭에 맞춤.
-                let width = 497;
-                let left = position.left + jButton.width() - width - 1;
+                    // 전시장 설명 큰 버튼 폭에 맞춤.
+                    let width = 497;
+                    let left = position.left + jButton.width() - width - 1;
 
-                if (me.isSmallWindow) {
-                    width = jButton.width();
-                    left = 18;
+                    if (me.isSmallWindow) {
+                        width = jButton.width();
+                        left = 18;
+                    }
+
+                    jProductField.width(width).css('top', top + 'px').css('left', left + 'px');
+
+                    me.isShowProduct = true;
                 }
-
-                jProductField.width(width).css('top', top + 'px').css('left', left + 'px');
-
-                me.isShowProduct = true;
             },
             onClickHideProduct: function () {
                 const me = this;

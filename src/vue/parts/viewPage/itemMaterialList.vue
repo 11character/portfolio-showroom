@@ -11,7 +11,7 @@
             class="item-material-list">
 
             <div v-for="(button, i) in buttonArray" :key="i" class="texture-button">
-                <img v-if="button.url" :src="button.url" :alt="i" @click="onClickMaterial(button)" class="texture-button-img">
+                <img v-if="button.url" :src="button.url" :alt="i" @click="onClickMaterial(button)" class="texture-button-img" async>
 
                 <div v-else @click="onClickMaterial(button)" class="texture-button-none-img">
                     <font-awesome-icon :icon="['fas', 'paint-brush']"></font-awesome-icon>&nbsp;{{ i + 1 }}
@@ -114,9 +114,9 @@
             padding: 0rem 1rem;
 
             .texture-button {
-                width: 90px;
-                min-width: 90px;
-                height: 90px;
+                width: 60px;
+                min-width: 60px;
+                height: 60px;
                 border-radius: 50%;
                 margin: 8px 16px;
                 background-color: #000000;

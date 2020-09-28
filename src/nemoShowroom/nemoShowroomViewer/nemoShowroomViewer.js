@@ -139,7 +139,7 @@ export default class NemoShowroomViewer {
         me.checkBoxArr = [];
         me.checkItemArr = [];
         me.outlineObjArr = [];
-        me.intersectedItem = null;
+        me.selectedItem = null;
 
         // ---
         me.__initEvent();
@@ -747,10 +747,10 @@ export default class NemoShowroomViewer {
             switch(evt.button) {
                 case 0:
                     // 테두리 표시.
-                    me.intersectedItem = me.__intersect(evt);
-                    me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+                    me.selectedItem = me.__intersect(evt);
+                    me.outlinePass.selectedObjects = me.selectedItem ? [me.selectedItem.object3D] : [];
 
-                    me.options.onClick(me.intersectedItem);
+                    me.options.onClick(me.selectedItem);
                     break;
             }
         }
@@ -775,26 +775,27 @@ export default class NemoShowroomViewer {
                 me.camera.target.z = 500 * Math.sin(phi) * Math.sin(theta);
                 me.camera.lookAt(me.camera.target);
 
-                // 화면 가운데 포커스를 설정한 경우 테두리 표시.
-                if (me.options.centerFocus) {
+                // 선택된 아이템이 없고, 화면 가운데 포커스를 설정한 경우 테두리 표시.
+                if (!me.selectedItem && me.options.centerFocus) {
                     clearTimeout(centerFocusTimeout);
 
                     centerFocusTimeout = setTimeout(function () {
                         const centerX = (me.rootEl.clientWidth / 2) * window.devicePixelRatio;
                         const centerY = (me.rootEl.clientHeight / 2) * window.devicePixelRatio;
+                        const intersectedItem = me.__intersectXY(centerX, centerY);
 
-                        me.intersectedItem = me.__intersectXY(centerX, centerY);
-                        me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+                        me.outlinePass.selectedObjects = intersectedItem ? [intersectedItem.object3D] : [];
                     }, 50);
                 }
 
-            } else if (!me.options.centerFocus) {
+            // 선택된 아이템이 없고, 마우스로 포커싱이 되는 경우.
+            } else if (!me.selectedItem && !me.options.centerFocus) {
                 clearTimeout(mouseFocusTimeout);
 
-                // 테두리 표시.
                 mouseFocusTimeout = setTimeout(function () {
-                    me.intersectedItem = me.__intersect(evt);
-                    me.outlinePass.selectedObjects = me.intersectedItem ? [me.intersectedItem.object3D] : [];
+                    const intersectedItem = me.__intersect(evt);
+
+                    me.outlinePass.selectedObjects = intersectedItem ? [intersectedItem.object3D] : [];
                 }, 10);
             }
         }

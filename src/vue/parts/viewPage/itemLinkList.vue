@@ -11,7 +11,7 @@
             class="item-link-list">
 
             <div v-for="(button, i) in buttonArray" :key="i" class="link-button">
-                <img v-if="button.url" :src="button.url" :alt="button.name" @click="onClickLink(button.link)">
+                <img v-if="button.url" :src="button.url" :alt="button.name" @click="onClickLink(button.link)" async>
 
                 <div v-else @click="onClickLink(button.link)" class="none-img">
                     <font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon>&nbsp;{{ i + 1 }}
