@@ -28,7 +28,7 @@
             <thead>
                 <tr>
                     <th>
-                        <input v-model="selectAll" type="checkbox">
+                        <input v-model="selectAll" type="checkbox" class="data-select-all">
                     </th>
                     <th>ID</th>
                     <th>타입</th>
@@ -84,13 +84,6 @@
                 page: 0
             };
         },
-        watch: {
-            selectAll: function (val) {
-                const me = this;
-
-                $(me.$el).find('.data-select').prop('checked', val);
-            }
-        },
         mounted: function () {
             const me = this;
 
@@ -114,6 +107,17 @@
                     {width: '20%', data: 'C_DATE', className:'text-center'},
                     {width: '10%', data: null, className:'text-center', searchable: false, orderable:false, defaultContent: editButtonsHtml}
                 ]
+            });
+
+            me.dataTable.on('change', '.data-select-all', function () {
+                $(me.$el).find('.table .data-select').prop('checked', me.selectAll);
+            });
+
+            me.dataTable.on('change', '.data-select', function () {
+                const selectCount = $(me.$el).find('.table .data-select:checked').length;
+                const info = me.dataTable.page.info();
+
+                $(me.$el).find('.data-select-all').prop('checked', selectCount >= (info.end - info.start));
             });
 
             me.dataTable.on('click', '.v-btn', function () {
