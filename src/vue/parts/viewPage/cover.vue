@@ -8,19 +8,17 @@
             <div v-else @click="onClickEnter" class="btn-enter disable-user-select font-neuemachina-light">Enter to Exhibition</div>
         </div>
 
-        <div ref="textField" class="loading-text-field">
-            <div class="loading-text-list font-neuemachina-light" v-if="percent < 100">
-                <div class="loading-text">Please Wait</div>
+        <div ref="textField" class="loading-text-field disable-user-select">
+            <div class="loading-text-list font-neuemachina-light">
+                <div class="loading-text">Please Wait...</div>
 
-                <div v-if="percent > 15" class="loading-text">It will be open soon</div>
+                <div v-if="percent > 15" class="loading-text">To walk in the virtual gallery,</div>
 
-                <div v-if="percent > 30" class="loading-text">We know it's slow..</div>
+                <div v-if="percent > 30" class="loading-text">Use W(↑) A(←) S(↓) D(→) for horizontal walk,</div>
 
-                <div v-if="percent > 45" class="loading-text">Almost done maybe</div>
+                <div v-if="percent > 45" class="loading-text">and R(up), F(Down) for vertially move.</div>
 
-                <div v-if="percent > 60" class="loading-text">Visit to a shop</div>
-
-                <div v-if="percent > 75" class="loading-text">While waiting</div>
+                <div v-if="percent > 60" class="loading-text">You can change view with drags.</div>
             </div>
         </div>
     </div>
@@ -159,7 +157,7 @@
             }
 
             .loading-text-list {
-                width: 500px;
+                width: 730px;
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
@@ -171,11 +169,15 @@
                 .loading-text {
                     display: inline-block;
                     padding: 0rem 1rem;
-                    font-size: 2rem;
+                    font-size: 1.9rem;
 
                     @media screen and (max-width: 1090px) {
-                        font-size: 1.5rem;
+                        font-size: 1.4rem;
                     }
+                }
+
+                .loading-text:nth-child(even) {
+                    font-weight: bold;
                 }
 
                 .loading-text:nth-child(odd) {
