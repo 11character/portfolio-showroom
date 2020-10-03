@@ -16,9 +16,11 @@
 
                 <div v-if="percent > 30" class="loading-text">Use W(↑) A(←) S(↓) D(→) for horizontal walk,</div>
 
-                <div v-if="percent > 45" class="loading-text">and R(up), F(Down) for vertially move.</div>
+                <div v-if="percent > 45" class="loading-text">and R(up), F(Down) for vertical move.</div>
 
-                <div v-if="percent > 60" class="loading-text">You can change view with drags.</div>
+                <div v-if="percent > 60" class="loading-text">You can change views with drags.</div>
+
+                <div v-if="percent > 75" class="loading-text">Desktop is recommended for optimal interface.</div>
             </div>
         </div>
     </div>
@@ -157,7 +159,7 @@
             }
 
             .loading-text-list {
-                width: 730px;
+                width: 765px;
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
