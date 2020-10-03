@@ -299,7 +299,7 @@ export default class NemoShowroomEditor extends EditorInterface {
     }
 
     /**
-     * 2D 객체 sprite 전환, 해제
+     * 2D 객체 sprite 전환, 해제.
      */
     switchingSpriteMode () {
         const me = this;

@@ -89,20 +89,6 @@
                                 </button>
                             </div>
 
-                            <template v-if="'html,image,youtube'.indexOf(assetItem.type) >= 0">
-                                <div v-if="assetItem.isSprite" class="control-row">
-                                    <button @click="onClickSwitchingSprite" type="button" class="control-btn" tabindex="-1">
-                                        <font-awesome-icon :icon="['fas', 'exchange-alt']"></font-awesome-icon>&nbsp;&nbsp;3D
-                                    </button>
-                                </div>
-
-                                <div v-else class="control-row">
-                                    <button @click="onClickSwitchingSprite" type="button" class="control-btn" tabindex="-1">
-                                        <font-awesome-icon :icon="['fas', 'exchange-alt']"></font-awesome-icon>&nbsp;&nbsp;2D
-                                    </button>
-                                </div>
-                            </template>
-
                             <div v-if="!assetItem.isStartPoint" class="control-row">
                                 <input-number v-model.number="scaleX" :step="0.1" class="sub-control-row" sub-label="X" label="Scale ( % )"></input-number>
                                 <input-number v-model.number="scaleY" :step="0.1" class="sub-control-row" sub-label="Y"></input-number>
@@ -680,12 +666,6 @@
                 const me = this;
 
                 me.$emit('control', 'textEdit');
-            },
-            onClickSwitchingSprite: function () {
-                const me = this;
-
-                me.editor.switchingSpriteMode();
-                me.$emit('control', 'switchingSprite');
             },
             onClickRemove: function () {
                 const me = this;
