@@ -277,16 +277,10 @@ export default class AssetItem {
 
         me.object3D.traverse(function (obj) {
             if (obj.material) {
-                let mtlArr = [obj.material];
-
-                if (Array.isArray(obj.material)) {
-                    mtlArr = obj.material;
-                }
-
-                for (let i = 0; i < mtlArr.length; i++) {
-                    mtlArr[i].transparent = true;
-                    mtlArr[i].opacity = num;
-                }
+                obj.material = new THREE.MeshBasicMaterial({
+                    transparent: true,
+                    opacity: num
+                });
             }
         });
     }

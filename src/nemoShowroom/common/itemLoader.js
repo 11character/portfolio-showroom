@@ -268,7 +268,6 @@ export default class AssetLoader {
         }).then(function (canvas) {
             const g = new THREE.PlaneGeometry(width, height);
             const m = new THREE.MeshPhongMaterial({
-                transparent: true,
                 map: new THREE.CanvasTexture(canvas),
                 side: THREE.DoubleSide
             });
@@ -292,7 +291,6 @@ export default class AssetLoader {
 
                 if (assetItem.isSprite) {
                     const sm = new THREE.SpriteMaterial({
-                        transparent: true,
                         map: texture
                     });
 
@@ -302,7 +300,6 @@ export default class AssetLoader {
                 } else {
                     const g = new THREE.PlaneGeometry(assetItem.width, assetItem.height);
                     const m = new THREE.MeshPhongMaterial({
-                        transparent: true,
                         map: texture,
                         side: THREE.DoubleSide
                     });
@@ -322,7 +319,6 @@ export default class AssetLoader {
 
         if (assetItem.isSprite) {
             const sm = new THREE.SpriteMaterial({
-                transparent: false,
                 colorWrite: false
             });
 
@@ -332,8 +328,8 @@ export default class AssetLoader {
         } else {
             const g = new THREE.PlaneGeometry(1, 1);
             const m = new THREE.MeshBasicMaterial({
-                transparent: false,
-                colorWrite: false
+                colorWrite: false,
+                side: THREE.DoubleSide
             });
 
             object3D = new THREE.Mesh(g, m);
@@ -349,10 +345,7 @@ export default class AssetLoader {
 
         if (assetItem.isSprite) {
             const sm = new THREE.SpriteMaterial({
-                transparent: true,
-                opacity: 0,
-                color: 0x000000,
-                blending: THREE.NoBlending
+                colorWrite: false
             });
             object3D = new THREE.Sprite(sm);
             object3D.scale.set(1, 1, 1);
@@ -360,10 +353,7 @@ export default class AssetLoader {
         } else {
             const g = new THREE.PlaneGeometry(1, 1);
             const m = new THREE.MeshBasicMaterial({
-                transparent: true,
-                opacity: 0,
-                color: 0x000000,
-                blending: THREE.NoBlending,
+                colorWrite: false,
                 side: THREE.DoubleSide
             });
 

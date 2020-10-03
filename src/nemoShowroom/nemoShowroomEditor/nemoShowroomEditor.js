@@ -87,9 +87,7 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.tfControls = new TransformControls(me.camera, me.renderer.domElement);
         me.tfControls.setRotationSnap(Math.PI / 180);
         // material 에 transparent 속성이 true인 경우 선택한 객체 뒤로 컨트롤러가 가려진다. 이를 해결하기 위해 renderOrder값을 1로 올려준다. (기본값은 0)
-        me.tfControls.traverse(function (object3D) {
-            object3D.renderOrder = 1;
-        });
+        me.tfControls.renderOrder = 2;
 
         // ---
         me.mouseRaycaster = new MouseRaycaster(me.renderer, me.camera);
@@ -103,14 +101,14 @@ export default class NemoShowroomEditor extends EditorInterface {
         // ---
         me.gridObject3D = new THREE.GridHelper( StaticVariable.GRID_SIZE, StaticVariable.GRID_DIVISIONS, StaticVariable.GRID_COLOR, StaticVariable.GRID_COLOR );
         me.gridObject3D.position.setY(0.005);
-        me.gridObject3D.renderOrder = 1;
+        me.gridObject3D.renderOrder = 2;
 
         // ---
         const floorGeo = new THREE.PlaneBufferGeometry(StaticVariable.FLOOR_SIZE, StaticVariable.FLOOR_SIZE);
         const floorMat = new THREE.MeshPhongMaterial({color: StaticVariable.FLOOR_COLOR});
         me.baseFloor = new THREE.Mesh(floorGeo, floorMat);
         me.baseFloor.rotation.x = -(Math.PI / 2);
-        me.baseFloor.renderOrder = 1;
+        me.baseFloor.renderOrder = 2;
 
         // ---
         me.scene.add(me.camera);

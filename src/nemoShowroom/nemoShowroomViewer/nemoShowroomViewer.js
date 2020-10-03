@@ -92,7 +92,7 @@ export default class NemoShowroomViewer {
         const floorMat = new THREE.MeshPhongMaterial({color: StaticVariable.FLOOR_COLOR});
         me.baseFloor = new THREE.Mesh(floorGeo, floorMat);
         me.baseFloor.rotation.x = -(Math.PI / 2);
-        me.baseFloor.renderOrder = 1;
+        me.baseFloor.renderOrder = 2;
 
         // ---
         me.scene.add(me.camera);
