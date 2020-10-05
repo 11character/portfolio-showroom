@@ -7,6 +7,7 @@ export default class Options {
         this.centerFocus = !!obj.centerFocus;
 
         this.onClick = (typeof obj.onClick == 'function') ? obj.onClick : function () {};
+        this.onMoveCamera = (typeof obj.onMoveCamera == 'function') ? obj.onMoveCamera : function () {};
         this.onLoadProgress = (typeof obj.onLoadProgress == 'function') ? obj.onLoadProgress : function () {};
         this.onLoad = (typeof obj.onLoad == 'function') ? obj.onLoad : function () {};
     }

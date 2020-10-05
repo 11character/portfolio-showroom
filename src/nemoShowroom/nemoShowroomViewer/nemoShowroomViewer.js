@@ -749,7 +749,6 @@ export default class NemoShowroomViewer {
                     // 테두리 표시.
                     me.selectedItem = me.__intersect(evt);
                     me.outlinePass.selectedObjects = me.selectedItem ? [me.selectedItem.object3D] : [];
-
                     me.options.onClick(me.selectedItem);
                     break;
             }
@@ -787,6 +786,8 @@ export default class NemoShowroomViewer {
                         me.outlinePass.selectedObjects = intersectedItem ? [intersectedItem.object3D] : [];
                     }, 50);
                 }
+
+                me.options.onMoveCamera();
 
             // 선택된 아이템이 없고, 마우스로 포커싱이 되는 경우.
             } else if (!me.selectedItem && !me.options.centerFocus) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="import-modal modal fade" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="import-modal modal fade" tabindex="-1" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-text disable-user-select">
                 <div class="modal-head">

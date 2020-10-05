@@ -1,5 +1,6 @@
 <template>
     <div class="view-page-field">
+        <youtube-view-modal @hidden="onHiddenYoutubeModal" ref="youtubeViewModal"></youtube-view-modal>
 
         <div :class="{'logo-view-mode': isFullScreen, 'logo-sm': isSmallWindow}" class="logo"></div>
 
@@ -205,6 +206,7 @@
 </template>
 
 <script>
+    import * as StaticVariable from '../../nemoShowroom/common/staticVariable';
     import * as ApiUrl from '../../class/apiUrl';
     import Utils from '../../class/utils';
     import Showroom from '../../class/showroom';
@@ -215,6 +217,7 @@
     import moveControlVue from '../parts/viewPage/moveControl.vue';
     import hoverControlVue from '../parts/viewPage/hoverControl.vue';
     import textSliderVue from '../parts/textSlider.vue';
+    import youtubeViewModalVue from '../parts/viewPage/youtubeViewModal.vue';
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
@@ -227,11 +230,14 @@
             'item-material-list': itemMaterialListVue,
             'move-control': moveControlVue,
             'hover-control': hoverControlVue,
-            'text-slider': textSliderVue
+            'text-slider': textSliderVue,
+            'youtube-view-modal': youtubeViewModalVue
         },
         props: ['id', 'lang'],
         data: function () {
             const me = this;
+            
+            let youtubeTimeout;
 
             return {
                 pageText: {ko: {}, en: {}},
@@ -268,6 +274,13 @@
                         } else {
                             me.onClickHideProduct();
                         }
+
+                        if (assetItem && assetItem.type == StaticVariable.ITEM_TYPE_YOUTUBE) {
+                            youtubeTimeout = setTimeout(me.onClickYoutube, 500);
+                        }
+                    },
+                    onMoveCamera: function () {
+                        clearTimeout(youtubeTimeout);
                     },
                     onLoadProgress: function (count, total, assetItem) {
                         me.loadingPercent = parseInt(count / total * 100, 10);
@@ -514,23 +527,27 @@
 
                 me.showroomViewer.start();
             },
-            onClickMusic: function () {
+            onClickMusic: function (bool) {
                 const me = this;
 
                 const bgnEl = me.$refs.bgm;
 
                 if (me.showroom.bgmUrl) {
+                    if (typeof bool == 'boolean') {
+                        me.isPlayMusic = !bool;
+                    }
+
                     if (!me.isPlayMusic) {
-                        me.isPlayMusic = !me.isPlayMusic;
                         bgnEl.loop = true;
                         bgnEl.src = me.showroom.bgmUrl;
                         bgnEl.play();
 
                     } else {
-                        me.isPlayMusic = !me.isPlayMusic;
                         bgnEl.pause();
                         bgnEl.currentTime = 0;
                     }
+
+                    me.isPlayMusic = !me.isPlayMusic;
                 }
             },
             onClickLang: function () {
@@ -593,6 +610,30 @@
                 } else if (y < -30) {
                     viewer.moveDownSwitch(true);
                 }
+            },
+            onClickYoutube: function () {
+                const me = this;
+
+                if (me.selectedItem && me.selectedItem.type == StaticVariable.ITEM_TYPE_YOUTUBE) {
+                    const index = me.selectedItem.content.lastIndexOf('/');
+
+                    let youtubeId = me.selectedItem.content;
+
+                    if (index > -1) {
+                        youtubeId = youtubeId.substring(index + 1);
+                    }
+
+                    me.$refs.youtubeViewModal.open(youtubeId);
+
+                    me.showroomViewer.cssRenderer.pauseYoutube();
+                    me.onClickMusic(false);
+                }
+            },
+            onHiddenYoutubeModal: function () {
+                const me = this;
+
+                me.showroomViewer.cssRenderer.playYoutube();
+                me.onClickMusic(true);
             }
         }
     }
