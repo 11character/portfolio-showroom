@@ -501,16 +501,12 @@ export default class NemoShowroomViewer {
         const position = me.camera.position.clone();
         const originY = position.y;
 
-        const rayCaster = new THREE.Raycaster(position, direction);
+        const rayCaster = new THREE.Raycaster(position, direction, 0, StaticVariable.CONTROLS_RAY_FAR);
 
         let arr = rayCaster.intersectObjects(me.colliderMeshArr);
         
         // 충돌검사.
-        let check = false;
-
-        if (arr.length) {
-            check = arr[0].distance < StaticVariable.CONTROLS_RAY_FAR;
-        }
+        let check = arr.length > 0;
 
         // 위, 아래 이동이 아닌 경우 상단과 하단 부분도 측정.
         if (direction.y == 0) {
@@ -518,19 +514,13 @@ export default class NemoShowroomViewer {
             position.setY(originY + (StaticVariable.CONTROLS_RAY_FAR * 0.75));
             rayCaster.set(position, direction);
             arr = rayCaster.intersectObjects(me.colliderMeshArr);
-
-            if (arr.length) {
-                check = arr[0].distance < StaticVariable.CONTROLS_RAY_FAR;
-            }
+            check = arr.length > 0;
 
             // 하단 선.
             position.setY(originY - (StaticVariable.CONTROLS_RAY_FAR * 0.75))
             rayCaster.set(position, direction);
             arr = rayCaster.intersectObjects(me.colliderMeshArr);
-
-            if (arr.length) {
-                check = arr[0].distance < StaticVariable.CONTROLS_RAY_FAR;
-            }
+            check = arr.length > 0;
         }
 
         return check;

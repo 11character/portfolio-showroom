@@ -278,6 +278,7 @@ export default class AssetItem {
         me.object3D.traverse(function (obj) {
             if (obj.material) {
                 obj.material = new THREE.MeshBasicMaterial({
+                    side: THREE.DoubleSide,
                     transparent: true,
                     opacity: num
                 });
