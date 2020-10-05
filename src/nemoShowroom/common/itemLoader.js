@@ -86,6 +86,10 @@ export default class AssetLoader {
             if (object3D.material) {
                 object3D.material.side = THREE.DoubleSide;
             }
+
+            if (assetItem.type !== StaticVariable.ITEM_TYPE_HTML && assetItem.type !== StaticVariable.ITEM_TYPE_YOUTUBE) {
+                object3D.renderOrder = 1;
+            }
         });
 
         if (assetItem.type !== StaticVariable.ITEM_TYPE_HTML && assetItem.type !== StaticVariable.ITEM_TYPE_YOUTUBE) {

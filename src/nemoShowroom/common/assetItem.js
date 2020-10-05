@@ -282,6 +282,8 @@ export default class AssetItem {
                     transparent: true,
                     opacity: num
                 });
+
+                obj.material.renderOrder = obj.renderOrder;
             }
         });
     }
