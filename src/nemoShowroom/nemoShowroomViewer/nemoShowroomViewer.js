@@ -136,9 +136,8 @@ export default class NemoShowroomViewer {
         me.isRun = true;
 
         // ---
-        me.checkBoxArr = [];
-        me.checkItemArr = [];
-        me.outlineObjArr = [];
+        me.colliderMeshArr = [];
+        me.outlineMeshArr = [];
         me.selectedItem = null;
 
         // ---
@@ -222,25 +221,26 @@ export default class NemoShowroomViewer {
             // cssRenderer에 배치되어 크기를 구할 수 있도록 대기.
             setTimeout(function () {
                 if (isFirst) {
-                    me.checkBoxArr = [];
-                    me.checkItemArr = [];
-                    me.outlineObjArr = [];
+                    me.colliderMeshArr = [];
+                    me.outlineMeshArr = [];
                 }
 
                 for (let i = 0; i < itemArr.length; i++) {
                     const assetItem = itemArr[i];
 
-                    // 충돌박스 생성.
-                    if (assetItem.isCollider) {
-                        // 두 배열의 순서 일치.
-                        me.checkBoxArr.push(assetItem.getBox3());
-                        me.checkItemArr.push(assetItem);
-                    }
+                    assetItem.object3D.traverse(function (obj) {
+                        if (obj.isMesh) {
+                            // 충돌박스 생성.
+                            if (assetItem.isCollider) {
+                                me.colliderMeshArr.push(obj);
+                            }
 
-                    // 클릭대상.
-                    if (assetItem.isClickTarget) {
-                        me.outlineObjArr.push(assetItem.object3D);
-                    }
+                            // 클릭대상.
+                            if (assetItem.isClickTarget) {
+                                me.outlineMeshArr.push(obj);
+                            }
+                        }
+                    });
                 }
 
                 me.options.onLoad(me);
@@ -499,42 +499,37 @@ export default class NemoShowroomViewer {
 
         // 계산된 방향으로 선을 긋는다.
         const position = me.camera.position.clone();
-        const ray = new THREE.Ray(position, direction);
         const originY = position.y;
-        const vec3 = new THREE.Vector3();
 
+        const rayCaster = new THREE.Raycaster(position, direction);
+
+        let arr = rayCaster.intersectObjects(me.colliderMeshArr);
+        
         // 충돌검사.
         let check = false;
 
-        for (let i = 0; i < me.checkBoxArr.length; i++) {
-            // 중심 선.
-            ray.origin.setY(originY);
-            ray.intersectBox(me.checkBoxArr[i], vec3);
+        if (arr.length) {
+            check = arr[0].distance < StaticVariable.CONTROLS_RAY_FAR;
+        }
 
-            if (vec3.lengthSq() && vec3.distanceTo(position) < StaticVariable.CONTROLS_RAY_FAR) {
-                check = true;
-                break;
+        // 위, 아래 이동이 아닌 경우 상단과 하단 부분도 측정.
+        if (direction.y == 0) {
+            // 상단 선.
+            position.setY(originY + (StaticVariable.CONTROLS_RAY_FAR * 0.75));
+            rayCaster.set(position, direction);
+            arr = rayCaster.intersectObjects(me.colliderMeshArr);
+
+            if (arr.length) {
+                check = arr[0].distance < StaticVariable.CONTROLS_RAY_FAR;
             }
 
-            // 위, 아래 이동이 아닌 경우.
-            if (direction.y == 0) {
-                // 상단 선.
-                ray.origin.setY(originY + (StaticVariable.CONTROLS_RAY_FAR * 0.75));
-                ray.intersectBox(me.checkBoxArr[i], vec3);
+            // 하단 선.
+            position.setY(originY - (StaticVariable.CONTROLS_RAY_FAR * 0.75))
+            rayCaster.set(position, direction);
+            arr = rayCaster.intersectObjects(me.colliderMeshArr);
 
-                if (vec3.lengthSq() && vec3.distanceTo(position) < StaticVariable.CONTROLS_RAY_FAR) {
-                    check = true;
-                    break;
-                }
-
-                // 하단 선.
-                ray.origin.setY(originY - (StaticVariable.CONTROLS_RAY_FAR * 0.75));
-                ray.intersectBox(me.checkBoxArr[i], vec3);
-
-                if (vec3.lengthSq() && vec3.distanceTo(position) < StaticVariable.CONTROLS_RAY_FAR) {
-                    check = true;
-                    break;
-                }
+            if (arr.length) {
+                check = arr[0].distance < StaticVariable.CONTROLS_RAY_FAR;
             }
         }
 
@@ -599,7 +594,7 @@ export default class NemoShowroomViewer {
     __intersect(evt) {
         const me = this;
 
-        const intersectChild = me.mouseRaycaster.intersect(me.outlineObjArr, evt);
+        const intersectChild = me.mouseRaycaster.intersect(me.outlineMeshArr, evt);
 
         let group = null;
 
@@ -617,7 +612,7 @@ export default class NemoShowroomViewer {
     __intersectXY(x, y) {
         const me = this;
 
-        const intersectChild = me.mouseRaycaster.intersectXY(me.outlineObjArr, x, y);
+        const intersectChild = me.mouseRaycaster.intersectXY(me.outlineMeshArr, x, y);
 
         let group = null;
 
