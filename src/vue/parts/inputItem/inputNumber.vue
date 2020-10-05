@@ -7,7 +7,7 @@
 
             <button @mousedown="onMousedown(-1)" @mouseup="onMouseup" @mouseleave="onMouseup" type="button" class="num-btn num-btn-left" tabindex="-1">-</button>
 
-            <input v-model.number="value" type="number" class="input-number">
+            <input v-model.number="value" @change="onChange" type="number" class="input-number">
 
             <button @mousedown="onMousedown(1)" @mouseup="onMouseup" @mouseleave="onMouseup" type="button" class="num-btn num-btn-right" tabindex="-1">＋</button>
         </div>
@@ -16,9 +16,12 @@
 
 <script>
     /**
-     * template event : input
+     * template event : change
      */
     export default {
+        model: {
+            event: 'change'
+        },
         props: {
             label: {type: String, default: ''},
             subLabel: {type: String, default: ''},
@@ -37,21 +40,21 @@
                 btnInterval: null
             };
         },
-        watch: {
-            value: function (num) {
+        methods: {
+            onChange: function () {
                 const me = this;
 
-                me.$emit('input', num);
-            }
-        },
-        methods: {
+                me.$emit('change', me.value);
+            },
             onMousedown: function (sign) {
                 const me = this;
 
-                me.value += (me.step * sign);
+                me.value = parseFloat((me.value + (me.step * sign)).toFixed(3));
 
                 clearTimeout(me.btnTimeout);
                 clearInterval(me.btnInterval);
+
+                me.$emit('change', me.value);
 
                 me.btnTimeout = setTimeout(function () {
                     me.autoAction(sign);
@@ -70,7 +73,9 @@
                     let val = me.value;
 
                     val += (me.step * sign);
-                    me.value = val.toFixed(3);
+                    me.value = parseFloat(val.toFixed(3));
+
+                    me.$emit('change', me.value);
                 }, 10);
             }
         }
