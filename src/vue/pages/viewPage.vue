@@ -236,7 +236,7 @@
         props: ['id', 'lang'],
         data: function () {
             const me = this;
-            
+
             let youtubeTimeout;
 
             return {
@@ -254,6 +254,7 @@
                 isHiddenCover: false,
                 loadingPercent: 0,
                 selectedItem: null,
+                mobileWidth: 1090,
                 showroomViewer: new NemoShowroomViewer({
                     width: 100,
                     height: 100,
@@ -305,7 +306,16 @@
             me.$refs.viewField.appendChild(me.showroomViewer.rootEl);
 
             $(window).on('resize.view.page', function () {
-                me.isSmallWindow = $(window).width() < 1090;
+                const bool = $(window).width() < me.mobileWidth;
+
+                // 모바일 화면으로 전환시 꺼지는 음악을 다시 켠다.
+                if (bool != me.isSmallWindow) {
+                    setTimeout(function () {
+                        me.onClickMusic(me.isPlayMusic);
+                    }, 100);
+                }
+
+                me.isSmallWindow = bool;
 
                 me.onResizeViewer();
             });
@@ -417,7 +427,7 @@
                 let width = 700;
                 let top = jWindow.height() - 141;
 
-                if (jWindow.width() < 1160) {
+                if (jWindow.width() < me.mobileWidth) {
                     const jProductButton = $(me.$refs.productButton);
 
                     width = jWindow.width() - 36;
