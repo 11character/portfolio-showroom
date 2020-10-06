@@ -84,7 +84,7 @@ export default class AssetLoader {
             }
 
             // 조명 객체가 섞여 있는 경우 제거한다.
-            if (assetItem.type != StaticVariable.ITEM_TYPE_SPOT_LIGHT && object3D.isLight) {
+            if (assetItem.type !== StaticVariable.ITEM_TYPE_SPOT_LIGHT && object3D.isLight) {
                 removeChildArr.push(object3D);
             }
 

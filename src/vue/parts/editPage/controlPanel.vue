@@ -111,6 +111,10 @@
                                 <input-number v-model.number="rotationY" :step="1" class="sub-control-row" sub-label="Y" label="Rotation ( ° )"></input-number>
                             </div>
 
+                            <div v-if="assetItem.type != 'youtube' && !assetItem.isLight && !assetItem.isStartPoint" class="control-row">
+                                <input-text v-model.trim="link" label="Link"></input-text>
+                            </div>
+
                             <div v-if="assetItem.isAnimation" class="control-row">
                                 <input-number v-model.number="animationEndTime" :step="1000" label="Animation time ( ms )"></input-number>
                             </div>
@@ -474,6 +478,7 @@
                 me.rotationY = parseFloat(Utils.r2d(assetItem.rotation.y).toFixed(3));
                 me.rotationZ = parseFloat(Utils.r2d(assetItem.rotation.z).toFixed(3));
                 me.animationEndTime = assetItem.animationEndTime;
+                me.link = assetItem.link;
                 me.backgroundLoading = assetItem.backgroundLoading;
                 me.isClickTarget = assetItem.isClickTarget;
                 me.isTransparent = assetItem.isTransparent;

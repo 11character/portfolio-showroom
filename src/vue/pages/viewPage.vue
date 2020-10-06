@@ -2,6 +2,8 @@
     <div class="view-page-field">
         <youtube-view-modal @hidden="onHiddenYoutubeModal" ref="youtubeViewModal"></youtube-view-modal>
 
+        <link-modal ref="linkModal"></link-modal>
+
         <div :class="{'logo-view-mode': isFullScreen, 'logo-sm': isSmallWindow}" class="logo"></div>
 
         <!-- small window -->
@@ -218,6 +220,7 @@
     import hoverControlVue from '../parts/viewPage/hoverControl.vue';
     import textSliderVue from '../parts/textSlider.vue';
     import youtubeViewModalVue from '../parts/viewPage/youtubeViewModal.vue';
+    import linkModalVue from '../parts/viewPage/linkModal.vue';
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
@@ -231,13 +234,15 @@
             'move-control': moveControlVue,
             'hover-control': hoverControlVue,
             'text-slider': textSliderVue,
-            'youtube-view-modal': youtubeViewModalVue
+            'youtube-view-modal': youtubeViewModalVue,
+            'link-modal': linkModalVue
         },
         props: ['id', 'lang'],
         data: function () {
             const me = this;
 
             let youtubeTimeout;
+            let linkTimeout;
 
             return {
                 pageText: {ko: {}, en: {}},
@@ -277,11 +282,18 @@
                         }
 
                         if (assetItem && assetItem.type == StaticVariable.ITEM_TYPE_YOUTUBE) {
-                            youtubeTimeout = setTimeout(me.onClickYoutube, 500);
+                            youtubeTimeout = setTimeout(me.onClickYoutube, 250);
+                        }
+
+                        if (assetItem && assetItem.link) {
+                            linkTimeout = setTimeout(function () {
+                                me.onClickLink(assetItem.link);
+                            }, 250);
                         }
                     },
                     onMoveCamera: function () {
                         clearTimeout(youtubeTimeout);
+                        clearTimeout(linkTimeout);
                     },
                     onLoadProgress: function (count, total, assetItem) {
                         me.loadingPercent = parseInt(count / total * 100, 10);
@@ -644,6 +656,11 @@
 
                 me.showroomViewer.cssRenderer.playYoutube();
                 me.onClickMusic(true);
+            },
+            onClickLink: function (url) {
+                const me = this;
+
+                me.$refs.linkModal.open(url);
             }
         }
     }

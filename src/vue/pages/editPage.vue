@@ -383,16 +383,18 @@
             onClickSave: function () {
                 const me = this;
 
-                me.showroom.data = me.showroomEditor.exportJson();
-
-                Utils.apiRequest(ApiUrl.SHOWROOM_UPDATE, me.showroom, 'post').then(function () {
-                    me.isConfigEdited = false;
-
-                    alert('저장 완료.');
-
-                }).catch(function () {
-                    alert('오류!')
-                });
+                if (confirm('현재 상태를 저장합니까?')) {
+                    me.showroom.data = me.showroomEditor.exportJson();
+    
+                    Utils.apiRequest(ApiUrl.SHOWROOM_UPDATE, me.showroom, 'post').then(function () {
+                        me.isConfigEdited = false;
+    
+                        alert('저장 완료.');
+    
+                    }).catch(function () {
+                        alert('오류!')
+                    });
+                }
             },
             onClickInfo: function () {
                 const me = this;
