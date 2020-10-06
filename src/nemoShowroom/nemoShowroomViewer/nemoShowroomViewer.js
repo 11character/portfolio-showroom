@@ -512,19 +512,19 @@ export default class NemoShowroomViewer {
         let check = arr.length > 0;
 
         // 위, 아래 이동이 아닌 경우 상단과 하단 부분도 측정.
-        if (direction.y == 0) {
-            // 상단 선.
-            position.setY(originY + (StaticVariable.CONTROLS_RAY_FAR * 0.75));
-            rayCaster.set(position, direction);
-            arr = rayCaster.intersectObjects(me.colliderMeshArr);
-            check = arr.length > 0;
+        // if (direction.y == 0) {
+        //     // 상단 선.
+        //     position.setY(originY + (StaticVariable.CONTROLS_RAY_FAR * 0.75));
+        //     rayCaster.set(position, direction);
+        //     arr = rayCaster.intersectObjects(me.colliderMeshArr);
+        //     check = arr.length > 0;
 
-            // 하단 선.
-            position.setY(originY - (StaticVariable.CONTROLS_RAY_FAR * 0.75))
-            rayCaster.set(position, direction);
-            arr = rayCaster.intersectObjects(me.colliderMeshArr);
-            check = arr.length > 0;
-        }
+        //     // 하단 선.
+        //     position.setY(originY - (StaticVariable.CONTROLS_RAY_FAR * 0.75))
+        //     rayCaster.set(position, direction);
+        //     arr = rayCaster.intersectObjects(me.colliderMeshArr);
+        //     check = arr.length > 0;
+        // }
 
         return check;
     }
