@@ -65,6 +65,7 @@ export default class AssetItem {
         this.isClickTarget = !!obj.isClickTarget;
 
         this.isLoaded = !!obj.isLoaded;
+        this.isEmpty = !!obj.isEmpty;
 
         this.materialOptions = {};
         if (obj.materialOptions) {

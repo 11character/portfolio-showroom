@@ -112,7 +112,7 @@ export default class AssetItemManager {
         const arr = [];
 
         for (let key in me.__items) {
-            if (me.__items.hasOwnProperty(key)) {
+            if (me.__items.hasOwnProperty(key) && !me.__items[key].isEmpty) {
                 arr.push(me.__items[key]);
             }
         }

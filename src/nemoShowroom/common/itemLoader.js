@@ -26,26 +26,31 @@ export default class AssetLoader {
 
         return me.__loadItem(assetItem).then(function (item) {
             return me.__onLoad(item);
+
+        }).catch(function () {
+            assetItem.isEmpty = true;
+            assetItem.object3D = new THREE.Group();
+
+            return Promise.resolve(assetItem);
         });
     }
 
     clone(assetItem) {
         const me = this;
 
-        const cloneItem = (assetItem.clone()).object3D = new THREE.Group();
-        const reloadType = StaticVariable.CLONE_RELOAD_TYPE;
+        const cloneItem = assetItem.clone();
+        cloneItem.isLoaded = false;
+        cloneItem.object3D = new THREE.Group();
 
         // 3D객체 복제
         // 3D객체를 복제하는 데 타입을 구분하는 이유는 threejs로 불러온 파일 형식에 따라서 복제가 안되는 포맷이 있기 때문이다.
         // 복제가 안되는 대상은 재로드 하는 방식을 사용한다.(현재는 fbx파일)
         // 반대로 obj로더의 경우에는 로드를 연속으로 하면 오류가 발생한다.
 
-        cloneItem.isLoaded = false;
-
         let promise;
 
-        if (reloadType.indexOf(cloneItem.type) > -1) {
-            promise = me.__loadItem(cloneItem)
+        if (StaticVariable.CLONE_RELOAD_TYPE.indexOf(cloneItem.type) > -1) {
+            promise = me.__loadItem(cloneItem);
 
         } else {
             cloneItem.object3D.add(assetItem.object3D.clone());
@@ -53,11 +58,17 @@ export default class AssetLoader {
             cloneItem.object3D.position.copy(assetItem.object3D.position);
             cloneItem.object3D.rotation.copy(assetItem.object3D.rotation);
 
-            promise = Promise.resolve();
+            promise = Promise.resolve(cloneItem);
         }
 
-        return promise.then(function () {
-            return me.__onLoad(cloneItem);
+        return promise.then(function (item) {
+            return me.__onLoad(item);
+
+        }).catch(function () {
+            cloneItem.isEmpty = false;
+            cloneItem.object3D = new THREE.Group();
+
+            return Promise.resolve(cloneItem);
         });
     }
 
@@ -128,50 +139,44 @@ export default class AssetLoader {
             return Promise.resolve(assetItem);
         };
 
-        const onLoadError = function () {
-            assetItem.object3D.add(new THREE.Object3D());
-
-            return Promise.resolve(assetItem);
-        };
-
         switch (assetItem.type) {
             case StaticVariable.ITEM_TYPE_3D_GLB:
             case StaticVariable.ITEM_TYPE_3D_GLTF:
-                return me.__loadGltf(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadGltf(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_3D_OBJ:
-                return me.__loadObjMtl(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadObjMtl(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_3D_STL:
-                return me.__loadStl(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadStl(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_3D_FBX:
-                return me.__loadFbx(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadFbx(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_3D_DAE:
-                return me.__loadCollada(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadCollada(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_IMAGE:
-                return me.__loadImage(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadImage(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_HTML:
-                return me.__loadHtml(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadHtml(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_YOUTUBE:
-                return me.__loadYoutube(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadYoutube(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_TEXT:
-                return me.__loadText(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadText(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_SPOT_LIGHT:
-                return me.__loadSpotLight(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadSpotLight(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_START_POINT:
-                return me.__loadStartPoint(assetItem).then(onLoadComplete).catch(onLoadError);
+                return me.__loadStartPoint(assetItem).then(onLoadComplete);
 
             default:
                 console.error('type not found');
-                return onLoadError();
+                return Promise.reject();
         }
     }
 
@@ -505,15 +510,9 @@ export default class AssetLoader {
                 return Promise.resolve(null);
 
             }).then(function (mtlParseResult) {
-                try {
-                    me.__loadObj(assetItem, mtlParseResult).then(function (object3D) {
-                        resolve(object3D);
-                    });
-
-                } catch (error) {
-                    console.error(error);
-                    reject(error);
-                }
+                me.__loadObj(assetItem, mtlParseResult).then(function (object3D) {
+                    resolve(object3D);
+                }).catch(reject);
             });
         });
     }
