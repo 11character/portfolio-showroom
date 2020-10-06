@@ -2,7 +2,7 @@
     <div class="asset-view-page-field">
         <loading :hidden="!disabled" ref="loading"></loading>
 
-        <div class="view-field font-neuemachina" ref="viewField"></div>
+        <div class="view-field font-showroom" ref="viewField"></div>
 
         <div :hidden="!isShowMaterialList" class="material-button-field">
             <item-material-list :asset-item="assetItem"></item-material-list>

@@ -1,5 +1,5 @@
 <template>
-    <div class="empty-page font-neuemachina-ultrabold">
+    <div class="empty-page font-showroom-bold">
         <h1>- EMPTY -</h1>
     </div>
 </template>

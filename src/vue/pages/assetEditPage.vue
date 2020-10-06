@@ -16,7 +16,7 @@
                 </div>
             </nav>
 
-            <div ref="viewField" class="font-neuemachina"></div>
+            <div ref="viewField" class="font-showroom"></div>
 
             <div class="control-field">
                 <asset-panel :editor="assetEditor" :asset-item="assetEditor.assetItem" @control="onControl"></asset-panel>

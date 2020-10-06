@@ -32,20 +32,20 @@
                 <!-- 내용 -->
                 <div :hidden="isShowInfo" class="menu-center disable-user-select">
                     <div @click="onClickShopLink" class="menu-item">
-                        <div class="content font-neuemachina-ultrabold">
+                        <div class="content font-showroom-bold">
                             <span>Shop</span>
                         </div>
                     </div>
 
                     <div @click="onClickShowroomInfo" class="menu-item">
-                        <div class="content font-neuemachina-ultrabold">
+                        <div class="content font-showroom-bold">
                             <span>Info</span>
                         </div>
                     </div>
 
                     <div v-if="showroom.bgmUrl" :class="{'menu-item-n': isPlayMusic}" @click="onClickMusic" class="menu-item">
                         <!-- 배경음악 -->
-                        <div class="content font-neuemachina-ultrabold">
+                        <div class="content font-showroom-bold">
                             <span v-if="isPlayMusic">Music On</span>
                             <span v-else>Music Off</span>
                             <audio ref="bgm"></audio>
@@ -56,7 +56,7 @@
                 <!-- END-내용 -->
 
                 <!-- 설명 텍스트 -->
-                <div :hidden="!isShowInfo" ref="menuInfoField" class="menu-info-field font-neuemachina">
+                <div :hidden="!isShowInfo" ref="menuInfoField" class="menu-info-field font-showroom">
                     <pre v-if="lang == 'ko'">{{ showroom.contentKo }}</pre>
                     <pre v-else>{{ showroom.contentEn }}</pre>
                 </div>
@@ -70,7 +70,7 @@
         <template v-if="!isSmallWindow">
             <div :class="{'showroom-button-field-sm': isSmallButton}" class="showroom-button-field">
                 <!-- 설명 텍스트 -->
-                <div :hidden="!isShowInfo" ref="infoField" class="info-field font-neuemachina">
+                <div :hidden="!isShowInfo" ref="infoField" class="info-field font-showroom">
                     <pre v-if="lang == 'ko'">{{ showroom.contentKo }}</pre>
                     <pre v-else>{{ showroom.contentEn }}</pre>
                 </div>
@@ -78,7 +78,7 @@
 
                 <!-- 시작화면 -->
                 <template v-if="!isSmallButton">
-                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShopLink" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShopLink" class="showroom-button disable-user-select font-showroom-bold">
                         <div class="content">
                             <span>Selective Art Shop</span>
                             <br>
@@ -88,7 +88,7 @@
                         </div>
                     </div>
 
-                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomInfo" ref="textButton" class="showroom-button disable-user-select font-neuemachina-ultrabold">
+                    <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShowroomInfo" ref="textButton" class="showroom-button disable-user-select font-showroom-bold">
                         <div class="content">
                             <span>Selected Text:</span>
                             <br>
@@ -108,13 +108,13 @@
 
                 <!-- 전체화면 -->
                 <template v-if="isSmallButton">
-                    <div @click="onClickShopLink" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
+                    <div @click="onClickShopLink" class="showroom-button-sm disable-user-select font-showroom-bold">
                         <div class="content">
                             <span>Enter to Art Shop</span>
                         </div>
                     </div>
 
-                    <div @click="onClickShowroomInfo" class="showroom-button-sm disable-user-select font-neuemachina-ultrabold">
+                    <div @click="onClickShowroomInfo" class="showroom-button-sm disable-user-select font-showroom-bold">
                         <div class="content">
                             <span>Selected Text</span>
                         </div>
@@ -151,7 +151,7 @@
 
                 <!-- 배경음악 -->
                 <div v-if="!isSmallWindow && showroom.bgmUrl" :class="{'music-button-active': isPlayMusic}" @click="onClickMusic" class="music-button">
-                    <div class="content font-neuemachina-ultrabold">
+                    <div class="content font-showroom-bold">
                         <span v-if="isPlayMusic">Music On</span>
                         <span v-else>Music Off</span>
                         <audio ref="bgm"></audio>
@@ -162,7 +162,7 @@
                 <!-- 연관상품 -->
                 <div @click="onClickShowProduct" ref="productButton" class="product-button">
                     <div class="button-content-field">
-                        <div class="content font-neuemachina-ultrabold">
+                        <div class="content font-showroom-bold">
                             <span>Available Product</span>
                         </div>
 
@@ -174,7 +174,7 @@
 
                 <div :hidden="!isShowProduct" ref="productField" class="product-field">
                     <div @click="onClickHideProduct" class="product-header">
-                        <div class="content font-neuemachina-ultrabold">
+                        <div class="content font-showroom-bold">
                             <span>Available Product List</span>
                         </div>
 

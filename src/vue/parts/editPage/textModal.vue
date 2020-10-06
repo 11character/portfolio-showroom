@@ -14,7 +14,7 @@
                             <input-color v-model="bgColor" label="배경색"></input-color>
                         </div>
 
-                        <div class="col-12 mt-3 font-neuemachina">
+                        <div class="col-12 mt-3 font-showroom">
                             <textarea class="col-12" style="resize:none;"></textarea>
                         </div>
                     </div>

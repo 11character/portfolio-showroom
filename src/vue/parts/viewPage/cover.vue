@@ -5,11 +5,11 @@
                 <div ref="bar" class="progress-bar"></div>
             </div>
 
-            <div v-else @click="onClickEnter" class="btn-enter disable-user-select font-neuemachina-light">Enter to Exhibition</div>
+            <div v-else @click="onClickEnter" class="btn-enter disable-user-select font-showroom-light">Enter to Exhibition</div>
         </div>
 
         <div ref="textField" class="loading-text-field disable-user-select">
-            <div class="loading-text-list font-neuemachina-light">
+            <div class="loading-text-list font-showroom-light">
                 <div class="loading-text">Please Wait...</div>
 
                 <div v-if="percent > 15" class="loading-text">To walk in the virtual gallery,</div>

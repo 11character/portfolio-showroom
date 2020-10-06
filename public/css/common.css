@@ -16,16 +16,34 @@
         url('../font/neue-machina-ultrabold/NeueMachina-Ultrabold.woff') format("woff")
 }
 
-.font-neuemachina-light {
-    font-family: NeueMachinaLight !important;
+@font-face {
+    font-family: NotoSansLight;
+    src: url('../font/noto-sans-cjk-kr-light/NotoSansCJKkr-Light.woff2') format("woff2"),
+        url('../font/noto-sans-cjk-kr-light/NotoSansCJKkr-Light.woff') format("woff")
 }
 
-.font-neuemachina {
-    font-family: NeueMachina !important;
+@font-face {
+    font-family: NotoSans;
+    src: url('../font/noto-sans-cjk-kr-regular/NotoSansCJKkr-Regular.woff2') format("woff2"),
+        url('../font/noto-sans-cjk-kr-regular/NotoSansCJKkr-Regular.woff') format("woff")
 }
 
-.font-neuemachina-ultrabold {
-    font-family: NeueMachinaUltrabold !important;
+@font-face {
+    font-family: NotoSansBold;
+    src: url('../font/noto-sans-cjk-kr-bold/NotoSansCJKkr-Bold.woff2') format("woff2"),
+        url('../font/noto-sans-cjk-kr-bold/NotoSansCJKkr-Bold.woff') format("woff")
+}
+
+.font-showroom-light, .font-showroom-light * {
+    font-family: NeueMachinaLight, NotoSansLight !important;
+}
+
+.font-showroom, .font-showroom * {
+    font-family: NeueMachina, NotoSans !important;
+}
+
+.font-showroom-bold, .font-showroom-bold * {
+    font-family: NeueMachinaUltrabold, NotoSansBold !important;
 }
 
 .disable-user-select {
