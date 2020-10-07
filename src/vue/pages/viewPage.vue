@@ -304,6 +304,14 @@
                 })
             };
         },
+        watch: {
+            id: function () {
+                // vue는 파라미터 변환시 페이지를 리로드 하지 않는다.
+                // 전시장 이동을 하기 위해 ID 변환시 페이지를 다시 불러온다.
+                const me = this;
+                me.$router.go(0);
+            }
+        },
         mounted: function () {
             const me = this;
 
