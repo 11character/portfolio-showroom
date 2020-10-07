@@ -140,7 +140,7 @@
         </div>
 
         <div :class="{'center-full': isFullScreen, 'margin-x-0': isSmallWindow}" ref="center" class="center">
-            <cover :hidden="isHiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" class="cover"></cover>
+            <cover :hidden="isHiddenCover" :percent="loadingPercent" :img="showroom.imgUrl" @enter="onClickCover" ref="cover" class="cover"></cover>
 
             <div ref="viewField" class="view-field disable-user-select">
                 <div v-if="isMobile && !isShowMaterialList" class="move-left-control">
@@ -342,22 +342,17 @@
             }
 
             promise.then(function (data) {
-                // 뷰어의 위치가 변경되기를 기다렸다가 처리.
-                setTimeout(function () {
-                    $(window).trigger('resize.view.page');
+                if (data.data.length > 0) {
+                    me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
 
-                    if (data.data.length > 0) {
-                        me.showroom = new Showroom(Utils.snakeObjToCamelObj(data.data[0]));
+                    // 크기가 변경된 이후에 처리.
+                    setTimeout(function () {
+                        me.showroomViewer.openJson(me.showroom.data || '{}');
+                    }, 1000);
 
-                        // 크기가 변경된 이후에 처리.
-                        setTimeout(function () {
-                            me.showroomViewer.openJson(me.showroom.data || '{}');
-                        }, 1000);
-
-                    } else {
-                        me.$router.replace({name: 'empty'});
-                    }
-                }, 50);
+                } else {
+                    me.$router.replace({name: 'empty'});
+                }
             });
 
             // 모바일 브라우저 확대, 축소, 어색한 조작 방지.
@@ -365,6 +360,12 @@
                 evt.stopPropagation();
                 evt.preventDefault();
             });
+
+            // 뷰어의 위치가 변경되기를 기다렸다가 처리.
+            setTimeout(function () {
+                $(window).trigger('resize.view.page');
+                me.$refs.cover.positionSetting();
+            }, 10);
         },
         beforeDestroy: function () {
             const me = this;
@@ -1097,7 +1098,7 @@
 
             .content {
                 width: 100%;
-                // margin-top:18px;
+                padding-top: 18px;
                 color: #ffffff;
                 border-top: 1px solid #ffffff;
                 display: flex;
@@ -1106,6 +1107,7 @@
                 font-size: 0.8rem;
 
                 @media screen and (max-width: 1090px) {
+                    padding-top: 0px;
                     border: none;
                     flex-direction: column;
                     justify-content: center;
