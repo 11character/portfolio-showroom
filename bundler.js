@@ -5,6 +5,8 @@ if (process.argv[2] === 'watch' || process.argv[2] === 'production') {
     console.log('is ' + buildType);
 }
 
+console.log('NODE_ENV : ' + process.env.NODE_ENV);
+
 const Bundler = require('parcel-bundler');
 const Path = require('path');
 
