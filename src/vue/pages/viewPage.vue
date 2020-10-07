@@ -85,7 +85,7 @@
                             <span>Selective Art Shop</span>
                             <br>
                             <text-slider class="text-slider">
-                                <span>Enter to Art Shop&nbsp;&nbsp;&nbsp;-</span>
+                                <span>Enter to Art Shop -&nbsp;</span>
                             </text-slider>
                         </div>
                     </div>
