@@ -1,5 +1,5 @@
 <template>
-    <div :hidden="hidden" class="link-modal-field">
+    <div :hidden="hidden" class="link-modal-field disable-user-select">
         <div class="link-modal-card font-showroom-bold">
             <div class="link-modal-header">
                 <span @click="onClickCancel" class="icon">

@@ -206,6 +206,7 @@
                 padding: 0rem 1rem;
                 background-color: #000000;
                 color: #ffffff;
+                border: 2px solid #ffffff;
                 font-size: 2rem;
                 cursor: pointer;
 

@@ -59,8 +59,8 @@
 
                 <!-- 설명 텍스트 -->
                 <div :hidden="!isShowInfo" ref="menuInfoField" class="menu-info-field font-showroom">
-                    <pre v-if="lang == 'ko'">{{ showroom.contentKo }}</pre>
-                    <pre v-else>{{ showroom.contentEn }}</pre>
+                    <div v-if="lang == 'ko'" v-html="showroom.contentKo"></div>
+                    <div v-else v-html="showroom.contentEn"></div>
                 </div>
                 <!-- END-설명 텍스트 -->
             </div>
@@ -309,7 +309,7 @@
                 // vue는 파라미터 변환시 페이지를 리로드 하지 않는다.
                 // 전시장 이동을 하기 위해 ID 변환시 페이지를 다시 불러온다.
                 const me = this;
-                me.$router.go(0);
+                window.location.reload();
             }
         },
         mounted: function () {
@@ -831,7 +831,7 @@
                 padding: 18px;
                 background-color: #000000;
 
-                pre {
+                & > div {
                     width: 100%;
                     white-space: pre-wrap;
                     color: #ffffff;
