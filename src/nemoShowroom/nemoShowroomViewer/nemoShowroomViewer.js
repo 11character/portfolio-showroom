@@ -628,35 +628,41 @@ export default class NemoShowroomViewer {
 
             switch (key) {
                 // w
+                case 'ㅈ':
                 case 'w':
                 case 'arrowup':
                     me.moveInfo.moveForward = true;
                     break;
 
                 // a
+                case 'ㅁ':
                 case 'a':
                 case 'arrowleft':
                     me.moveInfo.moveLeft = true;
                     break;
 
                 // s
+                case 'ㄴ':
                 case 's':
                 case 'arrowdown':
                     me.moveInfo.moveBackward = true;
                     break;
 
                 // d
+                case 'ㅇ':
                 case 'd':
                 case 'arrowright':
                     me.moveInfo.moveRight = true;
                     break;
 
                 // r
+                case 'ㄱ':
                 case 'r':
                     me.moveInfo.moveUp = true;
                     break;
 
                 // f
+                case 'ㄹ':
                 case 'f':
                     me.moveInfo.moveDown = true;
                     break;
@@ -672,35 +678,41 @@ export default class NemoShowroomViewer {
         if (me.isRun) {
             switch (key) {
                 // w
+                case 'ㅈ':
                 case 'w':
                 case 'arrowup':
                     me.moveInfo.moveForward = false;
                     break;
 
                 // a
+                case 'ㅁ':
                 case 'a':
                 case 'arrowleft':
                     me.moveInfo.moveLeft = false;
                     break;
 
                 // s
+                case 'ㄴ':
                 case 's':
                 case 'arrowdown':
                     me.moveInfo.moveBackward = false;
                     break;
 
                 // d
+                case 'ㅇ':
                 case 'd':
                 case 'arrowright':
                     me.moveInfo.moveRight = false;
                     break;
 
                 // r
+                case 'ㄱ':
                 case 'r':
                     me.moveInfo.moveUp = false;
                     break;
 
                 // f
+                case 'ㄹ':
                 case 'f':
                     me.moveInfo.moveDown = false;
                     break;
