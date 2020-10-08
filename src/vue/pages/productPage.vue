@@ -1,6 +1,6 @@
 <template>
-    <div class="file-page-field">
-        <top-nav page-name="file"></top-nav>
+    <div class="product-page-field">
+        <top-nav page-name="product"></top-nav>
 
         <!-- 업로드 모달 -->
         <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmUpload" ref="uploadModal">
@@ -47,7 +47,7 @@
 
             <div class="row mt-5">
                 <div class="col-12">
-                    <file-table ref="fileTable"></file-table>
+                    <product-table ref="productTable"></product-table>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
 
     import topNavVue from '../parts/topNav.vue';
     import confirmModalVue from '../parts/confirmModal.vue';
-    import fileTableVue from '../parts/filePage/fileTable.vue';
+    import productTableVue from '../parts/productPage/productTable.vue';
 
     const Promise = window.Promise;
 
@@ -69,7 +69,7 @@
         components: {
             'top-nav': topNavVue,
             'confirm-modal': confirmModalVue,
-            'file-table': fileTableVue
+            'product-table': productTableVue
         },
         data: function () {
             return {
@@ -99,11 +99,10 @@
                 const me = this;
 
                 if (bool) {
-                    const memeType = 'application/zip application/octet-stream application/x-zip-compressed multipart/x-zip';
                     const el = me.$refs.uploadFile;
                     const file = el.files[0];
 
-                    if (file && memeType.indexOf(file.type) > -1) {
+                    if (file) {
                         me.disabled = true;
 
                         const name = me.modelFileInfo.name || file.name;
@@ -127,7 +126,7 @@
 
                         }).done(function (data) {
                             if (data.code == 0) {
-                                me.$refs.fileTable.reloadTable();
+                                me.$refs.productTable.reloadTable();
 
                                 $(me.$refs.uploadModal.$el).modal('hide');
 
@@ -140,10 +139,7 @@
                         }).always(function () {
                             me.disabled = false;
                         });
-                    } else {
-                        alert('ZIP 압축파일만 업로드가 가능합니다.');
                     }
-
                 } else {
                     me.clear();
                 }
