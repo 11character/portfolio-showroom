@@ -72,9 +72,9 @@
         <template v-if="!isSmallWindow">
             <div :class="{'showroom-button-field-sm': isSmallButton}" class="showroom-button-field">
                 <!-- 설명 텍스트 -->
-                <div :hidden="!isShowInfo" ref="infoField" class="info-field font-showroom">
-                    <pre v-if="lang == 'ko'">{{ showroom.contentKo }}</pre>
-                    <pre v-else>{{ showroom.contentEn }}</pre>
+                <div :hidden="!isShowInfo" ref="infoField" class="info-field disable-user-select font-showroom">
+                    <div v-if="lang == 'ko'" v-html="showroom.contentKo"></div>
+                    <div v-else v-html="showroom.contentEn"></div>
                 </div>
                 <!-- END-설명 텍스트 -->
 
@@ -917,7 +917,7 @@
                 background-color: #000000;
                 border: 2px solid #000000;
 
-                pre {
+                & > div {
                     width: 100%;
                     white-space: pre-wrap;
                     color: #ffffff;

@@ -75,11 +75,11 @@
                     </div>
 
                     <div v-if="contentLang == 'ko'" class="col-12">
-                        <textarea v-model.trim="showroom.contentKo" class="form-control font-showroom"></textarea>
+                        <textarea v-model.trim="showroom.contentKo" class="form-control"></textarea>
                     </div>
 
                     <div v-if="contentLang == 'en'" class="col-12">
-                        <textarea v-model.trim="showroom.contentEn" class="form-control font-showroom"></textarea>
+                        <textarea v-model.trim="showroom.contentEn" class="form-control"></textarea>
                     </div>
                 </div>
             </template>
