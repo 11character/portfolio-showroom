@@ -1,5 +1,5 @@
 <template>
-    <div class="import-modal modal fade" tabindex="-1" data-backdrop="static">
+    <div class="model-modal-field import-modal modal fade" tabindex="-1" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-model-file disable-user-select">
                 <div class="modal-head">
@@ -9,7 +9,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <div class="row w-100">
+                    <div class="row">
                         <div class="col-12">
                             <div class="table-background">
                                 <table class="model-file-table table table-striped">
@@ -145,4 +145,14 @@
 
 <style lang="scss" scoped>
     @import "./modalStyle.scss";
+</style>
+
+<style lang="scss">
+    .model-modal-field .table-background {
+        padding: 15px 0px;
+
+        .dataTables_wrapper > div{
+            justify-content: center;
+        }
+    }
 </style>
