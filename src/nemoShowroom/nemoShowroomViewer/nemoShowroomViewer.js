@@ -732,13 +732,15 @@ export default class NemoShowroomViewer {
             pointerDownLon = me.cameraLon;
             pointerDownLat = me.cameraLat;
 
-            switch(evt.button) {
-                case 0:
-                    // 테두리 표시.
-                    me.selectedItem = me.__intersect(evt);
-                    me.outlinePass.selectedObjects = me.selectedItem ? [me.selectedItem.object3D] : [];
-                    me.options.onClick(me.selectedItem);
-                    break;
+            if (!me.moveInfo.isMove) {
+                switch(evt.button) {
+                    case 0:
+                        // 테두리 표시.
+                        me.selectedItem = me.__intersect(evt);
+                        me.outlinePass.selectedObjects = me.selectedItem ? [me.selectedItem.object3D] : [];
+                        me.options.onClick(me.selectedItem);
+                        break;
+                }
             }
         }
 
@@ -763,7 +765,7 @@ export default class NemoShowroomViewer {
                 me.camera.lookAt(me.camera.target);
 
                 // 선택된 아이템이 없고, 화면 가운데 포커스를 설정한 경우 테두리 표시.
-                if (!me.selectedItem && me.options.centerFocus) {
+                if (!me.moveInfo.isMove && !me.selectedItem && me.options.centerFocus) {
                     clearTimeout(centerFocusTimeout);
 
                     centerFocusTimeout = setTimeout(function () {
@@ -778,7 +780,7 @@ export default class NemoShowroomViewer {
                 me.options.onMoveCamera();
 
             // 선택된 아이템이 없고, 마우스로 포커싱이 되는 경우.
-            } else if (!me.selectedItem && !me.options.centerFocus) {
+            } else if (!me.moveInfo.isMove && !me.selectedItem && !me.options.centerFocus) {
                 clearTimeout(mouseFocusTimeout);
 
                 mouseFocusTimeout = setTimeout(function () {
