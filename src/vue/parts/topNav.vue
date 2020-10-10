@@ -12,9 +12,15 @@
                     </router-link>
                 </li>
 
-                <li :class="lastLinkClass" class="nav-item">
+                <li class="nav-item">
                     <router-link :to="{name: 'file'}" :class="fileClass" class="nav-link">
                         <span>File</span>
+                    </router-link>
+                </li>
+
+                <li :class="lastLinkClass" class="nav-item">
+                    <router-link :to="{name: 'product'}" :class="productClass" class="nav-link">
+                        <span>Product</span>
                     </router-link>
                 </li>
 
@@ -45,6 +51,9 @@
                 },
                 fileClass: {
                     'active': me.pageName == 'file'
+                },
+                productClass: {
+                    'active': me.pageName == 'product'
                 }
             };
         },

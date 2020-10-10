@@ -92,13 +92,15 @@ const homePageVue = () => import('./vue/pages/homePage.vue');
 const filePageVue = () => import('./vue/pages/filePage.vue');
 const editPageVue = () => import('./vue/pages/editPage.vue');
 const assetEditPageVue = () => import('./vue/pages/assetEditPage.vue');
+const productPageVue = () => import('./vue/pages/productPage.vue');
 
 const router = new VueRouter({
     routes: [
         {path: '/', name: 'home', component: homePageVue, props: false},
         {path: '/file', name: 'file', component: filePageVue, props: false},
         {path: '/edit/:id', name: 'edit', component: editPageVue, props: true},
-        {path: '/asset-edit/:id', name: 'asset-edit', component: assetEditPageVue, props: true}
+        {path: '/asset-edit/:id', name: 'asset-edit', component: assetEditPageVue, props: true},
+        {path: '/product', name: 'product', component: productPageVue, props: false}
     ]
 });
 
