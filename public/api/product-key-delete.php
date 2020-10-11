@@ -21,17 +21,11 @@
                 SEQ_ID => $seq_id
             ];
 
-            if ($pdo->prepare($sql_delete_tb_model_file)->execute($value)) {
-                // 관련 디렉토리를 제거한다.
-                $dir_path = $_POST['dirPath'];
-    
-                if (is_dir($dir_path)) {
-                    utils_delete_dir($dir_path);
-                }
-    
-                $data['code'] = 0;
-                $data['message'] = 'success';
-            }
+            $pdo->prepare($sql_delete_tb_product_key)->execute($value);
+
+            $data['code'] = 0;
+            $data['message'] = 'success';
+
         } catch(Exception $e) {
             if ($return_db_error) {
                 $data['message'] = $e->getMessage();

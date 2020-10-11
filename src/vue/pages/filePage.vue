@@ -4,34 +4,36 @@
 
         <!-- 업로드 모달 -->
         <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmUpload" ref="uploadModal">
-            <template v-slot:message>
+            <template v-slot:content>
                 <div class="row">
-                   <div class="col-12">
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label>파일 업로드</label>
-                            </div>
-                        </div>
+                    <div class="col-12">
+                        <h4>파일 업로드</h4>
+                    </div>
+                </div>
 
-                        <div class="row my-3">
-                            <div class="col-12">
-                                <input :disabled="disabled" @change="onChangefile" ref="uploadFile" type="file" class="w-100 border rounded">
-                            </div>
-                        </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <input :disabled="disabled" @change="onChangefile" ref="uploadFile" type="file" class="w-100 border rounded">
+                    </div>
+                </div>
 
-                        <div class="row my-3">
-                            <div class="col-12">
-                                <label>이름</label>
-                                <input v-model.trim="modelFileInfo.name" :disabled="disabled" type="text" class="form-control form-control-sm">
-                            </div>
-                        </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>이름</label>
+                    </div>
 
-                        <div class="row my-3">
-                            <div class="col-12">
-                                <label>설명</label>
-                                <input v-model.trim="modelFileInfo.description" :disabled="disabled" type="text" class="form-control form-control-sm">
-                            </div>
-                        </div>
+                    <div class="col-12">
+                        <input v-model.trim="modelFileInfo.name" :disabled="disabled" type="text" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>설명</label>
+                    </div>
+
+                    <div class="col-12">
+                        <input v-model.trim="modelFileInfo.description" :disabled="disabled" type="text" class="form-control form-control-sm">
                     </div>
                 </div>
             </template>

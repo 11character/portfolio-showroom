@@ -1,7 +1,7 @@
 <template>
     <div class="showroom-modal-field">
         <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmCreate" ref="createModal">
-            <template v-slot:message>
+            <template v-slot:content>
                 <div class="row">
                     <label class="col-12 form-label">이름</label>
                     <div class="col-12">

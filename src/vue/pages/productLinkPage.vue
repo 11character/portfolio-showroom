@@ -1,55 +1,11 @@
 <template>
     <div class="product-page-field">
-        <top-nav page-name="product"></top-nav>
-
-        <!-- 업로드 모달 -->
-        <confirm-modal :disabled="disabled" :disable-ok-hide="true" @confirm="onConfirmUpload" ref="uploadModal">
-            <template v-slot:content>
-                <div class="row">
-                    <div class="col-12">
-                        <h4>파일 업로드</h4>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <input :disabled="disabled" @change="onChangefile" ref="uploadFile" type="file" class="w-100 border rounded">
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <label>이름</label>
-                    </div>
-
-                    <div class="col-12">
-                        <input v-model.trim="productFileInfo.name" :disabled="disabled" type="text" class="form-control form-control-sm">
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <label>설명</label>
-                    </div>
-
-                    <div class="col-12">
-                        <input v-model.trim="productFileInfo.description" :disabled="disabled" type="text" class="form-control form-control-sm">
-                    </div>
-                </div>
-            </template>
-        </confirm-modal>
-        <!-- END-업로드 모달 -->
+        <top-nav page-name="product-link"></top-nav>
 
         <div class="container mt-5">
             <div class="row">
-                <div class="offset-lg-3 col-lg-6">
-                    <button @click="onClickUpload" type="button" class="w-100 btn btn-sm btn-outline-primary">파일 올리기</button>
-                </div>
-            </div>
-
-            <div class="row mt-5">
                 <div class="col-12">
-                    <product-table ref="productTable"></product-table>
+                    <product-link-table ref="productTable"></product-link-table>
                 </div>
             </div>
         </div>
@@ -63,7 +19,7 @@
 
     import topNavVue from '../parts/topNav.vue';
     import confirmModalVue from '../parts/confirmModal.vue';
-    import productTableVue from '../parts/productPage/productTable.vue';
+    import productLinkTableVue from '../parts/productLinkPage/productLinkTable.vue';
 
     const Promise = window.Promise;
 
@@ -71,7 +27,7 @@
         components: {
             'top-nav': topNavVue,
             'confirm-modal': confirmModalVue,
-            'product-table': productTableVue
+            'product-link-table': productLinkTableVue
         },
         data: function () {
             return {

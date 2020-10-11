@@ -10,51 +10,9 @@
         </confirm-modal>
         <!-- END-제거 모달 -->
 
-        <!-- 링크 생성 모달 -->
-        <confirm-modal @confirm="onConfirmLink" ref="createModal">
-            <template v-slot:content>
-                <div class="row">
-                    <div class="col-12">
-                        <h4>다운로드 링크 생성</h4>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-12 h3 text-truncate">
-                        <span>{{ productFileInfo.name }}</span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <label>기한</label>
-                    </div>
-
-                    <div class="col-6">
-                        <input-date v-model="productKey.endDate" :disabled="disabled" type="text" class="p-0 form-control form-control-sm"></input-date>
-                    </div>
-
-                    <div class="col-6 text-left">
-                        <span>까지</span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <label>설명</label>
-                    </div>
-
-                    <div class="col-12">
-                        <input v-model.trim="productKey.description" :disabled="disabled" type="text" class="form-control form-control-sm">
-                    </div>
-                </div>
-            </template>
-        </confirm-modal>
-        <!-- END-링크 생성 모달 -->
-
-        <!-- 링크 생성 완료 모달 -->
-        <product-link-modal :productKey="alertProductKey" ref="linkModal"></product-link-modal>
-        <!-- END-링크 생성 완료 모달 -->
+        <!-- 정보 보기 모달 -->
+        <product-link-modal :productKey="productKey" ref="linkModal"></product-link-modal>
+        <!-- END-정보 보기 모달 -->
 
         <div class="w-100 mb-3">
             <div class="row">
@@ -73,10 +31,10 @@
                         <input v-model="selectAll" type="checkbox" class="data-select-all">
                     </th>
                     <th>ID</th>
-                    <th>이름</th>
+                    <th>상품명</th>
+                    <th>링크</th>
                     <th>설명</th>
-                    <th>크기</th>
-                    <th>생성일</th>
+                    <th>종료일</th>
                     <th></th>
                 </tr>
             </thead>
@@ -89,8 +47,8 @@
         <div ref="editButtons" hidden>
             <div class="row">
                 <div class="col-12 p-1 py-lg-0 px-lg-2">
-                    <button type="button" class="k-btn w-100 btn btn-sm btn-outline-primary">
-                        <font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon>
+                    <button type="button" class="v-btn w-100 btn btn-sm btn-outline-primary">
+                        <font-awesome-icon :icon="['fas', 'eye']"></font-awesome-icon>
                     </button>
                 </div>
             </div>
@@ -101,12 +59,11 @@
 <script>
     import * as ApiUrl from '../../../class/apiUrl';
     import Utils from '../../../class/utils';
-    import ProductFileInfo from '../../../class/productFileInfo';
     import ProductKey from '../../../class/productKey';
 
     import confirmModalVue from '../confirmModal.vue';
     import inputDateVue from '../inputItem/inputDate.vue';
-    import productLinkModalVue from '../productLinkPage/productLinkModal.vue';
+    import productLinkModalVue from './productLinkModal.vue';
 
     const Promise = window.Promise;
 
@@ -118,9 +75,8 @@
         },
         data: function () {
             return {
-                productFileInfo: new ProductFileInfo(),
                 productKey: new ProductKey(),
-                alertProductKey: new ProductKey(),
+                linkUrl: '',
                 dataTable: null,
                 selectAll: false,
                 page: 0
@@ -132,13 +88,16 @@
             const editButtonsHtml = me.$refs.editButtons.innerHTML;
             const checkHtml = me.$refs.check.innerHTML;
 
-            const sizeRender = function (data) {
-                return Utils.sizeString(parseInt(data, 10));
+            const linkRender = function (data) {
+                const urlSplitArr = window.location.href.split('/');
+                const url = urlSplitArr.slice(0, urlSplitArr.length - 2).join('/');
+
+                return url + '/download.php?id=' + data;
             }
 
             me.dataTable = $(me.$refs.table).DataTable({
                 ajax: {
-                    url: ApiUrl.PRODUCT_FILE_LIST,
+                    url: ApiUrl.PRODUCT_KEY_LIST,
                     dataSrc: 'data'
                 },
                 order: [],
@@ -146,11 +105,11 @@
                 pagingType: 'numbers',
                 columns: [
                     {width: '5%', data: null, className:'text-center', searchable: false, orderable:false, defaultContent: checkHtml},
-                    {width: '5%', data: 'SEQ_ID', className:'text-center'},
-                    {width: '30%', data: 'NAME', className:'text-center'},
-                    {width: '30%', data: 'DESCRIPTION', className:'text-center'},
-                    {width: '10%', data: 'SIZE', className:'text-center', render: sizeRender},
-                    {width: '15%', data: 'C_DATE', className:'text-center'},
+                    {width: '5%', data: 'PRODUCT_ID', className:'text-center'},
+                    {width: '15%', data: 'PRODUCT_NAME', className:'text-center text-break'},
+                    {width: '30%', data: 'DOWNLOAD_KEY', className:'text-center', render: linkRender},
+                    {width: '30%', data: 'DESCRIPTION', className:'text-center text-break'},
+                    {width: '10%', data: 'END_DATE', className:'text-center'},
                     {width: '5%', data: null, className:'text-center', searchable: false, orderable:false, defaultContent: editButtonsHtml}
                 ]
             });
@@ -166,19 +125,15 @@
                 $(me.$el).find('.data-select-all').prop('checked', selectCount >= (info.end - info.start));
             });
 
-            me.dataTable.on('click', '.k-btn', function () {
+            me.dataTable.on('click', '.v-btn', function () {
                 const data = me.dataTable.row($(this).parents('tr')).data();
+                const keyData = new ProductKey(Utils.snakeObjToCamelObj(data));
 
-                me.productFileInfo = new ProductFileInfo(Utils.snakeObjToCamelObj(data));
-                me.productKey = new ProductKey();
+                // 다운로드 링크는 사용되는 페이지에서 생성.
+                keyData.downloadLink = linkRender(keyData.downloadKey);
 
-                let date = new Date();
-                date.setMonth(date.getMonth() + 1);
-
-                me.productKey.productId = me.productFileInfo.seqId;
-                me.productKey.endDate = Utils.dateToDateString(date);
-
-                me.$refs.createModal.open();
+                me.productKey = keyData;
+                me.$refs.linkModal.open();
             });
 
             me.dataTable.on('page', function () {
@@ -220,13 +175,13 @@
 
                     $(me.$el).find('.data-select:checked').each(function (i, el) {
                         const data = me.dataTable.row($(el).parents('tr')).data();
-                        dataArr.push(new ProductFileInfo(Utils.snakeObjToCamelObj(data)));
+                        dataArr.push(new ProductKey(Utils.snakeObjToCamelObj(data)));
                     });
 
                     const promiseArr = [];
 
                     for (let i = 0; i < dataArr.length; i++) {
-                        const promise = Utils.apiRequest(ApiUrl.PRODUCT_FILE_DELETE, dataArr[i], 'post').catch(function () {
+                        const promise = Utils.apiRequest(ApiUrl.PRODUCT_KEY_DELETE, dataArr[i], 'post').catch(function () {
                             return Promise.resolve();
                         });
 
@@ -235,30 +190,6 @@
 
                     Promise.all(promiseArr).then(function () {
                         me.reloadTable(false);
-                    });
-                }
-            },
-            onConfirmLink: function (bool) {
-                const me = this;
-                const productKey = me.productKey;
-
-                if (bool) {
-                    Utils.apiRequest(ApiUrl.PRODUCT_KEY_CREATE, productKey, 'post').then(function () {
-                        return Utils.apiRequest(ApiUrl.PRODUCT_KEY_DATA, {id: productKey.productId});
-
-                    }).then(function (data) {
-                        if (data.code == 0) {
-                            const keyData = new ProductKey(Utils.snakeObjToCamelObj(data.data[0]));
-
-                            // 다운로드 링크는 사용되는 페이지에서 생성.
-                            const urlSplitArr = window.location.href.split('/');
-                            const url = urlSplitArr.slice(0, urlSplitArr.length - 2).join('/');
-
-                            keyData.downloadLink = url + '/download.php?id=' + keyData.downloadKey;
-
-                            me.alertProductKey = keyData;
-                            me.$refs.linkModal.open();
-                        }
                     });
                 }
             }

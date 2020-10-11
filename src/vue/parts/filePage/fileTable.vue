@@ -2,7 +2,7 @@
     <div class="file-table-field">
         <!-- 제거 모달 -->
         <confirm-modal @confirm="onConfirmDelete" ref="deleteModal">
-            <template v-slot:message>
+            <template v-slot:content>
                 <div class="h4 my-5 text-center">
                     <span>선택한 파일을 삭제하나요?</span>
                 </div>
@@ -17,7 +17,7 @@
         <div class="w-100 mb-3">
             <div class="row">
                 <div class="col-lg-1">
-                    <button @click="onClickDelete" type="button" class="d-btn w-100 btn btn-sm btn-outline-danger">
+                    <button @click="onClickDelete" type="button" class="w-100 btn btn-sm btn-outline-danger">
                         <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>
                     </button>
                 </div>
@@ -102,9 +102,9 @@
                     {width: '5%', data: null, className:'text-center', searchable: false, orderable:false, defaultContent: checkHtml},
                     {width: '5%', data: 'SEQ_ID', className:'text-center'},
                     {width: '8%', data: 'EXT', className:'text-center'},
-                    {width: '20%', data: 'NAME', className:'text-center'},
+                    {width: '25%', data: 'NAME', className:'text-center'},
                     {width: '32%', data: 'DESCRIPTION', className:'text-center'},
-                    {width: '20%', data: 'C_DATE', className:'text-center'},
+                    {width: '15%', data: 'C_DATE', className:'text-center'},
                     {width: '10%', data: null, className:'text-center', searchable: false, orderable:false, defaultContent: editButtonsHtml}
                 ]
             });
@@ -130,12 +130,6 @@
                 me.$router.push({name: 'asset-edit', params:{id: data['SEQ_ID']}});
             });
 
-            me.dataTable.on('click', '.d-btn', function () {
-                const data = me.dataTable.row($(this).parents('tr')).data();
-                me.modelFileInfo = new ModelFileInfo(Utils.snakeObjToCamelObj(data));
-                me.$refs.deleteModal.open();
-            });
-
             me.dataTable.on('page', function () {
                 $(me.$el).find('.data-select').prop('checked', false);
                 me.selectAll = false;
@@ -159,6 +153,8 @@
                 bool = (typeof bool == 'boolean') ? bool : true;
 
                 me.dataTable.ajax.reload(null, bool);
+
+                $(me.$el).find('.data-select-all:checked').prop('checked', false);
             },
             onClickDelete: function () {
                 const me = this;
@@ -196,8 +192,18 @@
 </script>
 
 <style lang="scss">
-    // 테이블은 외부 소스라서 스코프 없이 설정
+    // 테이블은 외부 소스라서 스코프 없이 설정.
     .dataTables_wrapper.dt-bootstrap4.no-footer > .row:nth-child(2) > div {
+        padding: 0px;
         overflow-x: auto;
+
+        table {
+            width: 1138px;
+
+            td {
+                vertical-align: middle;
+                word-break:break-all;
+            }
+        }
     }
 </style>

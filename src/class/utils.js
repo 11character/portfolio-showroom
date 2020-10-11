@@ -135,4 +135,21 @@ export default class Utils {
 
         return parentPath.substring(parentPath.lastIndexOf('/') + 1);
     }
+
+    static sizeString(size) {
+        const arr = ['byte', 'KB', 'MB', 'GB'];
+        const step = 1000;
+
+        let str = size + arr[0];
+
+        for (let i = 1; i < arr.length; i++) {
+            const pow = Math.pow(step, i);
+
+            if (size > pow) {
+                str = (size / pow).toFixed(2) + arr[i];
+            }
+        }
+
+        return str;
+    }
 }

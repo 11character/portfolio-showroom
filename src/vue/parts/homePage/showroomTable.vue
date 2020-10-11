@@ -2,7 +2,7 @@
     <div class="showroom-table-field">
         <!-- 기본 전시장 선택 모달 -->
         <confirm-modal @confirm="onConfirmMainShowroom" ref="mainShowroomModal">
-            <template v-slot:message>
+            <template v-slot:content>
                 <div class="h4 my-5 text-center">
                     <span>기본 전시장으로 선택합니까?</span>
                 </div>
@@ -12,7 +12,7 @@
 
         <!-- 제거 모달 -->
         <confirm-modal @confirm="onConfirmDelete" ref="deleteModal">
-            <template v-slot:message>
+            <template v-slot:content>
                 <div class="h4 my-5 text-center">
                     <span>해당 전시장을 삭제하나요?</span>
                 </div>
@@ -105,9 +105,9 @@
                 columns: [
                     {width: '5%', data: null, className:'text-center', orderable:false, defaultContent: selectButtonHtml},
                     {width: '5%', data: 'SEQ_ID', className:'text-center'},
-                    {width: '20%', data: 'NAME', className:'text-center'},
+                    {width: '25%', data: 'NAME', className:'text-center'},
                     {width: '35%', data: 'DESCRIPTION', className:'text-center'},
-                    {width: '20%', data: 'C_DATE', className:'text-center'},
+                    {width: '15%', data: 'C_DATE', className:'text-center'},
                     {width: '15%', data: null, className:'text-center', orderable:false, defaultContent: editButtonsHtml}
                 ]
             });
@@ -175,8 +175,18 @@
 </script>
 
 <style lang="scss">
-    // 테이블은 외부 소스라서 스코프 없이 설정
+    // 테이블은 외부 소스라서 스코프 없이 설정.
     .dataTables_wrapper.dt-bootstrap4.no-footer > .row:nth-child(2) > div {
+        padding: 0px;
         overflow-x: auto;
+
+        table {
+            width: 1138px;
+
+            td {
+                vertical-align: middle;
+                word-break:break-all;
+            }
+        }
     }
 </style>

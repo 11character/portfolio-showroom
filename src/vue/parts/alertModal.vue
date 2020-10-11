@@ -8,7 +8,6 @@
 
                 <div class="modal-footer">
                     <button :disabled="disabled" @click="onClickOk" type="button" class="btn btn-primary">OK</button>
-                    <button :disabled="disabled" @click="onClickClose" type="button" class="btn btn-secondary">Cancel</button>
                 </div>
             </div>
         </div>
@@ -38,18 +37,9 @@
             onClickOk: function() {
                 const me = this;
 
-                if (!me.disableOkHide) {
-                    me.close();
-                }
-
-                me.$emit('confirm', true);
-            },
-            onClickClose: function() {
-                const me = this;
-
                 me.close();
 
-                me.$emit('confirm', false);
+                me.$emit('confirm', true);
             }
         },
     }

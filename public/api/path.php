@@ -19,4 +19,7 @@
 
     // 전시장 파일 디렉토리 절대경로.
     $SHOWROOM_FILE_DIR_PATH = $ROOT_DIR . '/' . $SHOWROOM_FILE_DIR;
+
+    // 상품 파일 디렉토리.
+    $PRODUCT_FILE_DIR_PATH = realpath($ROOT_DIR . '/../..') . '/product_file';
 ?>

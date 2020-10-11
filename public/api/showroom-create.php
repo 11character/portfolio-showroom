@@ -15,7 +15,7 @@
             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $insertValue = [
+            $insert_value = [
                 NAME => $_POST['name'],
                 DESCRIPTION => $_POST['description'],
                 LINK => $_POST['link'],
@@ -26,7 +26,7 @@
                 DATA => ''
             ];
 
-            $pdo->prepare($sql_insert_tb_showroom)->execute($insertValue);
+            $pdo->prepare($sql_insert_tb_showroom)->execute($insert_value);
 
             // 이미지와 배경음악 파일이 있다면 저장 처리.
             if (!empty($_FILES['imgFile']) || !empty($_FILES['bgmFile'])) {

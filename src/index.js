@@ -54,7 +54,8 @@ import {
     faGlobe,
     faStore,
     faChevronLeft,
-    faChevronRight
+    faChevronRight,
+    faCopy
 } from '@fortawesome/free-solid-svg-icons';
 
 FaLibrary.add(faSyncAlt);
@@ -80,6 +81,7 @@ FaLibrary.add(faGlobe);
 FaLibrary.add(faStore);
 FaLibrary.add(faChevronLeft);
 FaLibrary.add(faChevronRight);
+FaLibrary.add(faCopy);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
@@ -93,6 +95,7 @@ const filePageVue = () => import('./vue/pages/filePage.vue');
 const editPageVue = () => import('./vue/pages/editPage.vue');
 const assetEditPageVue = () => import('./vue/pages/assetEditPage.vue');
 const productPageVue = () => import('./vue/pages/productPage.vue');
+const productLinkPageVue = () => import('./vue/pages/productLinkPage.vue');
 
 const router = new VueRouter({
     routes: [
@@ -100,7 +103,8 @@ const router = new VueRouter({
         {path: '/file', name: 'file', component: filePageVue, props: false},
         {path: '/edit/:id', name: 'edit', component: editPageVue, props: true},
         {path: '/asset-edit/:id', name: 'asset-edit', component: assetEditPageVue, props: true},
-        {path: '/product', name: 'product', component: productPageVue, props: false}
+        {path: '/product', name: 'product', component: productPageVue, props: false},
+        {path: '/product-link', name: 'product-link', component: productLinkPageVue, props: false}
     ]
 });
 

@@ -145,14 +145,15 @@
 
 <style lang="scss" scoped>
     @import "./modalStyle.scss";
+
+    .model-modal-field .table-background {
+        padding: 15px 0px;
+    }
 </style>
 
 <style lang="scss">
-    .model-modal-field .table-background {
-        padding: 15px 0px;
-
-        .dataTables_wrapper > div{
-            justify-content: center;
-        }
+    // 테이블은 외부 소스라서 스코프 없이 설정.
+    .dataTables_wrapper > div{
+        justify-content: center;
     }
 </style>

@@ -88,6 +88,7 @@
                         ];
 
                         $pdo->prepare($sql_insert_tb_model_file)->execute($value);
+
                         $data['message'] = 'success';
 
                     } else {
@@ -98,8 +99,8 @@
         } catch(Exception $e) {
             $data['code'] = 99;
 
-            $data['message'] = $e->getMessage();
             if ($return_db_error) {
+                $data['message'] = $e->getMessage();
             }
         }
     }

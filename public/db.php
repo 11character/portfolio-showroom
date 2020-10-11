@@ -98,7 +98,7 @@ WHERE
     SEQ_ID = :SEQ_ID
 EOD;
 
-// 파일 목록 조회.
+// 모델 파일 목록 조회.
 $sql_select_tb_model_file = <<<EOD
 SELECT
     *
@@ -107,7 +107,7 @@ FROM
 ORDER BY C_DATE DESC
 EOD;
 
-// 파일 정보 조회.
+// 모델 파일 정보 조회.
 $sql_select_tb_model_file_from_id = <<<EOD
 SELECT
     *
@@ -117,7 +117,7 @@ WHERE
     SEQ_ID = :SEQ_ID
 EOD;
 
-// 파일 정보 조회.
+// 모델 파일 정보 조회.
 $sql_select_tb_model_file_from_url = <<<EOD
 SELECT
     *
@@ -127,7 +127,7 @@ WHERE
     URL = :URL
 EOD;
 
-// 파일 정보 생성.
+// 모델 파일 정보 생성.
 $sql_insert_tb_model_file = <<<EOD
 INSERT INTO TB_MODEL_FILE
 (
@@ -155,7 +155,7 @@ INSERT INTO TB_MODEL_FILE
 )
 EOD;
 
-// 파일 정보 업데이트.
+// 모델 파일 정보 업데이트.
 $sql_update_tb_model_file = <<<EOD
 UPDATE
     TB_MODEL_FILE
@@ -175,7 +175,7 @@ WHERE
     SEQ_ID = :SEQ_ID
 EOD;
 
-// 파일 정보 삭제.
+// 모델 파일 정보 삭제.
 $sql_delete_tb_model_file = <<<EOD
 DELETE FROM
     TB_MODEL_FILE
@@ -188,7 +188,7 @@ $sql_select_tb_page_variable_from_name = <<<EOD
 SELECT
     VALUE
 FROM
-    TB_PAGE-VARIABLE
+    TB_PAGE_VARIABLE
 WHERE
     NAME = :NAME
 EOD;
@@ -213,5 +213,92 @@ FROM
     JOIN TB_SHOWROOM B ON B.SEQ_ID = A.VALUE
 WHERE
     A.NAME = "MAIN_SHOWROOM"
+EOD;
+
+// 상품 파일 정보 생성.
+$sql_insert_tb_product_file = <<<EOD
+INSERT INTO TB_PRODUCT_FILE
+(
+    EXT,
+    NAME,
+    FULL_NAME,
+    DIR_PATH,
+    PATH,
+    SIZE,
+    DESCRIPTION
+) VALUES (
+    :EXT,
+    :NAME,
+    :FULL_NAME,
+    :DIR_PATH,
+    :PATH,
+    :SIZE,
+    :DESCRIPTION
+)
+EOD;
+
+// 상품 파일 목록 조회.
+$sql_select_tb_product_file = <<<EOD
+SELECT
+    *
+FROM
+    TB_PRODUCT_FILE
+ORDER BY C_DATE DESC
+EOD;
+
+// 상품 파일 정보 삭제.
+$sql_delete_tb_product_file = <<<EOD
+DELETE FROM
+    TB_PRODUCT_FILE
+WHERE
+    SEQ_ID = :SEQ_ID
+EOD;
+
+// 상품 파일 정보 생성.
+$sql_insert_tb_product_key = <<<EOD
+INSERT INTO TB_PRODUCT_KEY
+(
+    PRODUCT_ID,
+    DOWNLOAD_KEY,
+    DESCRIPTION,
+    END_DATE
+) VALUES (
+    :PRODUCT_ID,
+    :DOWNLOAD_KEY,
+    :DESCRIPTION,
+    :END_DATE
+)
+EOD;
+
+// 상품 ID로 다운로드 key 조회.
+$sql_select_tb_product_key_from_product_id = <<<EOD
+SELECT
+    A.*,
+    B.NAME AS PRODUCT_NAME
+FROM
+    TB_PRODUCT_KEY A
+    LEFT OUTER JOIN TB_PRODUCT_FILE B ON B.SEQ_ID = A.PRODUCT_ID
+WHERE
+    PRODUCT_ID = :PRODUCT_ID
+ORDER BY A.C_DATE DESC
+EOD;
+
+// 상품 다운로드 key 목록 조회.
+$sql_select_tb_product_key = <<<EOD
+SELECT
+    A.*,
+    B.NAME AS PRODUCT_NAME
+FROM
+    TB_PRODUCT_KEY A
+    LEFT OUTER JOIN TB_PRODUCT_FILE B ON B.SEQ_ID = A.PRODUCT_ID
+ORDER BY A.C_DATE DESC
+EOD;
+
+// 상품 다운로드 key 삭제.
+$sql_delete_tb_product_key = <<<EOD
+DELETE FROM
+    TB_PRODUCT_KEY
+WHERE
+    SEQ_ID = :SEQ_ID
 EOD;
 ?>

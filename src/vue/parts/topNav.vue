@@ -18,9 +18,15 @@
                     </router-link>
                 </li>
 
-                <li :class="lastLinkClass" class="nav-item">
+                <li class="nav-item">
                     <router-link :to="{name: 'product'}" :class="productClass" class="nav-link">
                         <span>Product</span>
+                    </router-link>
+                </li>
+
+                <li :class="lastLinkClass" class="nav-item">
+                    <router-link :to="{name: 'product-link'}" :class="productLinkClass" class="nav-link">
+                        <span>Product-link</span>
                     </router-link>
                 </li>
 
@@ -54,6 +60,9 @@
                 },
                 productClass: {
                     'active': me.pageName == 'product'
+                },
+                productLinkClass: {
+                    'active': me.pageName == 'product-link'
                 }
             };
         },

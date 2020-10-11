@@ -21,7 +21,7 @@
                 SEQ_ID => $seq_id
             ];
 
-            if ($pdo->prepare($sql_delete_tb_model_file)->execute($value)) {
+            if ($pdo->prepare($sql_delete_tb_product_file)->execute($value)) {
                 // 관련 디렉토리를 제거한다.
                 $dir_path = $_POST['dirPath'];
     
