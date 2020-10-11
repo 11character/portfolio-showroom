@@ -270,24 +270,38 @@ INSERT INTO TB_PRODUCT_KEY
 )
 EOD;
 
-// 상품 ID로 다운로드 key 조회.
+// 상품 ID로 다운로드 key 정보 조회.
 $sql_select_tb_product_key_from_product_id = <<<EOD
 SELECT
     A.*,
-    B.NAME AS PRODUCT_NAME
+    COALESCE(B.NAME, "-delete-") AS PRODUCT_NAME
 FROM
     TB_PRODUCT_KEY A
     LEFT OUTER JOIN TB_PRODUCT_FILE B ON B.SEQ_ID = A.PRODUCT_ID
 WHERE
-    PRODUCT_ID = :PRODUCT_ID
+    A.PRODUCT_ID = :PRODUCT_ID
 ORDER BY A.C_DATE DESC
+EOD;
+
+// 다운로드용 key 정보 조회.
+$sql_select_download_data = <<<EOD
+SELECT
+    A.*,
+    B.FULL_NAME AS PRODUCT_FILE_NAME,
+    B.PATH AS PRODUCT_PATH
+FROM
+    TB_PRODUCT_KEY A
+    JOIN TB_PRODUCT_FILE B ON B.SEQ_ID = A.PRODUCT_ID
+WHERE
+    BINARY A.DOWNLOAD_KEY = :DOWNLOAD_KEY
+    AND A.END_DATE >= DATE(NOW())
 EOD;
 
 // 상품 다운로드 key 목록 조회.
 $sql_select_tb_product_key = <<<EOD
 SELECT
     A.*,
-    B.NAME AS PRODUCT_NAME
+    COALESCE(B.NAME, "-delete-") AS PRODUCT_NAME
 FROM
     TB_PRODUCT_KEY A
     LEFT OUTER JOIN TB_PRODUCT_FILE B ON B.SEQ_ID = A.PRODUCT_ID

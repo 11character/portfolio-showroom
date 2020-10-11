@@ -26,7 +26,7 @@
         }
 
     } catch(Exception $e) {
-        if (!$return_db_error) {
+        if ($return_db_error) {
             $data['message'] = $e->getMessage();
         }
     }
