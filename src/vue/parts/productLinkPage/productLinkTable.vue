@@ -4,7 +4,7 @@
         <confirm-modal @confirm="onConfirmDelete" ref="deleteModal">
             <template v-slot:content>
                 <div class="h4 my-5 text-center">
-                    <span>선택한 파일을 삭제하나요?</span>
+                    <span>선택한 다운로드 키를 삭제하나요?</span>
                 </div>
             </template>
         </confirm-modal>

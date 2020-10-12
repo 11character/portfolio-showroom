@@ -34,7 +34,7 @@
                     DIR_PATH => $dir_path,
                     PATH => $file_path,
                     SIZE => $file['size'],
-                    DESCRIPTION => isset($_POST['description']) ? $_POST['description'] : ''
+                    DESCRIPTION => $_POST['description']
                 ];
     
                 $pdo->prepare($sql_insert_tb_product_file)->execute($value);

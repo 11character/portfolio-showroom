@@ -83,7 +83,7 @@
                             DIR_URL => $dir_url,
                             URL => $dir_url . '/' . $full_name,
                             SIZE => $file['size'],
-                            DESCRIPTION => isset($_POST['description']) ? $_POST['description'] : '',
+                            DESCRIPTION => $_POST['description'],
                             DATA => ''
                         ];
 
