@@ -15,6 +15,7 @@
         <router-view></router-view>
     </div>
 
+    <script src="./dist/detect.js"></script>
     <script src="./dist/showroom/showroom.js"></script>
 </body>
 </html>

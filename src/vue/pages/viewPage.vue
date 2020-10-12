@@ -224,7 +224,7 @@
 
     import NemoShowroomViewer from '../../nemoShowroom/nemoShowroomViewer/nemoShowroomViewer';
 
-    import checkMobile from 'is-mobile';
+    import Bowser from 'bowser';
 
     export default {
         components: {
@@ -317,7 +317,10 @@
 
             me.loadPageText();
 
-            me.isMobile = checkMobile();
+            const bowser = Bowser.getParser(window.navigator.userAgent);
+            const platformType = bowser.getPlatformType(true);
+
+            me.isMobile = (platformType == 'mobile' || platformType == 'tablet');
 
             me.showroomViewer.centerFocus(me.isMobile);
 

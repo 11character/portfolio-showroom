@@ -1,0 +1,44 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.message-field {
+    padding: 0rem 1rem;
+    padding-bottom: 64px;
+}
+
+.button {
+    width: 100%;
+    margin-top: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button:last-child {
+    margin-top: 1rem;
+}
+
+.button a{
+    width: 275px;
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid #000000;
+    color: #000000;
+    font-weight: bold;
+}
+
+.button a:hover{
+    color: #ffffff;
+    background-color: #000000;
+    cursor: pointer;
+}

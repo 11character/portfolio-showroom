@@ -13,6 +13,7 @@ const Path = require('path');
 const file1 = Path.join(__dirname, './src/index.js');
 const file2 = Path.join(__dirname, './src/showroom.js');
 const file3 = Path.join(__dirname, './src/login.js');
+const file4 = Path.join(__dirname, './src/detect.js');
 
 const options1 = {
     outDir: 'public/dist/index',
@@ -35,10 +36,19 @@ const options3 = {
     watch: (buildType === 'watch')
 };
 
+const options4 = {
+    outDir: 'public/dist',
+    publicUrl: './',
+    sourceMaps: false,
+    watch: (buildType === 'watch')
+};
+
 const bundler1 = new Bundler(file1, options1);
 const bundler2 = new Bundler(file2, options2);
 const bundler3 = new Bundler(file3, options3);
+const bundler4 = new Bundler(file4, options4);
 
 bundler1.bundle();
 bundler2.bundle();
 bundler3.bundle();
+bundler4.bundle();

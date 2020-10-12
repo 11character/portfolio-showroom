@@ -19,6 +19,7 @@
         <router-view></router-view>
     </div>
 
+    <script src="./dist/detect.js"></script>
     <script src="./dist/index/index.js"></script>
 </body>
 </html>
