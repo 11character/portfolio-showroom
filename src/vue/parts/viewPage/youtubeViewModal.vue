@@ -1,5 +1,5 @@
 <template>
-    <div class="youtube-view-modal-field modal fade" tabindex="-1" data-backdrop="static">
+    <div class="youtube-view-modal-field modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-body">

@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" tabindex="-1" data-backdrop="static">
+    <div class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
