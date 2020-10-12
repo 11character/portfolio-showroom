@@ -22,7 +22,7 @@
                 if (is_file($file)) {
                     if (preg_match('MSIE', $_SERVER['HTTP_USER_AGENT'])) {
                         header('Content-type: application/octet-stream');
-                        header('Content-Length: '.filesize('$file'));
+                        header('Content-Length: '.filesize($file));
                         header('Content-Disposition: attachment; filename=' . $name);
                         header('Content-Transfer-Encoding: binary');
                         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -31,7 +31,7 @@
 
                     } else {
                         header('Content-type: file/unknown');
-                        header('Content-Length: '.filesize('$file'));
+                        header('Content-Length: '.filesize($file));
                         header('Content-Disposition: attachment; filename=' . $name);
                         header('Content-Description: PHP3 Generated Data');
                         header('Pragma: no-cache');
