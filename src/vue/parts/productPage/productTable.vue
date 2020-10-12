@@ -268,7 +268,7 @@
 
 <style lang="scss">
     // 테이블은 외부 소스라서 스코프 없이 설정.
-    .dataTables_wrapper.dt-bootstrap4.no-footer > .row:nth-child(2) > div {
+    .product-table-field .dataTables_wrapper.dt-bootstrap4.no-footer > .row:nth-child(2) > div {
         padding: 0px;
         overflow-x: auto;
 

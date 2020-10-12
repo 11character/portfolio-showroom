@@ -153,7 +153,7 @@
 
 <style lang="scss">
     // 테이블은 외부 소스라서 스코프 없이 설정.
-    .dataTables_wrapper > div{
+    .model-modal-field .dataTables_wrapper > div{
         justify-content: center;
     }
 </style>
