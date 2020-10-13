@@ -758,7 +758,7 @@
                 width: 100%;
                 height: 90px;
                 position: relative;
-                border-bottom: 2px solid #000000;
+                border-bottom: 3px solid #000000;
 
                 .menu-top-logo {
                     width: 87px;
@@ -1137,6 +1137,10 @@
 
                 .lang-button {
                     cursor: pointer;
+
+                    @media screen and (max-width: 1090px) {
+                        display: none;
+                    }
                 }
             }
         }

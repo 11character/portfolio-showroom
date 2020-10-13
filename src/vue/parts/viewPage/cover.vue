@@ -4,7 +4,7 @@
             <img :src="img" class="background">
         </div>
 
-        <div ref="textField" class="loading-text-field disable-user-select font-showroom-light">
+        <div v-if="percent < 100" ref="textField" class="loading-text-field disable-user-select font-showroom-light">
             <div class="loading-text">Please Wait...</div>
 
             <div v-if="percent > 15" class="loading-text">To walk in the virtual gallery,</div>
@@ -146,7 +146,6 @@
             @media screen and (max-width: 1090px) {
                 width: 100%;
                 max-width: 546px;
-                align-items: center;
             }
 
             .loading-text {
