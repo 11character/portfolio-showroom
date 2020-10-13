@@ -198,7 +198,7 @@
         </div>
 
         <div ref="bottom" class="bottom disable-user-select">
-            <div class="content">
+            <div class="content font-showroom">
                 <div class="text">{{ pageText[lang].bottom1 }}</div>
                 <div class="text">{{ pageText[lang].bottom2 }}</div>
                 <div @click="onClickLang" class="lang-button">KR / ENG</div>
@@ -376,7 +376,7 @@
             setTimeout(function () {
                 $(window).trigger('resize.view.page');
                 me.$refs.cover.positionSetting();
-            }, 10);
+            }, 100);
         },
         beforeDestroy: function () {
             const me = this;
