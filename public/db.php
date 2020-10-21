@@ -2,7 +2,7 @@
 $dbname = 'showroom';
 $dsn = 'mysql:host=127.0.0.1;port=3306;dbname=' . $dbname . ';charset=utf8';
 $db_user_name = 'root';
-$db_user_pwd = '000000';
+$db_user_pwd = '00000000';
 
 $return_db_error = false;
 
