@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./css/common.css">
     <link rel="stylesheet" href="./css/not-support.css">
 
-    <title>not support</title>
+    <title>desk desk</title>
 </head>
 <body>
     <div class="message-field font-showroom">

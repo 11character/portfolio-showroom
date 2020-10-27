@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" href="./dist/login/login.css">
 
-    <title>admin</title>
+    <title>desk desk</title>
 </head>
 <body>
     <div id="container" class="container-fluid my-3 my-lg-5">
