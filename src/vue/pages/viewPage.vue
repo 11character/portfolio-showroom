@@ -841,6 +841,7 @@
                     white-space: pre-wrap;
                     color: #ffffff;
                     padding-bottom: 18px;
+                    margin-bottom: 18px;
                 }
             }
         }
