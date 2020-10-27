@@ -72,10 +72,14 @@
             position:absolute;
             left: 50%;
             top: 50%;
-            margin-top: -115px;
+            margin-top: -160px;
             margin-left: -170px;
             background-color: #ffffff;
             border: 2px solid #000000;
+
+            @media screen and (max-width: 1090px) {
+                margin-top: -215px;
+            }
 
             .link-modal-header {
                 width: 100%;

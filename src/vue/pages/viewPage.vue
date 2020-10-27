@@ -58,7 +58,7 @@
                 <!-- END-내용 -->
 
                 <!-- 설명 텍스트 -->
-                <div :hidden="!isShowInfo" ref="menuInfoField" class="menu-info-field font-showroom">
+                <div :hidden="!isShowInfo" ref="menuInfoField" class="menu-info-field disable-user-select font-showroom">
                     <div v-if="lang == 'ko'" v-html="showroom.contentKo"></div>
                     <div v-else v-html="showroom.contentEn"></div>
                 </div>
@@ -368,8 +368,10 @@
 
             // 모바일 브라우저 확대, 축소, 어색한 조작 방지.
             $(me.$el).on('touchmove.view.page', function (evt) {
-                evt.stopPropagation();
-                evt.preventDefault();
+                if (evt.targetTouches.length > 1) {
+                    evt.stopPropagation();
+                    evt.preventDefault();
+                }
             });
 
             // 뷰어의 위치가 변경되기를 기다렸다가 처리.
@@ -1111,7 +1113,7 @@
                 width: 100%;
                 padding-top: 18px;
                 color: #ffffff;
-                border-top: 1px solid #ffffff;
+                border-top: 2px solid #ffffff;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
