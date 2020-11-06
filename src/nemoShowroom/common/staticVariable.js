@@ -87,7 +87,7 @@ export const FLOOR_SIZE = 2000;
 export const GRID_SIZE = 2000;
 
 /**
- * 그리드 간격.
+ * 그리드 필드를 나눌 수.
  */
 export const GRID_DIVISIONS = 1000;
 
