@@ -385,12 +385,12 @@
 
                 if (confirm('현재 상태를 저장합니까?')) {
                     me.showroom.data = me.showroomEditor.exportJson();
-    
+
                     Utils.apiRequest(ApiUrl.SHOWROOM_UPDATE, me.showroom, 'post').then(function () {
                         me.isConfigEdited = false;
-    
+
                         alert('저장 완료.');
-    
+
                     }).catch(function () {
                         alert('오류!')
                     });
@@ -416,6 +416,10 @@
 
 <style lang="scss" scoped>
     .edit-page-field {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+
         .editor-field {
             display: flex;
             justify-content: space-between;
