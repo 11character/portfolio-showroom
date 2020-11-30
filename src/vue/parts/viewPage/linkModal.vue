@@ -8,7 +8,7 @@
             </div>
 
             <div class="link-modal-body">
-                <span>다음 전시장으로 이동하시겠습니까?</span>
+                <span>다음 링크로 이동하시겠습니까?</span>
             </div>
 
             <div class="link-modal-footer">

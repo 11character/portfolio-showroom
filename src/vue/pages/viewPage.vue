@@ -35,7 +35,7 @@
                 <div :hidden="isShowInfo" class="menu-center disable-user-select">
                     <div @click="onClickShopLink" class="menu-item">
                         <div class="content font-showroom-bold">
-                            <span>Shop</span>
+                            <span>Website</span>
                         </div>
                     </div>
 
@@ -82,10 +82,10 @@
                 <template v-if="!isSmallButton">
                     <div :class="{'showroom-button-n': isFullScreen}" @click="onClickShopLink" class="showroom-button disable-user-select font-showroom-bold">
                         <div class="content">
-                            <span>Selective Art Shop</span>
+                            <span>Visit Website</span>
                             <br>
                             <text-slider class="text-slider">
-                                <span>Enter to Art Shop -&nbsp;</span>
+                                <span>Enter to Website -&nbsp;</span>
                             </text-slider>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                         <div class="content">
                             <span>Selected Text:</span>
                             <br>
-                            <span>Introduction / Artist Statement</span>
+                            <span>Introduction / Statement</span>
                         </div>
 
                         <div v-if="isShowInfo" class="icon">
@@ -112,7 +112,7 @@
                 <template v-if="isSmallButton">
                     <div @click="onClickShopLink" class="showroom-button-sm disable-user-select font-showroom-bold">
                         <div class="content">
-                            <span>Enter to Art Shop</span>
+                            <span>Visit Website</span>
                         </div>
                     </div>
 
@@ -165,7 +165,7 @@
                 <div @click="onClickShowProduct" ref="productButton" class="product-button">
                     <div class="button-content-field">
                         <div class="content font-showroom-bold">
-                            <span>Available Product</span>
+                            <span>Details</span>
                         </div>
 
                         <div class="icon">
@@ -177,7 +177,7 @@
                 <div :hidden="!isShowProduct" ref="productField" class="product-field">
                     <div @click="onClickHideProduct" class="product-header">
                         <div class="content font-showroom-bold">
-                            <span>Available Product List</span>
+                            <span>Details</span>
                         </div>
 
                         <div class="icon">
@@ -200,8 +200,7 @@
         <div ref="bottom" class="bottom disable-user-select">
             <div class="content font-showroom">
                 <div class="text">{{ pageText[lang].bottom1 }}</div>
-                <div class="text">{{ pageText[lang].bottom2 }}</div>
-                <div @click="onClickLang" class="lang-button">KR / ENG</div>
+                <!-- <div @click="onClickLang" class="lang-button">KR / ENG</div> -->
             </div>
         </div>
     </div>
