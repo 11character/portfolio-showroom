@@ -77,7 +77,7 @@
                             SEQ_ID => $row['SEQ_ID'],
                             NAME => $row['NAME'],
                             DESCRIPTION => $row['DESCRIPTION'],
-                            LINK => $row['link'],
+                            LINK => $row['LINK'],
                             IMG_URL => $row['IMG_URL'],
                             BGM_URL => $row['BGM_URL'],
                             CONTENT_KO => $row['CONTENT_KO'],
