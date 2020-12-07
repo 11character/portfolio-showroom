@@ -26,14 +26,15 @@
             };
         },
         watch: {
-            value: function (val) {
+            value: function (rgba) {
                 const me = this;
 
                 const jColor = $(me.$refs.colorBox);
 
-                jColor.css('backgroundColor', val);
+                me.colorPickr.setColor(rgba);
+                jColor.css('backgroundColor', rgba);
 
-                if (val) {
+                if (rgba) {
                     jColor.text('');
 
                 } else {
@@ -53,13 +54,9 @@
                     opacity: false,
                     hue: true
                 }
-            });
-
-            me.colorPickr.on('change', function (color) {
+            }).on('change', function (color) {
                 const rgba = color.toRGBA().toString(0);
-
                 me.value = rgba;
-                $(me.$refs.colorBox).css('backgroundColor', rgba);
                 me.$emit('input', rgba);
             });
 
