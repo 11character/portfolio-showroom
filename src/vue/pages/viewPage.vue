@@ -200,6 +200,7 @@
         <div ref="bottom" class="bottom disable-user-select">
             <div class="content font-showroom">
                 <div class="text">{{ pageText[lang].bottom1 }}</div>
+                <div class="text">{{ pageText[lang].bottom2 }}</div>
                 <!-- <div @click="onClickLang" class="lang-button">KR / ENG</div> -->
             </div>
         </div>
@@ -1134,16 +1135,21 @@
                     @media screen and (max-width: 1090px) {
                         width: 100%;
                         padding: 0px;
+                        text-align: right;
+                    }
+
+                    &:last-child {
+                        padding-right: 0rem;
                     }
                 }
 
-                .lang-button {
-                    cursor: pointer;
+                // .lang-button {
+                //     cursor: pointer;
 
-                    @media screen and (max-width: 1090px) {
-                        display: none;
-                    }
-                }
+                //     @media screen and (max-width: 1090px) {
+                //         display: none;
+                //     }
+                // }
             }
         }
 
