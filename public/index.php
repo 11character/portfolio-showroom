@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="./dist/index/index.css">
     <link rel="stylesheet" href="./css/common.css">
 
-    <title>desk desk</title>
+    <title>Arcade Theater</title>
 </head>
 <body>
     <div id="root">
