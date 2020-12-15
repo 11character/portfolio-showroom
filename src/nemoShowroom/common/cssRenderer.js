@@ -6,6 +6,8 @@ import Utils from '../../class/utils';
 import CssUnit from './cssUnit';
 import YouTubeApi from './youtubeApi';
 
+const Promise = window.Promise;
+
 export default class CssRenderer {
     constructor (renderer, camera) {
         const me = this;
@@ -32,9 +34,13 @@ export default class CssRenderer {
     add(assetItem) {
         const me = this;
 
+        let promise = Promise.resolve();
+
         if (assetItem.type === StaticVariable.ITEM_TYPE_HTML || assetItem.type === StaticVariable.ITEM_TYPE_YOUTUBE) {
-            me.__add(new CssUnit(assetItem));
+            promise = me.__add(new CssUnit(assetItem));
         }
+
+        return promise;
     }
 
     __add(cssUnit) {
@@ -49,6 +55,8 @@ export default class CssRenderer {
         const bodyEl = me.webglRenderer.domElement.parentNode || document.body;
         const fieldEl = Utils.createDivElement();
         const contentEl = Utils.createDivElement();
+
+        let promise = Promise.resolve();
 
         contentEl.id = assetItem.id;
         contentEl.classList.add(StaticVariable.CLASS_NAME_HTML_CONTENT);
@@ -107,34 +115,45 @@ export default class CssRenderer {
 
         // html인 경우 치수 관련 처리를 한다.
         } else {
-            contentEl.innerHTML = assetItem.content;
+            promise = new Promise(function (resolve, reject) {
+                try {
+                    contentEl.innerHTML = assetItem.content;
 
-            // 내용을 배치한 후 화면에 그려질 시간이 필요하다. 그 이후에 정확한 크기를 구할 수 있다.
-            setTimeout(function () {
-                // 사이즈 값이 없는 경우(혹은 0인 경우) 1을 넣는 이유는 크기가 0일때 3D랜더러에서 오류가 나기 때문이다.
-                const width = contentEl.offsetWidth || 1;
-                const height = contentEl.offsetHeight || 1;
+                    // 내용을 배치한 후 화면에 그려질 시간이 필요하다. 그 이후에 정확한 크기를 구할 수 있다.
+                    setTimeout(function () {
+                        // 사이즈 값이 없는 경우(혹은 0인 경우) 1을 넣는 이유는 크기가 0일때 3D랜더러에서 오류가 나기 때문이다.
+                        const width = contentEl.offsetWidth || 1;
+                        const height = contentEl.offsetHeight || 1;
 
-                assetItem.width = width;
-                assetItem.height = height;
+                        assetItem.width = width;
+                        assetItem.height = height;
 
-                contentEl.style.width = width + 'px';
-                contentEl.style.height = height + 'px';
+                        contentEl.style.width = width + 'px';
+                        contentEl.style.height = height + 'px';
 
-                //마스크가 되는 3D객체 크기 설정.
-                assetItem.object3D.children[0].scale.setX(width);
-                assetItem.object3D.children[0].scale.setY(height);
+                        //마스크가 되는 3D객체 크기 설정.
+                        assetItem.object3D.children[0].scale.setX(width);
+                        assetItem.object3D.children[0].scale.setY(height);
 
-                contentEl.style.position = 'relative';
-                contentEl.style.visibility = '';
+                        contentEl.style.position = 'relative';
+                        contentEl.style.visibility = '';
 
-                fieldEl.appendChild(contentEl);
+                        fieldEl.appendChild(contentEl);
 
-                me.__cssUnits[cssUnit.assetItem.id] = cssUnit;
-                me.__cssUnitArr.push(cssUnit);
-                me.__onAdd(cssUnit);
-            }, 500);
+                        me.__cssUnits[cssUnit.assetItem.id] = cssUnit;
+                        me.__cssUnitArr.push(cssUnit);
+                        me.__onAdd(cssUnit);
+
+                        resolve();
+                    }, 500);
+
+                } catch (error) {
+                    reject(error);
+                }
+            });
         }
+
+        return promise;
     }
 
     render() {

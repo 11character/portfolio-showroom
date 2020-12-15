@@ -215,8 +215,20 @@ export default class NemoShowroomViewer {
                 }
 
                 me.objectField.add(assetItem.object3D);
-                me.cssRenderer.add(assetItem);
+
                 me.assetItemManager.add(assetItem);
+
+                me.cssRenderer.add(assetItem).then(function () {
+                    // iframe을 표시하는 경우 불려진 내용에 따라서 포커스가 다른 페이지로 넘어가는 경우가 있다.
+                    // 이를 방지하기 위해 이벤트를 설정한다.
+                    const iframeElArr = me.rootEl.getElementsByTagName('iframe');
+
+                    for (let i = 0; i < iframeElArr.length; i++) {
+                        iframeElArr[i].addEventListener('load', function () {
+                            window.focus();
+                        });
+                    }
+                });
 
                 assetItem.animationPlay();
             }
@@ -507,7 +519,7 @@ export default class NemoShowroomViewer {
         const rayCaster = new THREE.Raycaster(position, direction, 0, StaticVariable.CONTROLS_RAY_FAR);
 
         let arr = rayCaster.intersectObjects(me.colliderMeshArr);
-        
+
         // 충돌검사.
         let check = arr.length > 0;
 
@@ -720,6 +732,17 @@ export default class NemoShowroomViewer {
         }
     }
 
+    __onKeyupAll() {
+        const me = this;
+
+        me.moveInfo.moveForward = false;
+        me.moveInfo.moveLeft = false;
+        me.moveInfo.moveBackward = false;
+        me.moveInfo.moveRight = false;
+        me.moveInfo.moveUp = false;
+        me.moveInfo.moveDown = false;
+    }
+
     __initEvent() {
         const me = this;
 
@@ -823,6 +846,10 @@ export default class NemoShowroomViewer {
 
         window.addEventListener('keyup', function (evt) {
             me.__onKeyup.call(me, evt);
+        });
+
+        window.addEventListener('blur', function () {
+            me.__onKeyupAll.call(me);
         });
 
         if (me.options.autoStart) {
