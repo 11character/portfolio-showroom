@@ -113,6 +113,8 @@ export default class NemoShowroomViewer {
         me.outlinePass.edgeStrength = 2;
         me.outlinePass.edgeThickness = 3;
         me.outlinePass.edgeGlow = 1;
+        me.outlinePass.visibleEdgeColor = new THREE.Color(0xffffff);
+        me.outlinePass.hiddenEdgeColor = new THREE.Color(0xffffff);
 
         me.fxaaPass = new ShaderPass(FXAAShader);
         me.fxaaPass.material.uniforms['resolution'].value.x = 1 / (winW * pixelRatio);
