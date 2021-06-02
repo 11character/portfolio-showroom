@@ -4,7 +4,9 @@
 
         <div class="value">{{ value }}</div>
 
-        <div ref="slider" class="slider"></div>
+        <div class="field">
+            <div ref="slider" class="slider"></div>
+        </div>
     </div>
 </template>
 
@@ -75,9 +77,15 @@
             font-size: 14px;
         }
 
-        .slider {
-            margin-top: 10px;
+        .field {
+            padding-top: 10px;
             width: 100%;
+            height:30px;
+
+            .slider {
+                width: 100%;
+            }
         }
+
     }
 </style>

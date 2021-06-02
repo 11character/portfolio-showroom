@@ -160,4 +160,22 @@
             }
         }
     }
+
+    .modal-content-light {
+        border-radius: 0.25rem;
+        background-color: rgba(60, 65, 80, 0.8);
+        box-shadow: 0 2px 24px 0 rgba(74, 78, 90, 0.4);
+
+        .modal-title {
+            color: #ffffff;
+            font-size: 15pt;
+            margin-top: 30px;
+            margin-left: 24px;
+        }
+
+        .modal-title-img-light {
+            width: 32px;
+            height: 32px;
+        }
+    }
 }

@@ -4,6 +4,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
+import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
 
 import * as StaticVariable from '../common/staticVariable';
 import MouseRaycaster from '../common/mouseRaycaster';
@@ -20,6 +21,8 @@ const Promise = window.Promise;
 export default class NemoShowroomViewer {
     constructor (obj = {}) {
         const me = this;
+
+        RectAreaLightUniformsLib.init();
 
         me.options = new Options(obj);
 
@@ -46,11 +49,6 @@ export default class NemoShowroomViewer {
         me.lightField.add(me.light);
 
         // ---
-        me.subLight = new THREE.AmbientLight();
-        me.subLight.intensity = StaticVariable.SUB_LIGHT_INTENSITY;
-        me.lightField.add(me.subLight);
-
-        // ---
         me.camera = new THREE.PerspectiveCamera(45, winW / winH, StaticVariable.CAMERA_NEAR, StaticVariable.CAMERA_FAR);
         me.camera.position.setY(StaticVariable.CONTROLS_RAY_FAR);
         me.camera.target = new THREE.Vector3();
@@ -67,6 +65,8 @@ export default class NemoShowroomViewer {
         me.renderer.domElement.style.position = 'absolute';
         me.renderer.domElement.style.left = '0px';
         me.renderer.domElement.style.top = '0px';
+        me.renderer.shadowMap.enabled = true;
+        me.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
         // ---
         me.cssRenderer = new CssRenderer(me.renderer, me.camera);
@@ -93,8 +93,8 @@ export default class NemoShowroomViewer {
         me.baseFloor = new THREE.Mesh(floorGeo, floorMat);
         me.baseFloor.rotation.x = -(Math.PI / 2);
         me.baseFloor.renderOrder = 1;
-        me.baseFloor.traverse(function (object) {
-            object.renderOrder = 1;
+        me.baseFloor.traverse(function (obj) {
+            obj.renderOrder = 1;
         });
 
         // ---
@@ -195,7 +195,20 @@ export default class NemoShowroomViewer {
 
                 // 조명 도형 제거.
                 if (assetItem.isLight) {
-                    assetItem.object3D.children[0].remove(assetItem.object3D.children[0].getObjectByName(StaticVariable.MESH_NAME_LIGHT_CONE));
+                    const lightObj3D = assetItem.object3D.children[0];
+                    const removeArr = [];
+
+                    lightObj3D.traverse(function (obj) {
+                        if (obj.name == StaticVariable.MESH_NAME_LIGHT_HELPER
+                            || obj.name == StaticVariable.MESH_NAME_LIGHT_CONE)// 이전 버전 식별자.
+                        {
+                            removeArr.push(obj);
+                        }
+                    });
+
+                    for (let i = 0; i < removeArr.length; i++) {
+                        removeArr[i].parent.remove(removeArr[i]);
+                    }
                 }
 
                 // 시작위치 지정, 도형 제거.

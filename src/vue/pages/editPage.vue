@@ -14,6 +14,8 @@
 
         <youtube-modal @apply="onApplyYouTube" ref="youtubeModal"></youtube-modal>
 
+        <light-modal @select="onSelectLight" ref="lightModal"></light-modal>
+
         <div ref="editorField" class="editor-field disable-user-select">
             <nav class="nav-field">
                 <div @click="onClickInfo" class="nav-btn nav-btn-sm">
@@ -44,13 +46,13 @@
                     <div class="nav-btn-font">YouTube</div>
                 </div>
 
-                <div @click="onApplyLight" class="nav-btn">
-                    <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
+                <div @click="onClickLightModalOpen" class="nav-btn">
+                    <img :src="'./img/icon-light.png'" class="nav-btn-img nav-btn-img-light">
                     <div class="nav-btn-font">Light</div>
                 </div>
 
                 <div @click="onApplyStartPoint" class="nav-btn">
-                    <img :src="'./img/icon-model-file.png'" class="nav-btn-img nav-btn-img-model-file">
+                    <img :src="'./img/icon-pin.png'" class="nav-btn-img nav-btn-img-pin">
                     <div class="nav-btn-font">Start point</div>
                 </div>
             </nav>
@@ -76,6 +78,7 @@
     import textModalVue from '../parts/editPage/textModal.vue';
     import webModalVue from '../parts/editPage/webModal.vue';
     import youtubeModalVue from '../parts/editPage/youtubeModal.vue';
+    import lightModalVue from '../parts/editPage/lightModal.vue';
     import controlPanelVue from '../parts/editPage/controlPanel.vue';
 
     import NemoShowroomEditor from '../../nemoShowroom/nemoShowroomEditor/nemoShowroomEditor';
@@ -89,6 +92,7 @@
             'text-modal': textModalVue,
             'web-modal': webModalVue,
             'youtube-modal': youtubeModalVue,
+            'light-modal': lightModalVue,
             'control-panel': controlPanelVue
         },
         props: ['id'],
@@ -194,6 +198,11 @@
                 const me = this;
 
                 me.$refs.youtubeModal.open();
+            },
+            onClickLightModalOpen: function () {
+                const me = this;
+
+                me.$refs.lightModal.open();
             },
             onControl: function (type) {
                 const me = this;
@@ -364,10 +373,10 @@
                     });
                 }
             },
-            onApplyLight: function () {
+            onSelectLight: function (type) {
                 const me = this;
 
-                me.showroomEditor.addSpotLight().then(function (assetItem) {
+                me.showroomEditor.addLight(type).then(function (assetItem) {
                     me.isConfigEdited = true;
                     me.showroomEditor.attach(assetItem);
                 });
@@ -478,7 +487,10 @@
                 margin-bottom: 23px;
             }
 
-            .nav-btn-img-webpage {
+            .nav-btn-img-webpage,
+            .nav-btn-img-light,
+            .nav-btn-img-pin
+             {
                 width: 40px;
                 height: 40px;
                 margin-bottom: 10px;

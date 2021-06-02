@@ -6,6 +6,7 @@ import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import { OBJLoader2 } from 'three/examples/jsm/loaders/OBJLoader2';
 import { MtlObjBridge } from 'three/examples/jsm/loaders/obj2/bridge/MtlObjBridge';
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader';
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 
 import html2canvas from 'html2canvas';
 
@@ -75,6 +76,7 @@ export default class AssetLoader {
     __onLoad(assetItem) {
         const group = assetItem.object3D;
         const removeChildArr = [];
+        const notSystemModel = StaticVariable.ITEM_SYSTEM_TYPES.indexOf(assetItem.type) < 0;
 
         group.traverse(function (object3D) {
             // 객체를 회전했을 때 Y축 180도 이상 회전값에 의해 XZ축이 반전되는 것을 막기위한 처리.
@@ -83,8 +85,8 @@ export default class AssetLoader {
                 object3D.rotation.order = 'YXZ';
             }
 
-            // 조명 객체가 섞여 있는 경우 제거한다.
-            if (assetItem.type !== StaticVariable.ITEM_TYPE_SPOT_LIGHT && object3D.isLight) {
+            // 에디터에서 추가하지 않은 조명 객체가 섞여 있는 경우 제거한다.
+            if (notSystemModel && object3D.isLight) {
                 removeChildArr.push(object3D);
             }
 
@@ -96,6 +98,12 @@ export default class AssetLoader {
             // 객체 양면 표시.
             if (object3D.material) {
                 object3D.material.side = THREE.DoubleSide;
+            }
+
+            // 그림자 설정.
+            if (notSystemModel && object3D.isMesh) {
+                object3D.castShadow = assetItem.castShadow;
+                object3D.receiveShadow = assetItem.receiveShadow;
             }
 
             if (assetItem.type !== StaticVariable.ITEM_TYPE_HTML && assetItem.type !== StaticVariable.ITEM_TYPE_YOUTUBE) {
@@ -168,8 +176,23 @@ export default class AssetLoader {
             case StaticVariable.ITEM_TYPE_TEXT:
                 return me.__loadText(assetItem).then(onLoadComplete);
 
+            case StaticVariable.ITEM_TYPE_AMBIENT_LIGHT:
+                return me.__loadAmbientLight(assetItem).then(onLoadComplete);
+
+            case StaticVariable.ITEM_TYPE_DIRECTIONAL_LIGHT:
+                return me.__loadDirectionalLight(assetItem).then(onLoadComplete);
+
+            case StaticVariable.ITEM_TYPE_HEMISPHERE_LIGHT:
+                return me.__loadHemisphereLight(assetItem).then(onLoadComplete);
+
             case StaticVariable.ITEM_TYPE_SPOT_LIGHT:
                 return me.__loadSpotLight(assetItem).then(onLoadComplete);
+
+            case StaticVariable.ITEM_TYPE_POINT_LIGHT:
+                return me.__loadPointLight(assetItem).then(onLoadComplete);
+
+            case StaticVariable.ITEM_TYPE_RECT_LIGHT:
+                return me.__loadRectLight(assetItem).then(onLoadComplete);
 
             case StaticVariable.ITEM_TYPE_START_POINT:
                 return me.__loadStartPoint(assetItem).then(onLoadComplete);
@@ -180,15 +203,7 @@ export default class AssetLoader {
         }
     }
 
-    __clearGroup(object3D) {
-        for (let i = 0; i < object3D.children.length; i++) {
-            object3D.remove(object3D.children[i]);
-        }
-    }
-
     __loadStartPoint(assetItem) {
-        const me = this;
-
         return new Promise(function (resolve) {
             const geometry = new THREE.ConeGeometry(1, 0.5, 4);
             const meshMaterial = new THREE.MeshPhongMaterial({color: 0x0000ff, emissive: 0x888888, transparent: true, opacity: 0.9});
@@ -216,39 +231,234 @@ export default class AssetLoader {
         });
     }
 
-    __loadSpotLight(assetItem) {
-        const me = this;
-
+    __loadAmbientLight(assetItem) {
         return new Promise(function (resolve) {
-            const spotLight = new THREE.SpotLight(
-                new THREE.Color(assetItem.lightOption.color),
-                assetItem.lightOption.intensity,
-                assetItem.lightOption.distance,
-                assetItem.lightOption.angle,
-                assetItem.lightOption.penumbra,
-                assetItem.lightOption.decay
+            const lightOptions = assetItem.lightOptions;
+            const light = new THREE.AmbientLight(
+                new THREE.Color(lightOptions.color),
+                lightOptions.intensity
             );
 
+            const geometry = new THREE.SphereGeometry(1, 8, 8);
+            const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
+            const sphere = new THREE.Mesh(geometry, material);
             const group = new THREE.Group();
 
             assetItem.isLight = true;
 
-            spotLight.position.set(0, 0.5, 0);
-            spotLight.target.position.set(0, -4.5, 0);
+            sphere.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
 
-            group.add(spotLight);
-            group.add(spotLight.target);
-
-            const geometry = new THREE.ConeGeometry(1, 1, 32);
-            const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
-            const cone = new THREE.Mesh(geometry, material);
-
-            cone.name = StaticVariable.MESH_NAME_LIGHT_CONE;
-
-            group.add(cone);
+            group.add(light);
+            group.add(sphere);
 
             resolve(group);
         });
+    }
+
+    __loadDirectionalLight(assetItem) {
+        return new Promise(function (resolve) {
+            const lightOptions = assetItem.lightOptions;
+            const light = new THREE.DirectionalLight(
+                new THREE.Color(lightOptions.color),
+                lightOptions.intensity
+            );
+
+            const geometry = new THREE.SphereGeometry(0.5, 8, 8);
+            const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
+            const sphere = new THREE.Mesh(geometry, material);
+            const field = new THREE.Group();
+            const group = new THREE.Group();
+
+            assetItem.isLight = true;
+
+            // 조명의 기본 방향을 -y로 하려 한다.
+            // CameraHelper 의 기본방향은 -z다.
+            // CameraHelper 의 기본방향 수정방법을 찾지 못했다.
+            // 그렇기 때문에 조명 방향을 -z축으로 설정하고, field를 -y로 회전한다.
+            light.position.set(0, 0, 0);
+            light.target.position.set(0, 0, -1);
+            light.castShadow = lightOptions.castShadow;
+            light.shadow.mapSize.width = lightOptions.shadowMapSizeW;
+            light.shadow.mapSize.height = lightOptions.shadowMapSizeH;
+            light.shadow.camera.near = lightOptions.shadowCameraNear;
+            light.shadow.camera.far = lightOptions.shadowCameraFar;
+            light.shadow.camera.left = lightOptions.shadowCameraLeft;
+            light.shadow.camera.right = lightOptions.shadowCameraRight;
+            light.shadow.camera.top = lightOptions.shadowCameraTop;
+            light.shadow.camera.bottom = lightOptions.shadowCameraBottom;
+            light.shadow.bias = lightOptions.shadowBias;
+
+            // 그림자 설정 후 CameraHelper를 생성해야 한다.
+            const helper = new THREE.CameraHelper(light.shadow.camera);
+
+            helper.matrix = new THREE.Matrix4();
+
+            helper.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+            sphere.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+
+            field.add(light);
+            field.add(light.target);
+            field.add(sphere);
+            field.add(helper);
+
+            field.rotation.set(-(Math.PI / 2), 0, 0);
+
+            group.add(field);
+
+            resolve(group);
+        });
+    }
+
+    __loadHemisphereLight(assetItem) {
+        return new Promise(function (resolve) {
+            const lightOptions = assetItem.lightOptions;
+            const light = new THREE.HemisphereLight(
+                new THREE.Color(lightOptions.color),
+                new THREE.Color(lightOptions.groundColor),
+                lightOptions.intensity
+            );
+
+            const sGeometry = new THREE.SphereGeometry(0.5, 8, 8);
+            const bGeometry1 = new THREE.BoxGeometry(0.25, 2, 0.25);
+            const bGeometry2 = new THREE.BoxGeometry(0.25, 2, 0.25);
+            const sMaterial = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
+            const bMaterial1 = new THREE.MeshBasicMaterial({color: 0x00ffff, wireframe: false});
+            const bMaterial2 = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
+            const sphere = new THREE.Mesh(sGeometry, sMaterial);
+            const box1 = new THREE.Mesh(bGeometry1, bMaterial1);
+            const box2 = new THREE.Mesh(bGeometry2, bMaterial2);
+            const group = new THREE.Group();
+
+            assetItem.isLight = true;
+
+            box1.position.set(0, 1.5, 0);
+            box2.position.set(0, -1.5, 0);
+
+            sphere.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+            box1.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+            box2.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+
+            group.add(light);
+            group.add(sphere);
+            group.add(box1);
+            group.add(box2);
+
+            resolve(group);
+        }).catch();
+    }
+
+    __loadSpotLight(assetItem) {
+        return new Promise(function (resolve) {
+            const lightOptions = assetItem.lightOptions;
+            const light = new THREE.SpotLight(
+                new THREE.Color(lightOptions.color),
+                lightOptions.intensity,
+                lightOptions.distance,
+                lightOptions.angle,
+                lightOptions.penumbra,
+                lightOptions.decay
+            );
+
+            const helper = new THREE.SpotLightHelper(light, 0xffff00);
+            const geometry = new THREE.SphereGeometry(0.5, 8, 8);
+            const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
+            const sphere = new THREE.Mesh(geometry, material);
+            const group = new THREE.Group();
+
+            assetItem.isLight = true;
+
+            light.position.set(0, 0.5, 0);
+            light.castShadow = lightOptions.castShadow;
+            light.shadow.mapSize.width = lightOptions.shadowMapSizeW;
+            light.shadow.mapSize.height = lightOptions.shadowMapSizeH;
+            light.shadow.camera.near = lightOptions.shadowCameraNear;
+            light.shadow.camera.far = lightOptions.shadowCameraFar;
+            light.shadow.bias = lightOptions.shadowBias;
+            light.shadow.focus = lightOptions.shadowFocus;
+
+            helper.matrix = helper.light.matrix;
+
+            helper.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+            sphere.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+
+            group.add(light);
+            group.add(light.target);
+            group.add(helper);
+            group.add(sphere);
+
+            resolve(group);
+        });
+    }
+
+    __loadPointLight(assetItem) {
+        return new Promise(function (resolve) {
+            const lightOptions = assetItem.lightOptions;
+            const light = new THREE.PointLight(
+                new THREE.Color(lightOptions.color),
+                lightOptions.intensity,
+                lightOptions.distance,
+                lightOptions.decay
+            );
+
+            const helper = new THREE.PointLightHelper(light, 1, 0xffff00);
+            const geometry = new THREE.SphereGeometry(0.5, 8, 8);
+            const material = new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false});
+            const sphere = new THREE.Mesh(geometry, material);
+            const group = new THREE.Group();
+
+            assetItem.isLight = true;
+
+            light.castShadow = lightOptions.castShadow;
+            light.shadow.mapSize.width = lightOptions.shadowMapSizeW;
+            light.shadow.mapSize.height = lightOptions.shadowMapSizeH;
+            light.shadow.camera.near = lightOptions.shadowCameraNear;
+            light.shadow.camera.far = lightOptions.shadowCameraFar;
+            light.shadow.bias = lightOptions.shadowBias;
+
+            helper.matrix = helper.light.matrix;
+
+            helper.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+            sphere.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+
+            group.add(light);
+            group.add(helper);
+            group.add(sphere);
+
+            resolve(group);
+        });
+    }
+
+    __loadRectLight(assetItem) {
+        return new Promise(function (resolve) {
+            const lightOptions = assetItem.lightOptions;
+
+            const lightF = new THREE.RectAreaLight(
+                new THREE.Color(lightOptions.color),
+                lightOptions.intensity,
+                lightOptions.width,
+                lightOptions.height
+            );
+
+            const lightB = new THREE.RectAreaLight(
+                new THREE.Color(lightOptions.color),
+                lightOptions.intensity,
+                lightOptions.width,
+                lightOptions.height
+            );
+
+            const helper = new RectAreaLightHelper(lightF);
+            const group = new THREE.Group();
+
+            assetItem.isLight = true;
+
+            lightB.lookAt(0, 0, 1);
+
+            group.add(lightF);
+            group.add(lightB);
+            group.add(helper);
+
+            resolve(group);
+        }).catch(e => console.log(e));
     }
 
     __loadText(assetItem) {
@@ -277,8 +487,7 @@ export default class AssetLoader {
         }).then(function (canvas) {
             const g = new THREE.PlaneGeometry(width, height);
             const m = new THREE.MeshPhongMaterial({
-                map: new THREE.CanvasTexture(canvas),
-                side: THREE.DoubleSide
+                map: new THREE.CanvasTexture(canvas)
             });
             const object3D = new THREE.Mesh(g, m);
 
@@ -310,7 +519,7 @@ export default class AssetLoader {
                     const g = new THREE.PlaneGeometry(assetItem.width, assetItem.height);
                     const m = new THREE.MeshPhongMaterial({
                         map: texture,
-                        side: THREE.DoubleSide
+                        transparent: true
                     });
 
                     object3D = new THREE.Mesh(g, m);
@@ -337,8 +546,7 @@ export default class AssetLoader {
         } else {
             const g = new THREE.PlaneGeometry(1, 1);
             const m = new THREE.MeshBasicMaterial({
-                colorWrite: false,
-                side: THREE.DoubleSide
+                colorWrite: false
             });
 
             object3D = new THREE.Mesh(g, m);
@@ -362,8 +570,7 @@ export default class AssetLoader {
         } else {
             const g = new THREE.PlaneGeometry(1, 1);
             const m = new THREE.MeshBasicMaterial({
-                colorWrite: false,
-                side: THREE.DoubleSide
+                colorWrite: false
             });
 
             object3D = new THREE.Mesh(g, m);

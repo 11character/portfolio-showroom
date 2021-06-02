@@ -2,7 +2,9 @@
     <div class="input-checkbox-field">
         <div v-if="label" class="label">{{ label }}</div>
 
-        <input v-model="value" type="checkbox" class="input-checkbox">
+        <div>
+            <input v-model="value" type="checkbox" class="input-checkbox">
+        </div>
     </div>
 </template>
 

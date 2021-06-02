@@ -105,23 +105,35 @@ export const ITEM_TYPE_HTML = 'html';
 export const ITEM_TYPE_YOUTUBE = 'youtube';
 export const ITEM_TYPE_IMAGE = 'image';
 export const ITEM_TYPE_TEXT = 'text';
+
+export const ITEM_TYPE_AMBIENT_LIGHT = 'ambientLight';
+export const ITEM_TYPE_DIRECTIONAL_LIGHT = 'directionalLight';
+export const ITEM_TYPE_HEMISPHERE_LIGHT = 'hemisphereLight';
 export const ITEM_TYPE_SPOT_LIGHT = 'spotLight';
+export const ITEM_TYPE_POINT_LIGHT = 'pointLight';
+export const ITEM_TYPE_RECT_LIGHT = 'rectLight';
+
 export const ITEM_TYPE_START_POINT = 'startPoint';
 
 /**
  * 3D 타입.
  */
-export const ITEM_3D_TYPES = [ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_STL, ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_DAE].join(' ');
+export const ITEM_3D_TYPES = [ITEM_TYPE_3D_GLTF, ITEM_TYPE_3D_GLB, ITEM_TYPE_3D_OBJ, ITEM_TYPE_3D_STL, ITEM_TYPE_3D_FBX, ITEM_TYPE_3D_DAE].join(',');
 
 /**
  * 2D 타입.
  */
-export const ITEM_2D_TYPES = [ITEM_TYPE_HTML, ITEM_TYPE_YOUTUBE, ITEM_TYPE_IMAGE, ITEM_TYPE_TEXT].join(' ');
+export const ITEM_2D_TYPES = [ITEM_TYPE_HTML, ITEM_TYPE_YOUTUBE, ITEM_TYPE_IMAGE, ITEM_TYPE_TEXT].join(',');
+
+/**
+ * CSS 타입.
+ */
+ export const ITEM_CSS_TYPES = [ITEM_TYPE_HTML, ITEM_TYPE_YOUTUBE].join(',');
 
 /**
  * 설정용 타입.
  */
-export const ITEM_SYSTEM_TYPES = [ITEM_TYPE_SPOT_LIGHT, ITEM_TYPE_START_POINT].join(' ');
+export const ITEM_SYSTEM_TYPES = [ITEM_TYPE_AMBIENT_LIGHT, ITEM_TYPE_DIRECTIONAL_LIGHT, ITEM_TYPE_HEMISPHERE_LIGHT, ITEM_TYPE_SPOT_LIGHT, ITEM_TYPE_POINT_LIGHT, ITEM_TYPE_RECT_LIGHT, ITEM_TYPE_START_POINT].join(',');
 
 /**
  * 대상 복제시 리로드 할 타입.
@@ -204,9 +216,10 @@ export const STYLE_ASSET_EDIT_BACKGROUND_COLOR = '#DFDFDF';
 export const CONTROLS_RAY_FAR = 1;
 
 /**
- * light cone 메쉬 이름.
+ * light 메쉬 이름.
  */
-export const MESH_NAME_LIGHT_CONE = 'lightCone';
+export const MESH_NAME_LIGHT_CONE = 'lightCone'; // 이전 저장 정보 호환을 위한 구분자.
+export const MESH_NAME_LIGHT_HELPER = 'lightHelper';
 
 /**
  * 입력값 잠금 대기시간.

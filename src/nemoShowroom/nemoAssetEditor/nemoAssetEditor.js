@@ -305,9 +305,8 @@ export default class NemoShowroomEditor extends EditorInterface {
         const me = this;
 
         const prevItem = me.assetItem;
-        const type = 'html,image,youtube';
 
-        if (prevItem && type.indexOf(prevItem.type) >= 0) {
+        if (prevItem && StaticVariable.ITEM_2D_TYPES.indexOf(prevItem.type) >= 0) {
             const cloneItem = prevItem.clone();
 
             cloneItem.rotation.x = 0;

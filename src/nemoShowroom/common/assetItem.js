@@ -1,10 +1,11 @@
 import * as THREE from 'three/build/three.module';
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 
 import Utils from '../../class/utils';
 import * as StaticVariable from './staticVariable';
 import MaterialOption from './materialOption';
 import MaterialButton from './materialButton';
-import LightOption from './lightOption';
+import LightOptions from './lightOptions';
 import ImageButton from './imageButton';
 
 const Promise = window.Promise;
@@ -34,6 +35,8 @@ export default class AssetItem {
         this.height = obj.height || 0;
         this.backgroundLoading = !!obj.backgroundLoading;
         this.link = obj.link || '';
+        this.castShadow = !!obj.castShadow;
+        this.receiveShadow = !!obj.receiveShadow;
 
         this.object3D = obj.object3D;
 
@@ -75,7 +78,7 @@ export default class AssetItem {
             }
         }
 
-        this.lightOption = new LightOption(obj.lightOption);
+        this.lightOptions = new LightOptions(obj.lightOptions);
 
         this.linkButtonArray = [];
         if (Array.isArray(obj.linkButtonArray)) {
@@ -118,6 +121,8 @@ export default class AssetItem {
             height: me.height,
             backgroundLoading: me.backgroundLoading,
             link: me.link,
+            castShadow: me.castShadow,
+            receiveShadow: me.receiveShadow,
 
             zeroScale: me.zeroScale,
             zeroPosition: me.zeroPosition,
@@ -140,7 +145,7 @@ export default class AssetItem {
             isClickTarget: me.isClickTarget,
 
             materialOptions: me.materialOptions,
-            lightOption: me.lightOption,
+            lightOptions: me.lightOptions,
 
             linkButtonArray: me.linkButtonArray,
             materialButtonArray: me.materialButtonArray
@@ -245,25 +250,57 @@ export default class AssetItem {
         return options;
     }
 
-    setLightOption(obj = {}) {
+    setLightOptions(obj = {}) {
         const me = this;
 
         if (me.isLight) {
-            me.lightOption = new LightOption(obj);
+            me.lightOptions = new LightOptions(obj);
 
             me.object3D.traverse(function (obj) {
-                if (obj instanceof THREE.SpotLight) {
+                if (obj instanceof THREE.Light) {
                     let val;
 
-                    for (let key in me.lightOption) {
-                        val = me.lightOption[key];
+                    // 조명 설정 반복문 입력.
+                    for (let key in me.lightOptions) {
+                        if (key != 'shadow') {
+                            val = me.lightOptions[key];
 
-                        if (key == 'color') {
-                            val = new THREE.Color(val);
+                            if (key == 'color' || key == 'groundColor') {
+                                val = new THREE.Color(val);
+                            }
+
+                            obj[key] = val;
+                        }
+                    }
+
+                    if (obj.shadow) {
+                        // 그림자 설정 직접 입력.
+                        obj.shadow.mapSize.width = me.lightOptions.shadowMapSizeW;
+                        obj.shadow.mapSize.height = me.lightOptions.shadowMapSizeH;
+                        obj.shadow.camera.near = me.lightOptions.shadowCameraNear;
+                        obj.shadow.camera.far = me.lightOptions.shadowCameraFar;
+                        obj.shadow.bias = me.lightOptions.shadowBias;
+                        obj.shadow.focus = me.lightOptions.shadowFocus;
+
+                        // only directional light.
+                        if (obj.shadow.camera instanceof THREE.OrthographicCamera) {
+                            obj.shadow.camera.left = me.lightOptions.shadowCameraLeft;
+                            obj.shadow.camera.right = me.lightOptions.shadowCameraRight;
+                            obj.shadow.camera.top = me.lightOptions.shadowCameraTop;
+                            obj.shadow.camera.bottom = me.lightOptions.shadowCameraBottom;
                         }
 
-                        obj[key] = val;
+                        obj.shadow.camera.updateProjectionMatrix();
                     }
+
+                // 조명 helper 업데이트.
+                } else if (obj instanceof RectAreaLightHelper || obj instanceof THREE.SpotLightHelper) {
+                    obj.light.updateMatrix();
+                    obj.update();
+
+                // CameraHelper(그림자 영역) 업데이트.
+                } else if (obj instanceof THREE.CameraHelper) {
+                    obj.update();
                 }
             });
         }
@@ -289,6 +326,40 @@ export default class AssetItem {
                 obj.material.renderOrder = obj.renderOrder;
             }
         });
+    }
+
+    setCastShadow(bool) {
+        const me = this;
+
+        if (StaticVariable.ITEM_SYSTEM_TYPES.indexOf(me.type) < 0) {
+            me.castShadow = bool;
+
+            me.object3D.traverse(function (obj) {
+                if (obj.isMesh) {
+                    obj.castShadow = bool;
+                }
+            });
+        }
+    }
+
+    setReceiveShadow(bool) {
+        const me = this;
+
+        const notSystemModel = StaticVariable.ITEM_SYSTEM_TYPES.indexOf(me.type) < 0;
+
+        const supportMesh = me.type != StaticVariable.ITEM_TYPE_HTML
+            && me.type != StaticVariable.ITEM_TYPE_YOUTUBE
+            && me.type != StaticVariable.ITEM_TYPE_TEXT;
+
+        if (notSystemModel && supportMesh) {
+            me.receiveShadow = bool;
+
+            me.object3D.traverse(function (obj) {
+                if (obj.isMesh) {
+                    obj.receiveShadow = bool;
+                }
+            });
+        }
     }
 
     show(callEvent = true) {

@@ -69,18 +69,38 @@
                                 </button>
                             </div>
 
-                            <div v-if="!isSystemModel" class="control-row control-row-flex">
-                                <input-checkbox v-model="backgroundLoading" label="Background loading"></input-checkbox>
+                            <div class="control-row">
+                                <button @click="onClickRemove" type="button" class="control-btn" tabindex="-1">
+                                    <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>&nbsp;Remove
+                                </button>
                             </div>
 
-                            <div v-if="!isSystemModel" class="control-row control-row-flex">
-                                <input-checkbox v-model="isClickTarget" label="Click"></input-checkbox>
+                            <div v-if="!isSystemModel" class="asset-control-field">
+                                <div class="control-row control-row-flex">
+                                    <input-checkbox v-model="backgroundLoading" label="Background loading"></input-checkbox>
+                                </div>
 
-                                <template v-if="'html,image,youtube'.indexOf(assetItem.type) == -1">
-                                    <input-checkbox v-model="isTransparent" label="Hidden"></input-checkbox>
-                                </template>
+                                <div class="control-row control-row-flex">
+                                    <input-checkbox v-model="isClickTarget" label="Click"></input-checkbox>
 
-                                <input-checkbox v-model="isCollider" label="Collider"></input-checkbox>
+                                    <template v-if="StaticVariable.ITEM_CSS_TYPES.indexOf(assetItem.type) == -1">
+                                        <input-checkbox v-model="isTransparent" label="Hidden"></input-checkbox>
+                                    </template>
+
+                                    <input-checkbox v-model="isCollider" label="Collider"></input-checkbox>
+                                </div>
+                            </div>
+
+                            <div v-if="!isSystemModel" class="asset-control-field">
+                                <div class="control-row text-center">
+                                    <div class="control-label">Shadow</div>
+                                </div>
+
+                                <div class="control-row control-row-flex">
+                                    <input-checkbox v-model="castShadow" label="Cast"></input-checkbox>
+
+                                    <input-checkbox v-if="StaticVariable.ITEM_CSS_TYPES.indexOf(assetItem.type) == -1" v-model="receiveShadow" label="Receive"></input-checkbox>
+                                </div>
                             </div>
 
                             <div v-if="(contentType == 'text')" class="control-row">
@@ -89,7 +109,7 @@
                                 </button>
                             </div>
 
-                            <div v-if="!assetItem.isStartPoint" class="control-row">
+                            <div v-if="!assetItem.isStartPoint && !assetItem.isLight" class="control-row">
                                 <input-number v-model.number="scaleX" :step="0.1" class="sub-control-row" sub-label="X" label="Scale ( % )"></input-number>
                                 <input-number v-model.number="scaleY" :step="0.1" class="sub-control-row" sub-label="Y"></input-number>
                                 <input-number v-model.number="scaleZ" :step="0.1" class="sub-control-row" sub-label="Z"></input-number>
@@ -101,7 +121,7 @@
                                 <input-number v-model.number="positionZ" :step="0.5" class="sub-control-row" sub-label="Z"></input-number>
                             </div>
 
-                            <div v-if="!assetItem.isSprite && !assetItem.isStartPoint" class="control-row">
+                            <div v-if="!assetItem.isStartPoint && !assetItem.isSprite" class="control-row">
                                 <input-number v-model.number="rotationX" :step="1" class="sub-control-row" sub-label="X" label="Rotation ( ° )"></input-number>
                                 <input-number v-model.number="rotationY" :step="1" class="sub-control-row" sub-label="Y"></input-number>
                                 <input-number v-model.number="rotationZ" :step="1" class="sub-control-row" sub-label="Z"></input-number>
@@ -121,37 +141,114 @@
 
                             <!-- 조명 -->
                             <template v-if="assetItem.isLight">
+                                <!-- rect light 의 경우 조명 밝기 최대 값을 10으로 처리. -->
+                                <template v-if="assetItem.type == StaticVariable.ITEM_TYPE_RECT_LIGHT">
+                                    <div class="control-row">
+                                        <input-slider v-model.number="lightOptions.intensity" :key="assetItem.type" :min="0" :max="10" :step="0.1" label="Light intensity"></input-slider>
+                                    </div>
+                                </template>
+
+                                <template v-else>
+                                    <div class="control-row">
+                                        <input-slider v-model.number="lightOptions.intensity" :key="assetItem.type" :min="0" :max="2" :step="0.1" label="Light intensity"></input-slider>
+                                    </div>
+                                </template>
+
+                                <!-- spot light -->
+                                <template v-if="assetItem.type == StaticVariable.ITEM_TYPE_SPOT_LIGHT">
+                                    <div class="control-row">
+                                        <input-slider v-model.number="lightOptions.angle" :key="assetItem.type" :min="1" :max="180" :step="1" label="Light angle"></input-slider>
+                                    </div>
+
+                                    <div class="control-row">
+                                        <input-slider v-model.number="lightOptions.penumbra" :key="assetItem.type" :min="0" :max="1" :step="0.1" label="Light penumbra"></input-slider>
+                                    </div>
+
+                                    <div class="control-row">
+                                        <input-slider v-model.number="lightOptions.distance" :key="assetItem.type" :min="0" :max="100" :step="1" label="Light distance"></input-slider>
+                                    </div>
+
+                                    <div class="control-row">
+                                        <input-slider v-model.number="lightOptions.decay" :key="assetItem.type" :min="0" :max="2" :step="0.1" label="Light decay"></input-slider>
+                                    </div>
+                                </template>
+
+                                <!-- point light -->
+                                <template v-if="assetItem.type == StaticVariable.ITEM_TYPE_POINT_LIGHT">
+                                    <div class="control-row">
+                                        <input-slider v-model.number="lightOptions.distance" :key="assetItem.type" :min="0" :max="100" :step="1" label="Light distance"></input-slider>
+                                    </div>
+
+                                    <div class="control-row">
+                                        <input-slider v-model.number="lightOptions.decay" :key="assetItem.type" :min="0" :max="2" :step="0.1" label="Light decay"></input-slider>
+                                    </div>
+                                </template>
+
+                                <!-- rect light -->
+                                <template v-if="assetItem.type == StaticVariable.ITEM_TYPE_RECT_LIGHT">
+                                    <div class="control-row">
+                                        <input-number v-model.number="lightOptions.width" :key="assetItem.type" :step="0.1" label="Light width"></input-number>
+                                    </div>
+
+                                    <div class="control-row">
+                                        <input-number v-model.number="lightOptions.height" :key="assetItem.type" :step="0.1" label="Light height"></input-number>
+                                    </div>
+                                </template>
+
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightAngle" :min="1" :max="180" :step="1" label="Light angle"></input-slider>
+                                    <input-color v-model="lightOptions.color" :key="assetItem.type" label="Light color"></input-color>
+                                </div>
+
+                                <!-- hemisphere light -->
+                                <template v-if="assetItem.type == StaticVariable.ITEM_TYPE_HEMISPHERE_LIGHT">
+                                    <div class="control-row">
+                                        <input-color v-model="lightOptions.groundColor" :key="assetItem.type" label="Light ground color"></input-color>
+                                    </div>
+                                </template>
+
+                                <!-- 그림자 설정 -->
+                                <div class="control-row">
+                                    <input-checkbox v-model="lightOptions.castShadow" :key="assetItem.type" label="Cast shadow"></input-checkbox>
+                                </div>
+
+                                <!-- <div class="control-row">
+                                    <input-number v-model="lightOptions.shadowMapSizeW" :key="assetItem.type" :step="1" label="Shadow map width"></input-number>
                                 </div>
 
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightIntensity" :min="0" :max="2" :step="0.1" label="Light intensity"></input-slider>
+                                    <input-number v-model="lightOptions.shadowMapSizeH" :key="assetItem.type" :step="1" label="Shadow map height"></input-number>
+                                </div> -->
+
+                                <div class="control-row">
+                                    <input-number v-model="lightOptions.shadowBias" :key="assetItem.type" :step="0.001" label="Shadow bias"></input-number>
                                 </div>
 
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightPenumbra" :min="0" :max="1" :step="0.1" label="Light penumbra"></input-slider>
+                                    <input-number v-model="lightOptions.shadowCameraNear" :key="assetItem.type" :step="1" label="Shadow camera near"></input-number>
                                 </div>
 
                                 <div class="control-row">
-                                    <input-slider v-model.number="lightDistance" :min="0" :max="100" :step="1" label="Light distance"></input-slider>
+                                    <input-number v-model="lightOptions.shadowCameraFar" :key="assetItem.type" :step="1" label="Shadow camera far"></input-number>
                                 </div>
 
-                                <div class="control-row">
-                                    <input-slider v-model.number="lightDecay" :min="0" :max="1" :step="0.1" label="Light decay"></input-slider>
-                                </div>
+                                <template v-if="assetItem.type == StaticVariable.ITEM_TYPE_DIRECTIONAL_LIGHT">
+                                    <div class="control-row">
+                                        <input-number v-model="shadowCameraSize.width" :key="assetItem.type" :step="1" label="Shadow camera width"></input-number>
+                                    </div>
 
-                                <div class="control-row">
-                                    <input-color v-model="lightColor" label="Light color"></input-color>
-                                </div>
+                                    <div class="control-row">
+                                        <input-number v-model="shadowCameraSize.height" :key="assetItem.type" :step="1" label="Shadow camera height"></input-number>
+                                    </div>
+                                </template>
+
+                                <!-- spot light -->
+                                <!-- <template v-if="assetItem.type == StaticVariable.ITEM_TYPE_SPOT_LIGHT">
+                                    <div class="control-row">
+                                        <input-slider v-model="lightOptions.shadowFocus" :key="assetItem.type" :min="0" :max="1" :step="0.1" label="Shadow focus"></input-slider>
+                                    </div>
+                                </template> -->
                             </template>
                             <!-- END-조명 -->
-
-                            <div class="control-row">
-                                <button @click="onClickRemove" type="button" class="control-btn" tabindex="-1">
-                                    <font-awesome-icon :icon="['fas', 'trash-alt']"></font-awesome-icon>&nbsp;Remove
-                                </button>
-                            </div>
                         </div>
                     </div>
 
@@ -175,6 +272,7 @@
 <script>
     import * as StaticVariable from '../../../nemoShowroom/common/staticVariable';
     import AssetItem from '../../../nemoShowroom/common/assetItem';
+    import LightOptions from '../../../nemoShowroom/common/lightOptions';
     import ModelFileInfo from '../../../class/modelFileInfo';
     import Utils from '../../../class/utils';
     import * as ApiUrl from '../../../class/apiUrl';
@@ -207,8 +305,8 @@
             const me = this;
 
             return {
-                lockEvent: false,
                 StaticVariable: StaticVariable,
+                lockEvent: false,
                 isSystemModel: false,
                 is3dModel: false,
                 contentType: '',
@@ -224,14 +322,12 @@
                 rotationY: 0,
                 rotationZ: 0,
                 animationEndTime: 0,
-                lightAngle: 60,
-                lightIntensity: 1,
-                lightPenumbra: 0,
-                lightDistance: 0,
-                lightDecay: 1,
-                lightColor: 'rgb(255, 255, 255)',
+                lightOptions: new LightOptions(),
+                shadowCameraSize: {width: 0, height: 0},
                 link: '',
                 backgroundLoading: false,
+                castShadow: false,
+                receiveShadow: false,
                 isClickTarget: false,
                 isTransparent: false,
                 isCollider: false
@@ -335,46 +431,46 @@
                     me.$emit('control', 'backgroundLoading');
                 }
             },
-            lightAngle: function () {
+            castShadow: function (bool) {
                 const me = this;
 
                 if (!me.lockEvent) {
-                    me.setLightOption();
+                    const assetItem = me.editor.selectedItem;
+
+                    if (assetItem) {
+                        assetItem.setCastShadow(bool);
+                    }
                 }
             },
-            lightIntensity: function () {
+            receiveShadow: function (bool) {
                 const me = this;
 
                 if (!me.lockEvent) {
-                    me.setLightOption();
+                    const assetItem = me.editor.selectedItem;
+
+                    if (assetItem) {
+                        assetItem.setReceiveShadow(bool);
+                    }
                 }
             },
-            lightPenumbra: function () {
-                const me = this;
+            lightOptions: {
+                deep: true,
+                handler: function () {
+                    const me = this;
 
-                if (!me.lockEvent) {
-                    me.setLightOption();
+                    if (!me.lockEvent) {
+                        me.setLightOptions();
+                    }
                 }
             },
-            lightDistance: function () {
-                const me = this;
+            shadowCameraSize: {
+                deep: true,
+                handler: function () {
+                    const me = this;
 
-                if (!me.lockEvent) {
-                    me.setLightOption();
-                }
-            },
-            lightDecay: function () {
-                const me = this;
-
-                if (!me.lockEvent) {
-                    me.setLightOption();
-                }
-            },
-            lightColor: function () {
-                const me = this;
-
-                if (!me.lockEvent) {
-                    me.setLightOption();
+                    if (!me.lockEvent) {
+                        me.setLightOptions();
+                    }
                 }
             },
             isClickTarget: function (bool) {
@@ -480,37 +576,66 @@
                 me.animationEndTime = assetItem.animationEndTime;
                 me.link = assetItem.link;
                 me.backgroundLoading = assetItem.backgroundLoading;
+                me.castShadow = assetItem.castShadow;
+                me.receiveShadow = assetItem.receiveShadow;
                 me.isClickTarget = assetItem.isClickTarget;
                 me.isTransparent = assetItem.isTransparent;
                 me.isCollider = assetItem.isCollider;
-                me.lightAngle = Math.round(Utils.r2d(assetItem.lightOption.angle));
-                me.lightIntensity = assetItem.lightOption.intensity;
-                me.lightPenumbra = assetItem.lightOption.penumbra;
-                me.lightDistance = assetItem.lightOption.distance;
-                me.lightDecay = assetItem.lightOption.decay;
-                me.lightColor = assetItem.lightOption.color;
+
+                const lOptions = assetItem.lightOptions;
+
+                me.lightOptions.width = lOptions.width;
+                me.lightOptions.height = lOptions.height;
+                me.lightOptions.angle = Math.round(Utils.r2d(lOptions.angle));
+                me.lightOptions.intensity = lOptions.intensity;
+                me.lightOptions.penumbra = lOptions.penumbra;
+                me.lightOptions.distance = lOptions.distance;
+                me.lightOptions.decay = lOptions.decay;
+                me.lightOptions.color = lOptions.color;
+                me.lightOptions.groundColor = lOptions.groundColor;
+                me.lightOptions.castShadow = lOptions.castShadow;
+                me.lightOptions.shadowMapSizeW = lOptions.shadowMapSizeW;
+                me.lightOptions.shadowMapSizeH = lOptions.shadowMapSizeH;
+                me.lightOptions.shadowCameraNear = lOptions.shadowCameraNear;
+                me.lightOptions.shadowCameraFar = lOptions.shadowCameraFar;
+                me.lightOptions.shadowCameraLeft = lOptions.shadowCameraLeft;
+                me.lightOptions.shadowCameraRight = lOptions.shadowCameraRight;
+                me.lightOptions.shadowCameraTop = lOptions.shadowCameraTop;
+                me.lightOptions.shadowCameraBottom = lOptions.shadowCameraBottom;
+                me.lightOptions.shadowBias = lOptions.shadowBias;
+                me.lightOptions.shadowFocus = lOptions.shadowFocus;
+
+                // 조작되는 그림자 영역은 width, height 단위로 처리.
+                me.shadowCameraSize.width = me.lightOptions.shadowCameraRight * 2;
+                me.shadowCameraSize.height = me.lightOptions.shadowCameraTop * 2;
 
                 setTimeout(function () {
                     me.lockEvent = false;
                 }, StaticVariable.INPUT_CONTROL_LOCK_TIME);
             },
-            setLightOption: function () {
+            setLightOptions: function () {
                 const me = this;
 
                 if (!me.lockEvent) {
                     const assetItem = me.editor.selectedItem;
 
                     if (assetItem) {
-                        assetItem.setLightOption({
-                            angle: Utils.d2r(me.lightAngle),
-                            intensity: me.lightIntensity,
-                            penumbra: me.lightPenumbra,
-                            distance: me.lightDistance,
-                            decay: me.lightDecay,
-                            color: me.lightColor
-                        });
+                        const option = new LightOptions(me.lightOptions);
 
-                        me.$emit('control', 'lightOption');
+                        option.angle = Utils.d2r(option.angle);
+
+                        // 그림자 영역.
+                        const cameraX = me.shadowCameraSize.width / 2;
+                        const cameraY = me.shadowCameraSize.height / 2;
+
+                        option.shadowCameraLeft = -cameraX;
+                        option.shadowCameraRight = cameraX;
+                        option.shadowCameraTop = cameraY;
+                        option.shadowCameraBottom = -cameraY;
+
+                        assetItem.setLightOptions(option);
+
+                        me.$emit('control', 'lightOptions');
                     }
                 }
             },
@@ -773,6 +898,14 @@
                 text-align: center;
                 overflow:hidden;
                 margin-bottom: 1rem;
+            }
+
+            .control-label {
+                width: 100%;
+                font-size: 15px;
+                font-weight: 600;
+                color: #ffffff;
+                overflow:hidden;
             }
 
             .control-btn {

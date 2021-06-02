@@ -1,6 +1,7 @@
 import * as THREE from 'three/build/three.module';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
+import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
 
 import * as StaticVariable from '../common/staticVariable';
 import MouseRaycaster from '../common/mouseRaycaster';
@@ -23,6 +24,8 @@ export default class NemoShowroomEditor extends EditorInterface {
 
         const me  = this;
 
+        RectAreaLightUniformsLib.init();
+
         me.options = new Options(obj);
 
         const winW = me.options.width;
@@ -43,13 +46,9 @@ export default class NemoShowroomEditor extends EditorInterface {
 
         // ---
         me.light = new THREE.DirectionalLight();
+        me.light.intensity = 0;
         me.light.position.copy(StaticVariable.LIGHT_ZERO_POSITION);
         me.lightField.add(me.light);
-
-        // ---
-        me.subLight = new THREE.AmbientLight();
-        me.subLight.intensity = StaticVariable.SUB_LIGHT_INTENSITY;
-        me.lightField.add(me.subLight);
 
         // ---
         me.camera = new THREE.PerspectiveCamera(45, winW / winH, StaticVariable.CAMERA_NEAR, StaticVariable.CAMERA_FAR);
@@ -63,6 +62,8 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.renderer.domElement.style.position = 'absolute';
         me.renderer.domElement.style.left = '0px';
         me.renderer.domElement.style.top = '0px';
+        me.renderer.shadowMap.enabled = true;
+        me.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
         // ---
         me.cssRenderer = new CssRenderer(me.renderer, me.camera);
@@ -87,8 +88,8 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.tfControls = new TransformControls(me.camera, me.renderer.domElement);
         me.tfControls.setRotationSnap(Math.PI / 180);
         me.tfControls.renderOrder = 1;
-        me.tfControls.traverse(function (object) {
-            object.renderOrder = 1;
+        me.tfControls.traverse(function (obj) {
+            obj.renderOrder = 1;
         });
 
         // ---
@@ -104,8 +105,8 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.gridObject3D = new THREE.GridHelper( StaticVariable.GRID_SIZE, StaticVariable.GRID_DIVISIONS, StaticVariable.GRID_COLOR, StaticVariable.GRID_COLOR );
         me.gridObject3D.position.setY(0.005);
         me.gridObject3D.renderOrder = 1;
-        me.gridObject3D.traverse(function (object) {
-            object.renderOrder = 1;
+        me.gridObject3D.traverse(function (obj) {
+            obj.renderOrder = 1;
         });
 
         // ---
@@ -114,8 +115,8 @@ export default class NemoShowroomEditor extends EditorInterface {
         me.baseFloor = new THREE.Mesh(floorGeo, floorMat);
         me.baseFloor.rotation.x = -(Math.PI / 2);
         me.baseFloor.renderOrder = 1;
-        me.baseFloor.traverse(function (object) {
-            object.renderOrder = 1;
+        me.baseFloor.traverse(function (obj) {
+            obj.renderOrder = 1;
         });
 
         // ---
@@ -195,16 +196,19 @@ export default class NemoShowroomEditor extends EditorInterface {
     }
 
     /**
-     * 스포트 라이트를 추가한다.
+     * 라이트를 추가한다.
+     * @param {string} lightType 조명 타입.
      */
-    addSpotLight() {
+    addLight(lightType) {
         const me = this;
 
-        const name = '-Light-';
+        let name = lightType.charAt(0).toUpperCase();
+        name += lightType.slice(1);
+        name = '-' + name + '-';
 
         const assetItem = new AssetItem({
             name: name,
-            type: StaticVariable.ITEM_TYPE_SPOT_LIGHT
+            type: lightType
         });
 
         return me.itemLoader.load(assetItem).then(function (currentItem) {
@@ -212,7 +216,7 @@ export default class NemoShowroomEditor extends EditorInterface {
             me.assetItemManager.add(currentItem);
 
             me.historyManager.push({
-                name: 'addSpotLight',
+                name: 'addLight.' + lightType,
                 redo: function () {
                     me.recoverArray([currentItem]);
                 },
@@ -653,9 +657,8 @@ export default class NemoShowroomEditor extends EditorInterface {
         const me = this;
 
         const prevItem = me.selectedItem;
-        const type = 'html,image,youtube';
 
-        if (prevItem && type.indexOf(prevItem.type) >= 0) {
+        if (prevItem && StaticVariable.ITEM_2D_TYPES.indexOf(prevItem.type) >= 0) {
             const cloneItem = prevItem.clone();
 
             cloneItem.rotation.x = 0;
@@ -751,7 +754,10 @@ export default class NemoShowroomEditor extends EditorInterface {
             const transformHistory = new TransformHistory(assetItem, assetItem);
 
             assetItem.object3D.position.multiply(new THREE.Vector3(x, y, z));
-            assetItem.object3D.scale.multiply(new THREE.Vector3(x, y, z));
+
+            if (!assetItem.isLight && !assetItem.isStartPoint) {
+                assetItem.object3D.scale.multiply(new THREE.Vector3(x, y, z));
+            }
 
             assetItem.syncTransformMembers();
 
@@ -854,6 +860,34 @@ export default class NemoShowroomEditor extends EditorInterface {
 
         if (assetItem) {
             assetItem.link = link;
+        }
+    }
+
+    /**
+     * 선택한 아이템이 그림자를 가질 수 있도록 설정한다.
+     * @param {boolean} bool 작동 여부.
+     */
+    setCastShadow(bool) {
+        const me = this;
+
+        const assetItem = me.selectedItem;
+
+        if (assetItem) {
+            assetItem.setCastShadow(bool);
+        }
+    }
+
+    /**
+     * 선택한 아이템에 그림자가 그려질 수 있도록 설정한다.
+     * @param {boolean} bool 작동 여부.
+     */
+    setReceiveShadow(bool) {
+        const me = this;
+
+        const assetItem = me.selectedItem;
+
+        if (assetItem) {
+            assetItem.setReceiveShadow(bool);
         }
     }
 
