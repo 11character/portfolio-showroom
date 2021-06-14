@@ -453,6 +453,8 @@ export default class AssetLoader {
 
             lightB.lookAt(0, 0, 1);
 
+            helper.name = StaticVariable.MESH_NAME_LIGHT_HELPER;
+
             group.add(lightF);
             group.add(lightB);
             group.add(helper);
