@@ -4,20 +4,18 @@
             <img :src="img" class="background">
         </div>
 
-        <div v-if="percent < 100" ref="textField" class="loading-text-field disable-user-select font-showroom-light">
-            <div class="loading-text">Please Wait...</div>
+        <div ref="textField" class="loading-text-field disable-user-select font-showroom-light">
+            <div class="loading-text">로딩중...</div>
 
-            <div v-if="percent > 15" class="loading-text">To walk in the virtual gallery,</div>
+            <div v-if="percent > 15" class="loading-text">수평이동은 W(↑) A(←) S(↓) D(→) 키 입니다.</div>
 
-            <div v-if="percent > 30" class="loading-text">Use W(↑) A(←) S(↓) D(→) for horizontal walk,</div>
+            <div v-if="percent > 30" class="loading-text">수직 이동은 R(up), F(Down) 키 입니다.</div>
 
-            <div v-if="percent > 45" class="loading-text">and R(up), F(Down) for vertical move.</div>
+            <div v-if="percent > 45" class="loading-text">시점은 마우스 드래그로 움직일 수 있습니다.</div>
 
-            <div v-if="percent > 60" class="loading-text">You can change views with drags.</div>
+            <div v-if="percent > 60" class="loading-text">스마트 폰은 하단에 컨트롤러가 표시됩니다.</div>
 
-            <div v-if="percent > 75" class="loading-text">Desktop is recommended</div>
-
-            <div v-if="percent > 90" class="loading-text">Visit artshop while waiting...</div>
+            <div v-if="percent > 75" class="loading-text">데스크탑 보기를 권장합니다.</div>
         </div>
 
         <div ref="progressField" class="progress-field">
@@ -25,7 +23,7 @@
                 <div ref="bar" class="progress-bar"></div>
             </div>
 
-            <div v-else @click="onClickEnter" class="btn-enter disable-user-select font-showroom-light">Enter to Exhibition</div>
+            <div v-else @click="onClickEnter" class="btn-enter disable-user-select font-showroom-light">여기를 눌러 입장</div>
         </div>
     </div>
 </template>

@@ -18,7 +18,7 @@
                     </router-link>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <router-link :to="{name: 'product'}" :class="productClass" class="nav-link">
                         <span>Product</span>
                     </router-link>
@@ -36,7 +36,7 @@
 
                 <li class="nav-item">
                     <a :href="'./logout.php'" class="nav-link">Logout</a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </nav>

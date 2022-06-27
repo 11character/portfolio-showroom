@@ -3,13 +3,13 @@
     include '../db.php';
 
     $page_text_ko = [
-        'bottom1' => '후원: 문화체육관광부, 한국문화예술위원회, 서울문화재단',
-        'bottom2' => 'Powered by ‘desk desk’'
+        'bottom1' => '',
+        'bottom2' => ''
     ];
 
     $page_text_en = [
-        'bottom1' => 'Sponsor: Ministry of Culture, Sports and Tourism, Arts Council Korea, Seoul Foundation for Arts and Culture.',
-        'bottom2' => 'Powered by ‘desk desk’'
+        'bottom1' => '',
+        'bottom2' => ''
     ];
 
     $data = [

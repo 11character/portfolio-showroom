@@ -7,7 +7,8 @@
             <template v-slot:content>
                 <div class="row">
                     <div class="col-12">
-                        <h4>파일 업로드</h4>
+                        <h4>ZIP 파일 업로드</h4>
+                        <div>파일을 압축해서 올려주세요. (50MB 이하)</div>
                     </div>
                 </div>
 

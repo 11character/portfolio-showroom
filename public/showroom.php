@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./dist/showroom/showroom.css">
     <link rel="stylesheet" href="./css/common.css">
 
-    <title>Arcade Theater</title>
+    <title>showroom</title>
 </head>
 <body style="overflow: hidden" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
     <div id="root">
