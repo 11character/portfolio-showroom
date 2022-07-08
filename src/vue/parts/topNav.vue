@@ -12,7 +12,7 @@
                     </router-link>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item mr-lg-auto">
                     <router-link :to="{name: 'file'}" :class="fileClass" class="nav-link">
                         <span>File</span>
                     </router-link>
@@ -32,11 +32,11 @@
 
                 <li v-if="separatePage" class="nav-item px-lg-2 mr-lg-auto">
                     <span class="navbar-text text-white">{{ separatePage }}</span>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
-                    <a :href="'./logout.php'" class="nav-link">Logout</a>
-                </li> -->
+                    <a :href="'https://github.com/11character/portfolio-showroom'" class="nav-link">GitHub</a>
+                </li>
             </ul>
         </div>
     </nav>
