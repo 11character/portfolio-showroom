@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="./dist/index/index.css">
     <link rel="stylesheet" href="./css/common.css">
 
-    <title>showroom</title>
+    <title>Showroom</title>
 </head>
 <body>
     <div id="root">

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./css/common.css">
     <link rel="stylesheet" href="./css/not-support.css">
 
-    <title>showroom</title>
+    <title>Showroom</title>
 </head>
 <body>
     <div class="message-field font-showroom">
